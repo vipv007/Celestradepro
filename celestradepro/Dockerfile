@@ -16,17 +16,20 @@ COPY ./celestradepro .
 # Build the Angular app
 RUN npm run build
 
-# Use NGINX as the base image for the final stage
-FROM nginx:alpine
+# Use a smaller base image to serve the Angular app (e.g., "http-server")
+FROM node:16
 
-# Copy the custom nginx.conf to the NGINX configuration directory
-COPY nginx.conf /etc/nginx/nginx.conf
+# Install a simple HTTP server to serve the Angular app
+RUN npm install -g http-server
 
-# Copy the built Angular app from the build stage to the nginx web server's directory
-COPY --from=build /app/dist/celestradepro /usr/share/nginx/html
+# Set the working directory in the container
+WORKDIR /app
 
-# Expose the default HTTP port
-EXPOSE 4200
+# Copy the built Angular app from the build stage to the container
+COPY --from=build /app/dist/celestradepro .
 
-# Start the nginx web server
-CMD ["nginx", "-g", "daemon off;"]
+# Expose the port your app will listen on (e.g., 8080)
+EXPOSE 8080
+
+# Start the HTTP server to serve your Angular app
+CMD ["http-server", "-p", "8080"]
