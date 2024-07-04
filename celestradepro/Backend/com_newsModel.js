@@ -3,18 +3,39 @@ const Schema = mongoose.Schema;
 
 let Com_news = new Schema({
 
- url:{
+//  url:{
+//   type: String
+//  },
+//  name:{
+//   type: String
+//  },
+//  imgurl:{
+//   type: String
+//  }, 
+url: {
   type: String
- },
- name:{
+},
+headline: {
   type: String
- },
- imgurl:{
+},
+summary: {
   type: String
- }, 
-
+},
+sentimentScore: {
+  type: Number
+},
+sentiment: {
+  type: String
+},
+fetchedTime: {
+  type: Date
+},
+archive: {
+  type: Boolean,
+  default: false
+}
 }, {
-  collection: 'Com_news'
+  collection: 'com_news'
 })
 
 module.exports = mongoose.model('Com_news', Com_news)
