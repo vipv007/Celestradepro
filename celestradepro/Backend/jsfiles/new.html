@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat with a Large Language Model (Llama API)</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .input-field {
+      margin-bottom: 10px;
+    }
+    .response {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Chat with a Model (Llama API)</h1>
+    <p>**Note:** This example utilizes the Perplexity API with a Llama model. You'll need a Perplexity API key and a suitable model for text generation.</p>
+    <div class="input-field">
+      <textarea id="prompt" rows="3" placeholder="Say something..."></textarea>
+    </div>
+    <button onclick="chatWithModel()">Send</button>
+    <p id="response" class="answer"></p>
+  </div>
+
+  <script>
+    // Replace 'YOUR_LLAMA_API_KEY' with your actual Llama API key
+    const apiKey = "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"; // Replace with your key
+
+    // Choose a publicly available model (replace if needed)
+    const modelName = "LlamaForTextGeneration/llama-7b";  // Replace with desired Llama model
+
+    // CORS Proxy URL (replace with your chosen CORS proxy)
+    const proxyUrl = "https://google.com/"; // Replace with a reliable CORS proxy URL
+
+    async function chatWithModel() {
+      const prompt = document.getElementById("prompt").value;
+
+      if (!prompt) {
+        alert("Please enter a message for the model!");
+        return;
+      }
+
+      const url = `${proxyUrl}https://api.perplexity.ai/generate`; // Corrected URL
+
+
+      // Set headers with your API key
+      const headers = {
+        Authorization: `Token ${apiKey}`,
+        "Content-Type": "application/json",
+      };
+
+      const data = JSON.stringify({
+        prompt: prompt,
+        model: modelName,
+        temperature: 0.7,  // Adjust temperature for creativity (0.0 to 1.0)
+        max_length: 150,  // Adjust maximum output length
+      });
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: headers,
+          body: data,
+        });
+
+        if (!response.ok) {
+          console.error("Error:", response.statusText);
+          const errorMessage = response.statusText === "Service Unavailable" ? "Perplexity API server is busy. Please try again later." : "Something went wrong. Please try again later.";
+          alert(errorMessage);
+          return;
+        }
+
+        const responseJson = await response.json();
+
+        const generatedText = responseJson.generated_text;
+
+        document.getElementById("response").textContent = generatedText;
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again later.");
+      }
+    }
+  </script>
+</body>
+</html>
