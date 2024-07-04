@@ -15,7 +15,8 @@ let Screener = new Schema({
 
 
 }, {
-  collection: 'screener'
+  //collection: 'screener'
+  collection: 'Com_hours'
 })
 
 module.exports = mongoose.model('Screener', Screener)

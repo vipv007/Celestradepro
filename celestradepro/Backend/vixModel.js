@@ -3,23 +3,26 @@ const Schema = mongoose.Schema;
 
 let Vix = new Schema({
  
-  Open: {
+  symbol:{
+    type: String
+  },
+  open: {
     type: Number
   },
-  High: {
+  high: {
     type: Number
   },
-  Low: {
+  low: {
     type: Number
   },
  
-  Close: {
+  close: {
     type: Number
   },
-  Volume: {
+  volume: {
     type: Number
   },
-  Adjclose:{
+  adi_close:{
     type:String
   } 
 

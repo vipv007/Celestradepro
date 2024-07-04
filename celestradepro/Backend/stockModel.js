@@ -19,15 +19,11 @@ let Stock = new Schema({
   Volume: {
     type: Number
   },
-  name:{
-    type:String
-  } ,
-  Security:{
-    type:String
-  } ,
-  Grant:{
-    type:String
-  } 
+  
+  selected: {
+    type: Boolean,
+    default: false // Default value for selected field
+  }
 },
  {
   collection: 'Stock'

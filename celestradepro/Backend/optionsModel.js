@@ -11,15 +11,13 @@ let options = new Schema({
   symbol:{
     type: String
   },
-  
-
   contractSymbol: {
     type: String
   },
   lastTradeDate: {
     type: Date
   },
-  strike:{
+  strikePrice:{
     type: String
   },
   lastPrice: {
@@ -56,12 +54,14 @@ let options = new Schema({
   currency:{
     type: String
   },
-  
+  expiryDate:{
+    type: Date
+  }
   
 
 
 }, {
-  collection: 'options'
+  collection: 'Options'
 })
 
 module.exports = mongoose.model('options', options)
