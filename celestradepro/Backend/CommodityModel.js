@@ -16,7 +16,7 @@ let commoditys = new Schema({
   close: {
     type: Number
   },
-  symbol: {
+  Symbol: {
     type: String
   },
   ask:
@@ -31,9 +31,14 @@ let commoditys = new Schema({
   {type:Number},
 
  changepercentage:
-{type:Number}},
- {
-  collection: 'commoditys'
-})
+    { type: Number }, // Removed the trailing comma here
 
-module.exports = mongoose.model('commoditys', commoditys)
+  selected: {
+    type: Boolean,
+    default: false // Default value for selected field
+  }
+}, {
+  collection: 'commoditys'
+});
+
+module.exports = mongoose.model('commoditys', commoditys);

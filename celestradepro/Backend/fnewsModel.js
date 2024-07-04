@@ -1,21 +1,31 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let Fnews = new Schema({
-
-  url:{
+let Fx_news = new Schema({
+  url: {
     type: String
-   },
-   name:{
+  },
+  headline: {
     type: String
-   },
-   imgurl:{
+  },
+  summary: {
     type: String
-   },
-
-
+  },
+  sentimentScore: {
+    type: Number
+  },
+  sentiment: {
+    type: String
+  },
+  fetchedTime: {
+    type: Date
+  },
+  archive: {
+    type: Boolean,
+    default: false
+  }
 }, {
-  collection: 'ForexNews'
-})
+  collection: 'Fx_news'
+});
 
-module.exports = mongoose.model('Fnews', Fnews)
+module.exports = mongoose.model('Fx_news', Fx_news);

@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 let forexSchema = new mongoose.Schema({
 
-   symbol:{
-      type: String
+ symbol:{
+   type: String
     },
  date:{
   type: Date
@@ -25,6 +25,10 @@ let forexSchema = new mongoose.Schema({
  },
  Adj_Close:{
     type: String
+ },
+ selected: {
+   type: Boolean,
+   default: false // Default value for selected field
  }
 },
 {
