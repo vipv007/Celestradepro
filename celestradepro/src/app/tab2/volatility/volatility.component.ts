@@ -32,21 +32,21 @@ export class VolatilityComponent implements OnInit {
         {
           label: 'Price',
           data: this.details.map(detail => detail.price),
-          fill: false,
+          backgroundColor: '#de2cc9', // Set the background color of "Price" bars to blue
           borderColor: '#4bc0c0'
         },
         {
           label: 'Implied Volatility',
           data: this.details.map(detail => detail.implied_volatility),
-          fill: false,
+          backgroundColor: '#0c6be8', // Set the background color of "Implied Volatility" bars to pink
           borderColor: '#f44336'
         },
-        {
-          label: 'Open Interest',
-          data: this.details.map(detail => detail.open_interest),
-          fill: false,
-          borderColor: '#565656'
-        }
+        // {
+        //   label: 'Open Interest',
+        //   data: this.details.map(detail => detail.open_interest),
+        //   fill: false,
+        //   borderColor: '#565656'
+        // }
       ]
     };
 
@@ -60,8 +60,8 @@ export class VolatilityComponent implements OnInit {
       }
     };
 
-    const chart = new Chart('canvas', {
-      type: 'line',
+    const chart = new Chart('canvas1', {
+      type: 'bar',
       data: chartData,
       options: chartOptions
     });

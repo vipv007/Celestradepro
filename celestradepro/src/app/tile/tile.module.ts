@@ -7,17 +7,25 @@ import { ExploreContainerComponentModule } from '../explore-container/explore-co
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { HttpClientModule } from '@angular/common/http';
 import { TilePage } from './tile.page';
-
-
+import { CommodityGainerComponent } from './commodity-gainer/commodity-gainer.component';
 import { Ribbon1Component } from './ribbon1/ribbon1.component';
+import { ProfileComponent } from './profile/profile.component';
 import { ComNewsComponent } from './com-news/com-news.component';
 import { CommodityComponent } from './commodity/commodity.component';
+import { ComcalenderComponent } from './comcalender/comcalender.component';
+import { ComChartComponent } from './com-chart/com-chart.component';
+import { MarketheatComponent } from './marketheat/marketheat.component';
+import { ScreenerComponent } from './screener/screener.component';
+import { ComprofComponent } from './comprof/comprof.component';
+import { CommarketComponent } from './commarket/commarket.component';
+import { IgxFinancialChartModule, IgxLegendModule } from "igniteui-angular-charts";
 
 
 @NgModule({
   declarations: [TilePage,
     ComNewsComponent,
-      Ribbon1Component,CommodityComponent],
+    Ribbon1Component, ProfileComponent, CommodityComponent, ComcalenderComponent,CommodityGainerComponent,
+    ComChartComponent, MarketheatComponent, CommarketComponent, ScreenerComponent, ComprofComponent],
 
 
 
@@ -29,6 +37,8 @@ import { CommodityComponent } from './commodity/commodity.component';
       ExploreContainerComponentModule,
       TilePageRoutingModule,
       Ng2SearchPipeModule,
+      IgxFinancialChartModule,
+      IgxLegendModule
 
 
   ],

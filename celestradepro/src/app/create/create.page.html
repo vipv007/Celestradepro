@@ -1,37 +1,21 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Add Details</ion-title>
-  </ion-toolbar>
-</ion-header>
+<div *ngFor="let forex of forexs">
+  <input type="radio" name="forexSymbol" [value]="forex.symbol" (change)="onSymbolChange($event)" /> {{ forex.symbol }}
+</div>
 
-<ion-content>
-  <ion-list lines="full">
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-      <ion-item>
-        <ion-label position="floating">Vix</ion-label>
-        <ion-input formControlName="Vix" type="text" required></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">High</ion-label>
-        <ion-input formControlName="High" type="text" required></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Low</ion-label>
-        <ion-input formControlName="Low" type="text" required>
-        </ion-input>
-      </ion-item>
-
-      
-
-      
-     
-      <ion-row>
-        <ion-col>
-          <ion-button type="submit" color="success" expand="block">Add</ion-button>
-        </ion-col>
-      </ion-row>
-    </form>
-  </ion-list>
-</ion-content>
+<div *ngIf="selectedSymbol" [ngClass]="selectedTheme">
+  <div class="theme-toggle">
+    <label class="switch">
+      <input type="checkbox" (change)="onThemeToggle($event)">
+      <span class="slider round"></span>
+    </label>
+    <span>{{ selectedTheme === 'light' ? 'Light Theme' : 'Dark Theme' }}</span>
+  </div>
+  <igx-financial-chart
+    width="100%"
+    height="500px"
+    [dataSource]="forexData[selectedSymbol]"
+    chartType="Candle"
+    xAxisMode="Time"
+    yAxisMode="Numeric">
+  </igx-financial-chart>
+</div>

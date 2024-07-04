@@ -9,6 +9,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
+import { ChartsModule } from 'ng2-charts';
+
 
  PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -19,11 +21,21 @@ import { VolatilityComponent } from './volatility/volatility.component';
 import { OptionIoComponent } from './option-io/option-io.component';
 import { VolChartComponent } from './vol-chart/vol-chart.component';
 import { OptionchComponent } from '../optionch/optionch.component';
+import { OptionnewsComponent } from './optionnews/optionnews.component';
+import { ActiveOptionsComponent } from './active-options/active-options.component';
+import { NiftyPage } from '../nifty/nifty.page';
+
+import { MyComponent } from './my/my.component';
+import { StrikePeggerComponent } from './strike-pegger/strike-pegger.component';
+import { OpstrikePeggerComponent } from './opstrike-pegger/opstrike-pegger.component';
 
 
 @NgModule({
     declarations: [Tab2Page,
-        ChartingComponent, OptionIoComponent, VolatilityComponent, VolChartComponent,OptionchComponent],
+
+        ChartingComponent, OptionIoComponent, VolatilityComponent, VolChartComponent,NiftyPage,ActiveOptionsComponent,
+        OptionchComponent, OptionnewsComponent, MyComponent,StrikePeggerComponent,OpstrikePeggerComponent],
+
     imports: [
         IonicModule,
         CommonModule,
@@ -33,7 +45,6 @@ import { OptionchComponent } from '../optionch/optionch.component';
         ExploreContainerComponentModule,
         Tab2PageRoutingModule,
         Ng2SearchPipeModule,
-        Tab1PageModule,
 
     ],
     exports: [

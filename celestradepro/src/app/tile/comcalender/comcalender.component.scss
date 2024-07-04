@@ -1,0 +1,38 @@
+table {
+    border-collapse: collapse;
+    width: 1100px;
+    /* Set width to 700px */
+    background-color: #dee0e5;
+    text-align: center;
+    margin-left: 5%;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: left;
+    /* Adjust alignment if needed */
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+th {
+    font-weight: bold;
+    background-color: #babec7;
+    color: white;
+}
+
+td:nth-child(6) {
+    color: red;
+}
+
+.s1 {
+    background-color: #babec7;
+    width: 1100px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 5%;
+}
+button{
+    margin-left: 5%;
+}

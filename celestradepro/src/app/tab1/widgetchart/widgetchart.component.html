@@ -1,0 +1,102 @@
+<div class="ion-padding">
+  <button expand="block" class="buy" (click)="showBox = !showBox">{{ symbol }}&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
+  <button class="buy" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button>
+
+  <div class="adj">
+    <div class="box" *ngIf="showBox">
+      <ion-label style="font-size: 20px; font-weight: bold; margin-left: 5%;"> {{ symbol }}</ion-label>
+      <input class="m1" type="number" [(ngModel)]="quantity" placeholder="quantity">
+      
+      <ion-row>
+        <ion-card class="buy" color="primary" (click)="onSubmit('BUY')">
+          <ion-row *ngFor="let stock of stocks">
+            <ng-container *ngIf="stock.symbol === symbol">
+              <button expand="block" class="asks" (click)="showPrice(stock.stock[0].Bid.toFixed(2))">{{ stock.stock[0].Bid.toFixed(2) }}:<small>Bid</small></button>
+            </ng-container>
+          </ion-row>
+          <small>BUY</small>
+        </ion-card>
+
+        <input type="number" class="ms" [(ngModel)]="price" placeholder="0" (change)="updateChart()">
+        
+        <ion-card class="sell" color="danger" (click)="onSubmit('SELL')">
+          <ion-row *ngFor="let stock of stocks">
+            <ng-container *ngIf="stock.symbol === symbol">
+              <button expand="block" class="asks" (click)="showPrice(stock.stock[0].Ask.toFixed(2))">{{ stock.stock[0].Ask.toFixed(2) }}:<small>Ask</small></button>
+            </ng-container>
+          </ion-row>
+          <small>SELL</small>
+        </ion-card>
+        
+        <ion-row *ngFor="let stock of stocks">
+          <ng-container *ngIf="stock.symbol === symbol">
+            <button expand="block" class="asks" (click)="showLow(stock.stock[0].Low.toFixed(2))">{{ stock.stock[0].Low.toFixed(2) }}<small>:Low</small></button><br><br>
+            <button expand="block" class="asks" (click)="showHigh(stock.stock[0].High.toFixed(2))">{{ stock.stock[0].High.toFixed(2) }}<small>:High</small></button>
+          </ng-container>
+        </ion-row>
+      </ion-row>
+      
+      <ion-row>
+        <button expand="block" class="ask"><small>SL</small></button>
+        <input type="number" [(ngModel)]="stoploss" placeholder="0" (change)="updateChart()">
+        <input type="number" [(ngModel)]="target" placeholder="0" (change)="updateChart()">
+        <button expand="block" class="ask" (click)="showHigh(target)"><small>TP</small></button>
+      </ion-row>
+    </div>
+
+    <div class="sto" *ngIf="showButton" style="color: black;">
+      <table class="table table-borderless table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th>Quantity</th>
+            <th>Orders</th>
+            <th>Buy Price</th>
+            <th>Sell Price</th>
+            <th>Orders</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let depth of marketDepthData" class="ms1">
+            <ng-container *ngFor="let item of depth.market_depth; let i = index">
+              <tr *ngIf="i >= 0" class="border-top">
+                <td colspan="8"></td>
+              </tr>
+              <tr>
+                <td>{{ item.buy_quantity }}</td>
+                <td>{{ item.b_order }}</td>
+                <td class="buy-price">{{ item.buy_price }}</td>
+                <td>{{ item.sell_price }}</td>
+                <td>{{ item.s_order }}</td>
+                <td>{{ item.sell_quantity }}</td>
+              </tr>
+            </ng-container>
+            <tr *ngIf="1 >= 0" class="border-top">
+              <td>{{ getTotalOrders(depth.market_depth, 'buy') }}</td>
+              <td></td>
+              <td style="font-size: 13px; width: 50%; font-weight: bold;">Total </td>
+              <td style="font-size: 13px; width: 50%; font-weight: bold;">Quantity</td>
+              <td></td>
+              <td>{{ getTotalOrder(depth.market_depth, 'sell') }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div [ngClass]="selectedTheme">
+    <br>
+    <div class="theme-toggle">
+      <label class="switch">
+        <input type="checkbox" (change)="onThemeToggle($event)">
+        <span class="slider round"></span>
+      </label>
+      <span>{{ selectedTheme === 'light' ? 'Light Theme' : 'Dark Theme' }}</span>
+    </div>
+    
+    <div class="chart-container">
+      <igx-financial-chart [dataSource]="stockData" width="100%" height="500px"></igx-financial-chart>
+    </div>
+  </div>
+</div>

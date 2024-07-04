@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Signup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="floating">First Name</ion-label>
+    <ion-input type="text" [(ngModel)]="givenName"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Last Name</ion-label>
+    <ion-input type="text" [(ngModel)]="familyName"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Gender</ion-label>
+    <ion-input type="text" [(ngModel)]="gender"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Phone Number (123-456-7890)</ion-label>
+    <ion-input type="tel" [(ngModel)]="phone"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Email</ion-label>
+    <ion-input type="email" [(ngModel)]="email"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Password</ion-label>
+    <ion-input type="password" [(ngModel)]="password"></ion-input>
+  </ion-item>
+<!-- 
+  <ion-text>Password Requirements:</ion-text>
+  <ul>
+    <li>{{ hasLowercase }}</li>
+    <li>{{ hasUppercase }}</li>
+    <li>{{ hasNumber }}</li>
+    <li>{{ hasSymbol }}</li>
+    <li>{{ hasMinLength }}</li>
+  </ul> -->
+
+  <ion-button expand="block" (click)="handleSignUp()">Sign up</ion-button>
+
+  <!-- <ion-button expand="block" (click)="redirectToResetPassword()">Reset password</ion-button> -->
+  <ion-button expand="block" (click)="goToLogin()">or log in instead.</ion-button>
+
+  <!-- <ion-item *ngIf="showCodeInput">
+    <ion-label position="floating">Code</ion-label>
+    <ion-input type="text" [(ngModel)]="code"></ion-input>
+  </ion-item>
+  <ion-button *ngIf="showCodeInput" expand="block" (click)="submitCode()">Confirm Code</ion-button> -->
+</ion-content>

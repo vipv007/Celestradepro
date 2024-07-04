@@ -1,0 +1,38 @@
+<div *ngIf="activeData && activeData.length" class="table-container">
+  <table class="screener-table">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Last</th>
+        <th>Change</th>
+        <th>% Chg</th>
+        <th>IV Rank</th>
+        <th>Options Vol</th>
+        <th>% Put</th>
+        <th>% Call</th>
+        <th>P/C Vol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of paginatedData">
+        <td>{{ stock.Symbol }}</td>
+        <td>{{ stock.Name }}</td>
+        <td>{{ stock.Last }}</td>
+        <td>{{ stock.Change }}</td>
+        <td>{{ stock['%Chg'] }}</td>
+        <td>{{ stock['IV Rank'] }}</td>
+        <td>{{ stock['Options Vol'] | number }}</td>
+        <td>{{ stock['% Put'] }}</td>
+        <td>{{ stock['% Call'] }}</td>
+        <td>{{ stock['P/C Vol'] | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-<ion-header>
+<!--ion-header>
   <ion-toolbar>
     <ion-title>
       Candlestick Chart
@@ -8,4 +8,29 @@
 
 <ion-content>
   <canvas #canvas></canvas>
-</ion-content>
+</ion-content-->
+
+
+<div id="chart-container" style="min-width: 300px; height: 400px; margin-top:13%"></div>
+
+<script>
+  function graph_price(symbol, exp_date, instr_name) {
+    //    $("#com_title").html(symbol + '(' + exp_date + ')')
+    items = []
+    $.ajax({
+      url: 'https://www.ncdex.com/graph_price',
+      method: "POST",
+      data: {
+        symbol: symbol,
+        exp_date: exp_date,
+        instr_name: instr_name,
+        _token: 'k2lS4VCK0m1XzEC5yU6lAqytNtE41CYqt4RhePp1'
+      },
+      dataType: 'html',
+      success: function (result) {
+        $("#graph_contents").html(result)
+      }
+    })
+  }
+</script>
+

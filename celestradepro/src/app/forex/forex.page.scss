@@ -1,39 +1,7 @@
-h2{
-  margin-left: 25px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-color: rgb(16, 78, 65);
-font-weight: bold;
-}
-/*.grid-container {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  padding: 40px;
-}
-#grid-item {
-
-  border: 1px  rgba(0, 0, 0, 0.8);
+.tradingview-widget-container{
+  height: 100%;
+  width: 100%;
+  margin-top: 5%;
+  margin-left: 13%;
   padding: 20px;
-  font-size: 20px;
-  text-align: center;
-}*/
-ion-content{
-  --background:rgb(227, 237, 252);
-}
-#c1{
-  background-color: rgb(245, 247, 175);
-}
-#c2{
-  background-color: rgb(84, 248, 62);
-}
-#c3{
-  background-color: rgb(243, 72, 72);
-}
-#c4{
-  background-color: rgb(243, 243, 101);
-}
-#c5{
-  background-color: rgb(127, 165, 247);
-}
-#c6{
-  background-color: rgb(247, 168, 240);
 }

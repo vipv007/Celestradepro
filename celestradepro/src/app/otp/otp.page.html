@@ -1,5 +1,14 @@
-<ng-container *ngFor="let stock of filteredStocks">
-  <h2>Symbol: {{ stock.symbol }}</h2>
-  <h2>Highest Price: {{ highestPrices[stock.symbol]?.toFixed(2) }}</h2>
-  <h2>Lowest Price: {{ lowestPrices[stock.symbol]?.toFixed(2) }}</h2>
-</ng-container>
+<!-- otp.page.html -->
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Plot Page
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button (click)="generatePlot()">Generate Plot</ion-button>
+  <div id="plot"></div>
+</ion-content>

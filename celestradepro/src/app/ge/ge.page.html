@@ -1,13 +1,24 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-back-button defaultHref="/"></ion-back-button>
-    <ion-title>GOOGL Chart</ion-title>
-  </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <div #chart class="chart"></div>
-</ion-content>
-
+<div class="heatmap-container">
+  <h2>Indices Heatmap</h2>
+  <div class="tabs">
+    <button (click)="setActiveTab('price')" [class.active]="activeTab === 'price'">Price</button>
+    <button (click)="setActiveTab('volume')" [class.active]="activeTab === 'volume'">Volume</button>
+    <button (click)="setActiveTab('oi')" [class.active]="activeTab === 'oi'">OI</button>
+  </div>
+  <div class="heatmap">
+    <div *ngFor="let item of data" [ngStyle]="{'background-color': getColor(item.change), 'color': getTextColor(item.change)}" class="heatmap-cell">
+      <strong>{{item.company}}</strong><br>
+      {{item.symbol}}<br>
+      Change: ${{item.change}}<br>
+      <ng-container *ngIf="activeTab === 'price'">
+        Price: ${{item.latest_price}}
+      </ng-container>
+      <ng-container *ngIf="activeTab === 'volume'">
+        Volume: {{item.volume | number}}
+      </ng-container>
+      <ng-container *ngIf="activeTab === 'oi'">
+        OI: {{item.oi | number}}
+      </ng-container>
+    </div>
+  </div>
+</div>

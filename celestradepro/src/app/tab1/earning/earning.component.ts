@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EarningService } from '../../services/earning.service';
-import { Chart } from 'chart.js'; // Import Chart.js
+import { StockService } from '../../services/stock.service';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-earning',
@@ -8,66 +9,144 @@ import { Chart } from 'chart.js'; // Import Chart.js
   styleUrls: ['./earning.component.scss'],
 })
 export class EarningComponent implements OnInit {
-  titles = [];
+  earningsData: any[] = [];
   chart: any;
+  selectedSymbols: string[] = [];
+  uniqueYears: string[] = [];
+  selectedYears: { [key: string]: boolean } = {};
 
-  constructor(private earningService: EarningService) {}
+  constructor(private earningService: EarningService, private stockService: StockService) {}
 
   ngOnInit() {
-    this.earningService.getAllEarnings().subscribe((response: any) => {
-      this.titles = response;
-      console.log(this.titles);
+    this.fetchDataAndGenerateChart();
+  }
+
+  fetchDataAndGenerateChart(): void {
+    this.stockService.getSelectedStocks().subscribe((selectedStocks: any[]) => {
+      this.selectedSymbols = selectedStocks
+        .filter((stock: any) => stock.selected)
+        .map((stock: any) => stock.symbol);
+
+      if (this.selectedSymbols.length > 0) {
+        this.fetchEarningsForSelectedStocks();
+      } else {
+        console.log('No symbols selected.');
+        // Handle the case where no symbols are selected
+      }
+    });
+  }
+
+  fetchEarningsForSelectedStocks(): void {
+    this.earningService.getAllEarnings().subscribe((response: any[]) => {
+      this.earningsData = response.filter(item => this.selectedSymbols.includes(item.symbol));
+      this.updateUniqueYears();
+      this.initializeSelectedYears();
       this.generateChart();
     });
   }
 
-  private generateChart(): void {
-    if (this.chart) {
-      this.chart.destroy();
-    }
+  updateUniqueYears(): void {
+    const allYears = this.earningsData.reduce((years, company) => {
+      company.earning.forEach(earning => {
+        years.add(earning.year.toString());
+      });
+      return years;
+    }, new Set<string>());
+
+    this.uniqueYears = Array.from(allYears);
+  }
+
+  initializeSelectedYears(): void {
+    this.uniqueYears.forEach(year => {
+      this.selectedYears[year] = false;
+    });
+  }
+
+  updateChart(selectedYear: string): void {
+    this.uniqueYears.forEach(year => {
+      if (year !== selectedYear) {
+        this.selectedYears[year] = false; // Deselect other years
+      }
+    });
+  
+    const { symbols, years, revenueData, forecastData, epsData } = this.prepareChartData();
+    this.chart.data.labels = symbols; // Update x-axis labels with selected stock symbols
+    this.chart.data.datasets[0].data = revenueData;
+    this.chart.data.datasets[1].data = forecastData;
+    this.chart.data.datasets[2].data = epsData;
+    this.chart.update();
+  }
+  
+
+  generateChart(): void {
+    const { years, revenueData, forecastData, epsData } = this.prepareChartData();
+
     this.chart = new Chart('myChart', {
       type: 'bar',
       data: {
-        labels: this.titles.map(title => title.symbol),
+        labels: years,
         datasets: [
           {
-            label: 'Actual',
-            data: this.titles.map(title => title.actual),
-            backgroundColor: '#E97777',
-
+            label: 'Revenue',
+            data: revenueData,
+            backgroundColor: 'rgba(46, 204, 113, 0.8)',
+            borderColor: 'rgba(46, 204, 113, 1)',
+            borderWidth: 1
           },
           {
-            label: 'Estimate',
-            data: this.titles.map(title => title.estimate),
-            backgroundColor: '#975C8D',
-
+            label: 'Forecast',
+            data: forecastData,
+            backgroundColor: 'rgba(52, 152, 219, 0.8)',
+            borderColor: 'rgba(52, 152, 219, 1)',
+            borderWidth: 1
           },
           {
-            label: 'Surprise',
-            data: this.titles.map(title => title.surprise),
-            backgroundColor: '#C85C8E',
-
-          },
-          {
-            label: 'Surprise Percent',
-            data: this.titles.map(title => title.surprisePercent),
-            backgroundColor: '#FFBABA',
-
-          },
-        ],
+            label: 'EPS',
+            data: epsData,
+            backgroundColor: 'rgba(241, 196, 15, 0.8)',
+            borderColor: 'rgba(241, 196, 15, 1)',
+            borderWidth: 1
+          }
+        ]
       },
       options: {
         scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-          ],
-        },
-      },
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
     });
   }
-}
 
+  prepareChartData(): { symbols: string[], years: string[], revenueData: number[], forecastData: number[], epsData: number[] } {
+    const selectedYears = Object.keys(this.selectedYears).filter(year => this.selectedYears[year]);
+    const symbols: string[] = [];
+    const years: string[] = [];
+    const revenueData: number[] = [];
+    const forecastData: number[] = [];
+    const epsData: number[] = [];
+  
+    selectedYears.forEach(selectedYear => {
+      const filteredEarningsData = this.earningsData.filter(company =>
+        company.earning.some(earning => earning.year.toString() === selectedYear)
+      );
+  
+      filteredEarningsData.forEach(company => {
+        if (!symbols.includes(company.symbol)) {
+          symbols.push(company.symbol);
+        }
+        years.push(selectedYear);
+  
+        const yearEarnings = company.earning.find(earning => earning.year.toString() === selectedYear);
+        revenueData.push(yearEarnings ? yearEarnings.revenue : 0);
+        forecastData.push(yearEarnings ? yearEarnings.forecast : 0);
+        epsData.push(yearEarnings ? yearEarnings.eps : 0);
+      });
+    });
+  
+    return { symbols, years, revenueData, forecastData, epsData };
+  }
+}  

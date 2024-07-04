@@ -1,46 +1,84 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { StockService } from '../services/stock.service';
-import { Chart } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import * as Highcharts from 'highcharts';
+import { PortfolioService } from '../services/portfolio.service';
 
 @Component({
   selector: 'app-plots',
   templateUrl: './plots.page.html',
-  styleUrls: ['./plots.page.scss'],
+  styleUrls: ['./plots.page.scss']
 })
 export class PlotsPage implements OnInit {
+  
+  portfolioData: any[];
 
-  @ViewChild('canvas', { static: true }) canvas: ElementRef;
+  constructor(private portfolioService: PortfolioService) { }
 
-  chart: any;
-
-  constructor(private stockService: StockService) {}
-
-  ngOnInit() {}
-
-  ionViewDidEnter() {
-    this.stockService.getAllStocks().subscribe((response: any) => {
-      const fxname = 'AMZN';
-      const forex = response.find(entry => entry.STK === fxname);
-      if (forex) {
-        const ohlcData = forex.stock;
-        console.log(ohlcData);
-        const data = {
-          labels: ['Open', 'High', 'Low', 'Close'],
-          datasets: [{
-            data: [ohlcData.Open, ohlcData.High, ohlcData.Low, ohlcData.Close],
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-          }]
-        };
-        this.chart = new Chart(this.canvas.nativeElement, {
-          type: 'pie',
-          data,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false
-          }
-        });
-      }
+  fetchPortfolioData() {
+    this.portfolioService.getAllPortfolio().subscribe((response: any[]) => {
+      this.portfolioData = response;
+      this.updateChart();
     });
+  }
+
+  ngOnInit(): void {
+    this.fetchPortfolioData();
+  }
+
+  updateChart() {
+    if (!this.portfolioData || this.portfolioData.length === 0) {
+      console.error("Portfolio data is empty.");
+      return;
+    }
+
+    const typeSymbolMap = new Map<string, Map<string, number>>();
+
+    this.portfolioData.forEach(item => {
+      const type = item.type;
+      const symbol = item.stock;
+      
+      if (!typeSymbolMap.has(type)) {
+        typeSymbolMap.set(type, new Map<string, number>());
+      }
+      
+      const symbolMap = typeSymbolMap.get(type);
+      if (!symbolMap.has(symbol)) {
+        symbolMap.set(symbol, 0);
+      }
+      symbolMap.set(symbol, symbolMap.get(symbol) + 1);
+    });
+
+    const seriesData = [];
+    
+    typeSymbolMap.forEach((symbolMap, type) => {
+      const data = [];
+      symbolMap.forEach((count, symbol) => {
+        data.push({ name: symbol, y: count });
+      });
+
+      seriesData.push({
+        name: type,
+        data: data
+      });
+    });
+
+    const options: Highcharts.Options = {
+      chart: {
+        type: 'pie'
+      },
+      title: {
+        text: 'Symbol Names by Type'
+      },
+      plotOptions: {
+        pie: {
+          dataLabels: {
+            enabled: true,
+            format: '{point.name}: {point.y}'
+          }
+        }
+      },
+      series: seriesData
+    };
+
+    Highcharts.chart('chart-container', options);
   }
 }

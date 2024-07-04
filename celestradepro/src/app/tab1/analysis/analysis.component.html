@@ -1,10 +1,226 @@
 <div class="ion-padding">
-  <ion-item>
-    <ion-label>Select Symbol</ion-label>
-    <div *ngFor="let stock of stocks">
-      <input type="checkbox" [(ngModel)]="stock.selected" (change)="onSelectionChange()">
-      {{stock.symbol}}
-    </div>
+ 
+  <button  class="buy" (click)="showBox = !showBox">{{ this.symbol }}&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
+    <button class="buy" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button>
+    <div class="adj">
+        <div class="box" *ngIf="showBox">
+           
+          
+          <ion-label style="font-size: 20px; font-weight: bold; margin-left: 5%;"> {{ this.symbol }}</ion-label>
+          <input class="m1" type="number" [(ngModel)]="quantity" placeholder="quantity">
+
+        <ion-row>
+          <ion-card class="buy" color="primary" (click)="onSubmit('BUY')" >
+            <ion-row *ngFor="let stock of stocks">
+
+              <ng-container *ngIf="stock.symbol === symbol"> 
+                <button expand="block" class="asks" (click)="showPrice(stock.stock[0].Bid.toFixed(2))">{{ stock.stock[0].Bid.toFixed(2) }}:<small>Bid</small></button>
+              </ng-container>
+            </ion-row>
+            <small>BUY</small>
+            </ion-card>
+           
+           
+            <input type="number" class="ms" [(ngModel)]="price" placeholder="0" (change)="updateChart()">
+           <ion-card class="sell" color="danger"  (click)="onSubmit('SELL')">
+            <ion-row *ngFor="let stock of stocks">
+              <ng-container *ngIf="stock.symbol === symbol"> 
+                <button expand="block" class="asks" (click)="showPrice(stock.stock[0].Ask.toFixed(2))">{{ stock.stock[0].Ask.toFixed(2) }}:<small>Ask</small></button>
+              </ng-container>
+            </ion-row>
+            <small>SELL</small>
+           </ion-card>
+           <ion-row *ngFor="let stock of stocks">
+              <ng-container *ngIf="stock.symbol === symbol"> 
+                <button expand="block" class="asks" (click)="showlow(stock.stock[0].Low.toFixed(2))">{{ stock.stock[0].Low.toFixed(2) }}<small>:Low</small></button><br><br>
+
+                <button expand="block" class="asks" (click)="showhigh(stock.stock[0].High.toFixed(2))">{{ stock.stock[0].High.toFixed(2) }}<small>:High</small></button>
+              </ng-container>
+            </ion-row>
+          </ion-row>
+           <ion-row >
+
+            <button expand="block" class="ask" ><small>SL</small></button>
+            <input type="number"  [(ngModel)]="low"[(ngModel)]="stoploss" placeholder="0" (change)="updateChart()">
+
+            <!-- <input type="number" [(ngModel)]="stoploss" placeholder="0" (change)="updateChart()"> -->
+            <input type="number" [(ngModel)]="target"[(ngModel)]="high" placeholder="0"(change)="updateChart()">
+             <button expand="block" class="ask" (click)="showHigh(folio.target)"><small>TP</small></button>
+            
+            
+            </ion-row>
+
+          </div>
+         
+
+          <div class="sto" *ngIf="showButton" style="color: black;">
+            <table class="table table-borderless table-hover">
+              <thead class="thead-light">
+                <tr>
+                  <th>Quantity</th>
+                  <th>Orders</th>
+                  <th>Buy Price</th>
+                  <th>Sell Price</th>
+                  <th>Orders</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let depth of marketDepthData" class="ms1">
+                  <ng-container *ngFor="let item of depth.market_depth; let i = index">
+                    <tr *ngIf="i >= 0" class="border-top">
+                      <td colspan="8"></td> <!-- Spanning all columns -->
+                    </tr>
+                    <tr>
+                      <td>{{ item.buy_quantity }}</td>
+                      <td>{{ item.b_order }}</td>
+                      <td class="buy-price">{{ item.buy_price }}</td>
+                      <td>{{ item.sell_price }}</td>
+                      <td>{{ item.s_order }}</td>
+                      <td>{{ item.sell_quantity }}</td>
+                    </tr>
+                  </ng-container>
+          
+                  <tr  *ngIf="1 >= 0" class="border-top">
+                     <td>{{ getTotalOrders(depth.market_depth, 'buy') }}</td>
+                    <td></td>
+                    <td style="font-size: 13px; width: 50%; font-weight: bold;">Total </td>
+                    <td style="font-size: 13px; width: 50%; font-weight: bold;">Quantity</td>
+                    <td></td>
+                    <td>{{ getTotalOrder(depth.market_depth, 'sell') }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+      </div>
+          <!-- Rest of your page content goes here -->
+          
+   
+    <!-- <ion-button expand="block" color="danger" class="cancel-button">SELL</ion-button>
+    <pre>..................</pre>
   </ion-item>
-  <div id="chart"></div>
-</div>
+  <ion-item class="dns">
+    <ion-row *ngFor="let stock of stocks">
+      <ng-container *ngIf="stock.symbol === symbol"> 
+        <button expand="block" class="asks" (click)="showPrice(stock.stock[0].High.toFixed(2))">{{ stock.stock[0].High.toFixed(2) }}<small>:High</small></button>
+      
+        <button expand="block" class="asks" (click)="showPrice(stock.stock[0].Low.toFixed(2))">{{ stock.stock[0].Low.toFixed(2) }}<small>:Low</small></button><br><br>
+          <ion-row *ngFor="let folio of portfolio">
+          <button expand="block" class="ask" (click)="showPrices(folio.stoploss)">{{ folio.stoploss }}<small>:SL</small></button>
+          <input type="number" id="lname" name="lname" [(ngModel)]="StoplossValue">
+          <button expand="block" class="ask" (click)="showPricess(folio.target)">{{ folio.target }}<small>:TP</small></button>
+          <input type="number" id="lname" name="lname" [(ngModel)]="TargetsValue"><br> <!-- Bind priceValue to the input field -->
+          <!-- </ion-row>
+           <ion-row>
+            <button expand="block" class="ask">CloseAll</button>
+            <button expand="block" class="ask">Close</button>
+            <button expand="block" class="ask">Cs</button>
+            <button expand="block" class="ask">Qty</button>
+           </ion-row>  -->
+          <!-- <ion-row>
+            <table>
+              <thead class="bs">
+                <tr style="background-color: rgb(71, 67, 67);">
+                  <th>BID</th>
+                  <th>ASK</th>
+                  </tr>
+              </thead>
+              <tbody>
+                        <ng-container>
+                          <tr>
+                            <td>22</td>
+                            <td>23</td>
+                          </tr>
+                        </ng-container>
+                         </tbody>
+                       </table>
+                      </ion-row>
+      
+      </ng-container>
+    </ion-row>    
+  </ion-item>
+  
+
+  
+  
+    -->
+  <br>
+      <button (click)="toggleDarkMode()"> Dark Mode</button>
+    <div class="chart-container" [ngClass]="{'dark-mode': isDarkMode}">
+      <br>
+      <igx-financial-chart [dataSource]="chartData" chartType="Candle" height="500px" width="100%">
+      </igx-financial-chart>
+    </div>
+    
+ 
+
+   <!-- < <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-8 my-8 box">
+    <div class="table-responsive">
+      <div class="container p-5">
+        <ion-row class="button-row">
+          <ion-button expand="block" color="success" (click)="openLoginForm()" class="buy-button">BUY</ion-button>
+          <ion-button expand="block" color="danger" class="cancel-button">SELL</ion-button>
+        </ion-row>
+      </div> 
+      <button (click)="showPrice()" expand="block" class="asks">2394.<small>98</small><br><small>High</small></button>
+      <input type="text" id="lname" name="lname" [(ngModel)]="priceValue"><br>-->
+
+      <div id="loginModal" class="modal"
+        [ngStyle]="{ 'display': modalOpen ? 'block' : 'none' }">
+        <div>
+          <div class="form-container">
+                  <!-- <ion-row class="input-boxes">
+                    <ion-col size="12">
+                      <ion-item class="input-item">
+                        <ion-label>Order Type</ion-label>
+                        <ion-select [(ngModel)]="selectedOrderType">
+                          <ion-select-option value="MIS">MIS</ion-select-option>
+                          <ion-select-option value="Limit">Limit</ion-select-option>
+                 
+                        </ion-select>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row> -->
+                  <!-- Other Input Fields -->
+                <ion-row class="input-boxes" style="border: 2px solid gray; padding: 20px;">
+                  <span class="close" (click)="closeLoginForm()">&times;</span>
+                    <ion-col size="2">
+                      
+                      <ion-item class="input-item">
+                        
+                        <ion-label position="floating">Quantity</ion-label>
+                        <ion-input type="number" [(ngModel)]="quantity" placeholder="0"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-item class="input-item">
+                        <ion-label position="floating">Price</ion-label>
+                        <ion-input type="number" [(ngModel)]="price" placeholder="0" (change)="updateChart()"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-item class="input-item">
+                        <ion-label position="floating">Trigger Price</ion-label>
+                        <ion-input type="number" [(ngModel)]="triggerprice" placeholder="0" ></ion-input>
+                      </ion-item>
+                      <ion-button color="success" class="cbutton" (click)="closeLoginForm()" (click)="onSubmit()">Done</ion-button>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-item class="input-item">
+                        <ion-label position="floating">Target</ion-label>
+                        <ion-input type="number" [(ngModel)]="target" placeholder="0"(change)="updateChart()"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-item class="input-item">
+                        <ion-label position="floating">Stoploss</ion-label>
+                        <ion-input type="number" [(ngModel)]="stoploss" placeholder="0" (change)="updateChart()"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                
+              </div>
+              </div>
+            </div>
+         </div>

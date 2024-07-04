@@ -1,0 +1,9 @@
+<ion-grid class="chart-grid">
+  <ion-row class="chart-row">
+    <ion-col size="12" size-md="6" size-lg="4" *ngFor="let commodity of commodities" class="chart-col">
+      <ion-card class="row-item">
+        <div [attr.id]="'chartContainer_' + commodity.Symbol" class="chart-container"></div>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>

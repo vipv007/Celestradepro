@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Orders</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="content-padding">
+ 
+  <div class="center-box">
+    <div class="box">
+      <small style="margin-left: 15px;">NIFTY 22nd FEB 22000 CE</small>
+      <p style="margin-left: 15px;">188.45</p>
+
+    <div class="form-container">
+      <ion-row class="segment-row">
+        <ion-col class="segment-col" size="12" size-md="6">
+          <ion-segment class="segment" [(ngModel)]="selectedSegment">
+            <ion-segment-button value="regular">Regular</ion-segment-button>
+            <ion-segment-button value="cover">Cover</ion-segment-button>
+            <ion-segment-button value="bracket">Bracket</ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+      <ion-button expand="block" color="success" class="buy-button">MIS</ion-button>
+      <ion-row class="button-row">
+        <ion-col size="12" class="button-col">
+          <ion-button expand="block" color="success" class="buy-button">Limit</ion-button>
+          <ion-button expand="block" color="danger" class="cancel-button">SL</ion-button>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row class="input-boxes">
+        <ion-col size="4">
+          <ion-item class="input-item">
+            <ion-label position="floating">Quantity</ion-label>
+            <ion-input type="number" [(ngModel)]="number1" placeholder="0"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="4">
+          <ion-item class="input-item">
+            <ion-label position="floating">Price</ion-label>
+            <ion-input type="number" [(ngModel)]="number2" placeholder="0"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="4">
+          <ion-item class="input-item">
+            <ion-label position="floating">Trigger Price</ion-label>
+            <ion-input type="number" [(ngModel)]="number3" placeholder="0"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row class="input-boxes">
+        <ion-col size="4">
+          <ion-item class="input-item">
+            <ion-label position="floating">Target</ion-label>
+            <ion-input type="number" [(ngModel)]="number4" placeholder="0"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="4">
+          <ion-item class="input-item">
+            <ion-label position="floating">Stoploss</ion-label>
+            <ion-input type="number" [(ngModel)]="number5" placeholder="0"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="4">
+          <ion-item class="input-item">
+            <ion-label position="floating">Trailing Stoploss</ion-label>
+            <ion-input type="number" [(ngModel)]="number6" placeholder="0"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+      <!-- Buttons Container -->
+      <ion-row class="button-row">
+        <ion-col size="12" class="button-col">
+          <ion-button expand="block" color="success" class="buy-button">Buy</ion-button>
+          <ion-button expand="block" color="danger" class="cancel-button">Cancel</ion-button>
+        
+
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+  </div>
+
+  
+</ion-content>

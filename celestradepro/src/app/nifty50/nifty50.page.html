@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Nifty 50 Stock Data
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list lines="full">
+    <ion-item *ngFor="let company of companies">
+      <ion-label>{{ company.symbol }}</ion-label>
+      <ion-note slot="end">{{ company.price }}</ion-note>
+    </ion-item>
+  </ion-list>
+  
+    <canvas #stockChart ></canvas>
+    <ion-button (click)="addTrendLine()">Add Trend Line</ion-button>
+    <ion-button (click)="addIndicators()">Add Indicators</ion-button>
+  
+
+</ion-content>

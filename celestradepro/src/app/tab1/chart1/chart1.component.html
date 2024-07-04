@@ -1,17 +1,3 @@
-<div>
-  <div>
-    <ion-item>
-      <ion-label>Select Fields</ion-label>
-      <ion-select multiple interface="popover" [(ngModel)]="selectedFields" (ionChange)="updateChart()">
-        <ion-select-option value="Buy">Buy</ion-select-option>
-        <ion-select-option value="Sell">Sell</ion-select-option>
-        <ion-select-option value="Hold">Hold</ion-select-option>
-        <ion-select-option value="Strong Sell">Strong Sell</ion-select-option>
-        <ion-select-option value="Strong Buy">Strong Buy</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </div>
-  <div class="chart-container">
-    <canvas #cylinderChart></canvas>
-  </div>
+<div class="chart-container">
+  <canvas #myChart></canvas>
 </div>

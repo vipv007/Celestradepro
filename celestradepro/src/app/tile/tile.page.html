@@ -2,7 +2,7 @@
   <app-ribbon1></app-ribbon1>
 </ion-header>
 
-<ion-content>
+<ion-content  class="cl1">
   <ion-segment [(ngModel)]="selectTabs">
     <ion-segment-button value="recent">
       <ion-label>List View</ion-label>
@@ -18,58 +18,304 @@
     </ion-segment-button>
   </ion-segment>
 
-  <!-- Buttons -->
-  <ion-col id="btn"><ion-button [routerLink]="['/trading']">CL</ion-button></ion-col>
-  <ion-col id="btn"><ion-button [routerLink]="['/trading-view']">SI</ion-button></ion-col>
-  <ion-col id="btn"><ion-button [routerLink]="['/ge']">GC</ion-button></ion-col>
-  <ion-col id="btn"><ion-button [routerLink]="['/ge']">HG</ion-button></ion-col>
-
+  
   <!-- Recent tab -->
   <div *ngIf="selectTabs === 'recent'">
-    <table>
-      <tbody>
-        <tr >
-          <td>
-            <table>
-              <thead>
-                <tr>
-                  <th>Symbol</th>
-                  <th>Date</th>
-                  <th>Open</th>
-                  <th>High</th>
-                  <th>Low</th>
-                  <th>Close</th>
-                  <th>ask</th>
-                  <th>bid</th>
-                  <th>change</th>
-                  <th>ChangePercentage</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                </tr>
-                <tr *ngFor="let com of commoditys">
-                 <td>{{ com.Symbol }}</td>
-                 <td>{{ com.Data[1].Date}}</td>
-                 <td>{{ com.Data[1].Open.toFixed(2) }}</td>
-                 <td>{{ com.Data[1].High.toFixed(2) }}</td>
-                 <td>{{ com.Data[1].Low.toFixed(2) }}</td>
-                 <td>{{ com.Data[1].Close.toFixed(2) }}</td>
-                 <td>{{ com.Data[1].Ask.toFixed(0)}}</td>
-                 <td>{{ com.Data[1].Bid.toFixed(0)}}</td>
-                 <td>{{ com.Data[1].Change.toFixed(0)}}</td>
-                 <td>{{ com.Data[1].ChangePercentage.toFixed(0)}}</td>
 
-               </tr><tr>
-                </tr>
-              </tbody>
-            </table>
+    <div class="tab">
+      <button class="tablinks" (click)="openTab($event, 'watchlist')">Watchlist</button>
+      <button class="tablinks" (click)="openTab($event, 'gainer')">Top Gainer</button>
+      <button class="tablinks" (click)="openTab($event, 'loser')">Top Loser</button>
+      <button class="tablinks" (click)="openTab($event, 'index')">Indices</button>
+    </div>
+    
+  <div id="watchlist" class="tabcontent">
+    <h4>Commodity Name</h4>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="getDataBySymbol(searchTerm)"></ion-searchbar>
+    <ion-grid class="col" >
+    <ion-row *ngFor="let com of searchedDatas | filter: searchTerm" style="font-size: larger;  font-family: Georgia, 'Times New Roman', Times, serif;" >
+        <ion-col col-4 class="ch">
+          {{ com.Symbol }}
+        </ion-col>
+        <ion-col col-4>
+          {{ com.Data[1].Close.toFixed(2) }}
+        </ion-col>
+        <ion-col col-4>
+          {{ com.Data[1].Change.toFixed(0)}}
+        </ion-col>
+        <ion-col col-4>
+          {{ com.Data[1].ChangePercentage.toFixed(0)}}
+        </ion-col>
+        <ion-col col-4>
+        <ion-label>{{ com.Data[1].Low.toFixed(2) }}</ion-label>
+        <input type="range" [min]="com.Data[2].Low" [max]="com.Data[2].High" [value]="com.Data[2].Close" #rangeSlider>
+        <ion-label>{{ com.Data[1].High.toFixed(2) }}</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          {{ com.Data[1].Bid.toFixed(0)}}
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>{{ com.Data[1].Open.toFixed(2) }}</ion-label>
+          <input type="range" [min]="lowestPrices?.[com.Symbol]" [max]="highestPrices?.[com.Symbol]" [value]="com.Data[2].Close"
+            #rangeSlider>
+          <ion-label>{{ com.Data[1].Ask.toFixed(2)}} </ion-label>
+        </ion-col>
+        <ion-col col-4>
+        <ion-button (click)="addSelectedCom(com)">Add</ion-button>
+        </ion-col>
+    </ion-row>
+    </ion-grid>
 
-          </td>
-        </tr>
-      </tbody>
+    <ion-grid class="col">
+      <ion-row style="border-top:groove">
+        <ion-col col-4>
+          <ion-label (click)="sortSymbols()" class="sort-label"> Symbol
+            <ion-icon name="arrow-down-outline" *ngIf="sortOrder === 'asc'"></ion-icon>
+            <ion-icon name="arrow-up-outline" *ngIf="sortOrder === 'desc'"></ion-icon>
+            <ion-icon name="swap-vertical" *ngIf="sortOrder === ''"></ion-icon>
+          </ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Last</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>High</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Low</ion-label>
+        </ion-col> 
+        <ion-col col-4>
+          <ion-label>Day Range</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Volume</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Change</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>%Chg</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Week Range</ion-label>
+        </ion-col>
+        <ion-col col-4></ion-col>
+      </ion-row>
+    </ion-grid>
 
-    </table>
+    <ion-grid *ngIf="selectedDatas && selectedDatas.length > 0" class="col">
+      <ion-row *ngFor="let com of selectedDatas" style="border-top:groove" >
+        <ng-container *ngIf="com.currentDataIndex !== undefined">
+        <ion-col col-4 id="c5">
+          <ion-label class="ch" (click)="setClickedData(com.Symbol)">{{ com.Symbol }}</ion-label>
+        </ion-col>
+        <ion-col col-4 id="c5">
+          <ion-label>{{ com.Data[com.currentDataIndex].Close.toFixed(2) }}</ion-label>
+        </ion-col>
+        <!-- <ion-col col-4 id="c5">
+          <ion-label >{{ com.Data[1].Date}}</ion-label>
+        </ion-col> -->
+        <!-- <ion-col col-4 id="c5">
+          <ion-label >{{ com.Data[1].Open.toFixed(2) }}</ion-label>
+        </ion-col>-->
+        <ion-col col-4 id="c5">
+          <ion-label style="color: green;" >{{ com.Data[com.currentDataIndex].High.toFixed(2) }}</ion-label>
+        </ion-col>
+        <ion-col col-4 id="c5">
+          <ion-label style="color: red;" >{{ com.Data[com.currentDataIndex].Low.toFixed(2) }}</ion-label>
+        </ion-col>
+      <ion-col col-4 id="c5">
+          <ion-label>{{ com.Data[com.currentDataIndex].Low.toFixed(2) }}</ion-label>
+          <div style="width: 120px; position: relative;">
+            <!-- Graphical bar representing the range -->
+            <div class="progress position-relative" style="height: 20px;">
+                <div
+                    [ngStyle]="{
+                        backgroundColor: com.Data[com.currentDataIndex].Close > com.Data[com.currentDataIndex].Open ? 'green' : 'red',
+                        width: ((com.Data[com.currentDataIndex].High - com.Data[com.currentDataIndex].Low) / (com.Data[com.currentDataIndex].High - com.Data[com.currentDataIndex].Low)) * 100 + '%',
+                        left: '0',
+                        height: '50%'
+                    }"
+                ></div>
+                <!-- Marker for the close value -->
+                <div
+                    class="caret-down"
+                    [ngStyle]="{
+                        position: 'absolute',
+                        left: ((com.Data[com.currentDataIndex].Close - com.Data[com.currentDataIndex].Low) / (com.Data[com.currentDataIndex].High - com.Data[com.currentDataIndex].Low)) * 100 + '%',
+                        transform: 'translateX(-20%)',
+                        top: '50%',
+                        fontSize: '6px',
+                        color: com.Data[com.currentDataIndex].Close > com.Data[com.currentDataIndex].Open ? 'green' : 'red'
+                    }"
+                >
+                    ▼
+                </div>
+            </div>
+        </div>
+            <ion-label>{{ com.Data[com.currentDataIndex].High.toFixed(2) }}</ion-label>
+       </ion-col>
+        <ion-col col-4 id="c5">
+          <ion-label>{{ com.Data[com.currentDataIndex].Ask.toFixed(0)}}</ion-label>
+        </ion-col>
+        <ion-col col-4 id="c5"  [ngClass]="{'positive-value': com.Data[com.currentDataIndex].Change< 0, 'negative-value': com.Data[com.currentDataIndex].Change< 0}">
+          <ion-label>{{ com.Data[com.currentDataIndex].Change.toFixed(0)}}</ion-label>
+        </ion-col>
+        <ion-col col-4 id="c5"  [ngClass]="{'positive-value': com.Data[com.currentDataIndex].ChangePercentage< 0, 'negative-value': com.Data[com.currentDataIndex].ChangePercentage< 0}">
+          <ion-label>{{ com.Data[com.currentDataIndex].ChangePercentage.toFixed(0)}}</ion-label>
+        </ion-col>
+        <ion-col col-4 id="c5">
+           <ion-label>{{ com.Data[com.currentDataIndex].Open.toFixed(2) }}</ion-label>
+          <input type="range" [min]="lowestPrices?.[com.Symbol]" [max]="highestPrices?.[com.Symbol]" [value]="com.Data[com.currentDataIndex].Close" #rangeSlider>
+          <ion-label>{{ com.Data[com.currentDataIndex].Low.toFixed(2) }} </ion-label>
+        </ion-col>
+      <ion-col col-4 id="c5">
+          <ion-button (click)="removeSelectedCom(com)">Remove</ion-button>
+        </ion-col>
+      </ng-container>
+        </ion-row>
+        </ion-grid>
+    </div> 
+
+    <div id="gainer" class="tabcontent"> 
+      <h4>Top Gainer</h4>
+      <ion-grid class="col">
+        <ion-row style="border-top:groove">
+          <ion-col col-4>
+            <ion-label>Name</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Company</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Change (%)</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Change</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Live Prices</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Last Prices</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    
+      <ion-grid class="col">
+        <ion-row *ngFor="let loser of topGainers">
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Name }}</ion-label><br>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Company }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Changeper }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Change }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Liveprices }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Lastprice }}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div id="loser" class="tabcontent">
+      <h4>Top Loser</h4>
+      <ion-grid class="col">
+        <ion-row style="border-top:groove">
+          <ion-col col-4>
+            <ion-label>Name</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Company</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Change (%)</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Change</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Live Prices</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Last Prices</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    
+      <ion-grid class="col">
+        <ion-row *ngFor="let loser of topLosers">
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Name }}</ion-label><br>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Company }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Changeper }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Change }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Liveprices }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ loser.Lastprice }}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <div id="index" class="tabcontent">
+      <h4>Indices</h4>
+      <ion-grid class="col">
+        <ion-row style="border-top:groove">
+          <ion-col col-4>
+            <ion-label>Symbol</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>High</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Low</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Close</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Chg%</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    
+      <ion-grid class="col" style="font-size: small;">
+        <ion-row *ngFor="let index of indexData" style="border-top:groove">
+          <ion-col col-4 id="c5">
+            <ion-label>{{ index.Name }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ index.High }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ index.Low }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ index.Last }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ index.Chg }}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
   </div>
 
   <!-- Chart tab -->
@@ -78,23 +324,32 @@
   </div>
 
   <!-- Tile tab -->
+
   <div *ngIf="selectTabs === 'contact'" class="grid-container">
-    <ion-card *ngFor="let com of commoditys" class="card">
-      <center><ion-card-title>{{ com.Symbol }}</ion-card-title></center>
+    <!--ion-card *ngFor="let com of selectedDatas" id="card">
+      <ion-card-title>{{ com.Symbol }}</ion-card-title>
       <ion-card-content>
         <ion-row>
           <ion-col>
-            <p>Ask</p>
-            <b [style.color]="getAskColor(com)">{{ com.Data[updateData()].Open.toFixed(2) }}</b>
+            <p>Buy</p>
+            <ion-col col-4 >
+              <ion-label color="success">{{ com.Data[0].Ask.toFixed(4) }}</ion-label>
+            </ion-col>
           </ion-col>
           <ion-col>
-            <p>Bid</p>
-            <b [style.color]="getBidColor(com)">{{ com.Data[updateData()].Close.toFixed(2) }}</b>
+            <p>Sell</p>
+            <ion-col col-4>
+              <ion-label color="danger">{{ com.Data[0].Bid.toFixed(4) }}</ion-label>
+            </ion-col>
           </ion-col>
         </ion-row>
       </ion-card-content>
-    </ion-card>
+    </ion-card-->
+    <app-com-chart></app-com-chart>
   </div>
+
+
+  
 
   <!-- Research tab -->
   <div class="design">
@@ -102,11 +357,31 @@
       <details>
         <summary>NEWS</summary>
         <app-com-news></app-com-news>
-        </details><br>
+        </details>
         <details>
           <summary>ECONOMIC CALENDER</summary>
-      
+          <app-comcalender></app-comcalender>
          </details>
+        <details>
+          <summary>MARKET HEATMAP</summary>
+          <app-marketheat></app-marketheat>
+        </details>
+        <details>
+          <summary>SCREENER CROSS RATES</summary>
+          <app-screener></app-screener>
+        </details>
+          <details>
+            <summary>PROFILE</summary>
+            <app-comprof></app-comprof>
+          </details>
+          <details>
+            <summary>GAINERS</summary>
+            <app-commodity-gainer></app-commodity-gainer>
+          </details>
+          <details>
+            <summary>MARKET HOURS</summary>
+            <app-commarket></app-commarket>
+          </details>
     </div>
   </div>
 </ion-content>

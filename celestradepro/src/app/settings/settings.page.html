@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Card Routes and Names</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let card of cards">
+          <ion-label position="stacked">Card Name</ion-label>
+          <ion-input [(ngModel)]="card.name" placeholder="Enter card name"></ion-input>
+          <ion-label position="stacked">Card Route</ion-label>
+          <ion-select [(ngModel)]="card.route">
+            <ion-select-option value="trading">Stocks</ion-select-option>
+            <ion-select-option value="bill">Options</ion-select-option>
+            <ion-select-option value="widget">Forex</ion-select-option>
+            <ion-select-option value="commodity">Commodity</ion-select-option>
+            <ion-select-option value="portfolio">Portfolio</ion-select-option>
+            <ion-select-option value="news">News</ion-select-option>
+            <!-- Add more options if needed -->
+          </ion-select>
+        </ion-item>
+      </ion-list>
+      <ion-button expand="full" (click)="saveCardChanges()">Save All</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

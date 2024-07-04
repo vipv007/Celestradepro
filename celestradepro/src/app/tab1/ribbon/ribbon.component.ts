@@ -1,55 +1,63 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable @typescript-eslint/naming-convention */
-import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild  } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-ribbon',
   templateUrl: './ribbon.component.html',
   styleUrls: ['./ribbon.component.scss'],
 })
-export class RibbonComponent implements  AfterViewInit  {
-
+export class RibbonComponent implements AfterViewInit {
   @ViewChild('tradingview') tradingview?: ElementRef;
+  showWidget: boolean = true;
+  scriptElement: HTMLScriptElement | undefined;
 
-  constructor(private _renderer2: Renderer2) { }
+  constructor(private _renderer2: Renderer2, private cdr: ChangeDetectorRef) {}
 
+  ngAfterViewInit() {
+    this.loadTradingViewWidget();
+  }
 
-  ngAfterViewInit(){
-    const script = this._renderer2.createElement('script');
-    script.type = `text/javascript`;
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-tickers.js';
-    script.text = `
-      {
-        symbols: [
-          {
-            proName: 'FOREXCOM:SPXUSD',
-            title: 'S&P 500'
-          },
-          {
-            proName: 'FOREXCOM:NSXUSD',
-            title: 'US 100'
-          },
-          {
-            proName: 'FX_IDC:EURUSD',
-            title: 'EUR/USD'
-          },
-          {
-            proName: 'BITSTAMP:BTCUSD',
-            title: 'Bitcoin'
-          },
-          {
-            proName: 'BITSTAMP:ETHUSD',
-            title: 'Ethereum'
-          }
-        ],
-        colorTheme: 'light',
-        isTransparent: false,
-        showSymbolLogo: true,
-        locale: 'in'
-      }
+  loadTradingViewWidget() {
+    this.scriptElement = this._renderer2.createElement('script');
+    this.scriptElement.type = 'text/javascript';
+    this.scriptElement.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+    this.scriptElement.text = `
+    {
+      "symbols": [
+        {
+          "description": "",
+          "proName": "NASDAQ:AAPL"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:MSFT"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:AMZN"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:GOOGL"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:NVDA"
+        }
+      ],
+      "showSymbolLogo": true,
+      "isTransparent": false,
+      "displayMode": "adaptive",
+      "colorTheme": "light",
+      "locale": "en"
     }`;
 
-    this.tradingview?.nativeElement.appendChild(script);
+    if (this.showWidget && !this.tradingview?.nativeElement.contains(this.scriptElement)) {
+      this.tradingview?.nativeElement.appendChild(this.scriptElement);
+    }
+  }
+
+  toggleWidget() {
+    this.showWidget = !this.showWidget;
+    console.log('Toggle widget method called');
   }
 }
-

@@ -1,65 +1,63 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild, ChangeDetectorRef } from '@angular/core';
 
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-
-declare const TradingView: any;
 @Component({
   selector: 'app-charting',
   templateUrl: './charting.component.html',
   styleUrls: ['./charting.component.scss'],
 })
-export class ChartingComponent implements OnInit, AfterViewInit  {
-  constructor() { }
+export class ChartingComponent implements AfterViewInit  {
+  @ViewChild('tradingview') tradingview?: ElementRef;
+  showWidget: boolean = true;
+  scriptElement: HTMLScriptElement | undefined;
 
-  ngOnInit() {
+  constructor(private _renderer2: Renderer2, private cdr: ChangeDetectorRef) {}
+
+  ngAfterViewInit() {
+    this.loadTradingViewWidget();
   }
-  ngAfterViewInit(){
-    new TradingView.MediumWidget(
-      {
-      symbols: [
-         [
-          'Apple',
-          'AAPL|1D'
-         ],
-        // [
-        //   'Google',
-        //   'GOOGL|1D'
-        // ],
-        // [
-        //   'Microsoft',
-        //   'MSFT|1D'
-        // ],
-        [
-          'Amazon',
-          'AMZN|1D'
-        ],
-        // [
-        //   'Tesla',
-        //   'TSLA|1D'
-        // ],
-        // [
-        //   'Nvidia ',
-        //   'NVDA|1D'
-        // ],
-      ],
-      chartOnly: false,
-      width: 600,
-      height: 500,
-      locale: 'en',
-      colorTheme: 'light',
-      autosize: false,
-      showVolume: false,
-      hideDateRanges: false,
-      scalePosition: 'right',
-      scaleMode: 'Normal',
-      fontFamily: '-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif',
-      fontSize: '10',
-      noTimeScale: false,
-      valuesTracking: '1',
-      chartType: 'line',
-      container_id: 'tradingview_7ab57'
-    }
-      );
-  };
 
+  loadTradingViewWidget() {
+    this.scriptElement = this._renderer2.createElement('script');
+    this.scriptElement.type = 'text/javascript';
+    this.scriptElement.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+    this.scriptElement.text = `
+    {
+      "symbols": [
+        {
+          "description": "",
+          "proName": "NASDAQ:AAPL"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:MSFT"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:AMZN"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:GOOGL"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:NVDA"
+        }
+      ],
+      "showSymbolLogo": true,
+      "isTransparent": false,
+      "displayMode": "adaptive",
+      "colorTheme": "light",
+      "locale": "en"
+    }`;
+
+    if (this.showWidget && !this.tradingview?.nativeElement.contains(this.scriptElement)) {
+      this.tradingview?.nativeElement.appendChild(this.scriptElement);
+    }
+  }
+
+  toggleWidget() {
+    this.showWidget = !this.showWidget;
+    console.log('Toggle widget method called');
+  }
 }

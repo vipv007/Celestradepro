@@ -1,133 +1,352 @@
+ion-header {
+  height: 13%;
+}
 
+.tool {
+  // --background: dodgerblue;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  color: blue;
+}
 
-#btn{
+.cl1 {
+  background-color: aquamarine;
+  font-family: Times New Roman !important;
+  font-size: 1.1em;
+
+}
+
+.table {
+  margin-left: 40px;
+
+}
+
+canvas {
+  height: 100px;
+  width: 100px;
+}
+
+#news {
+  text-decoration: none;
+  margin-left: 40px;
+  color: #000;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+}
+
+summary {
+  margin-left: 30px;
+  margin-top: 20px;
+  color: rgb(94, 10, 190);
+  font-weight: bold;
+}
+
+ion-segment {
+  ion-label {
+    font-size: medium;
+    font-weight: bolder;
+    color: #E63F1E;
+  }
+}
+.ch{
+  color: #E63F1E;
+}
+
+#btn {
   margin-top: 20px;
   margin-left: 200px;
   font-family: Georgia, 'Times New Roman', Times, serif;
- }
+}
 
-  /*img{
-    width:30%;
-    size-adjust: 5px;
-    padding-left: 4%;
-    padding-top: 3%;
-    padding-right: 1%;
-    padding-bottom: 1%;
-  }*/
+.color {
+  color: white;
+  padding-left: 35%;
 
-  .grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    padding: 40px;
-  }
-  .grid-item {
+}
 
-    border: 1px  rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    font-size: 20px;
-    text-align: center;
-  }
+.car {
+  height: 200px;
+  width: 45%;
+  background-color: rgba(64, 40, 248, 0.659);
+  color: white;
+}
 
-  .ion-searchbar{
-    border-radius: 10%;
-  }
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
+.positive-value {
+  color: green;
+}
 
-  th, td {
-    text-align: left;
-    padding: 8px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-  }
+.negative-value {
+  color: red;
+}
 
-  th {
-    background-color: #5680f2;
-    color: white;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-  }
+.card {
+  height: 100px;
+  width: 300px;
+  border-radius: 20%;
+  --background: darkblue;
+  color: white;
+  margin-left: 5%;
+}
 
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
+.card2 {
+  height: 100px;
+  width: 300px;
+  border-radius: 20%;
+  --background: darkblue;
+  color: white;
+  // margin-left: 35%;
+  // margin-top: -7%;
 
-  /* Style for the table container */
-  .table-container {
-    display: inline-block;
-    width: 48%;
-    margin-right: 2%;
-    margin-bottom: 20px;
-    vertical-align: top;
-    overflow-x: auto;
-  }
+}
 
-  @media (max-width: 768px) {
-    /* For small screens, make the tables stack on top of each other */
-    .table-container {
-      width: 100%;
-      margin-right: 0;
-    }
-  }
-ion-title{
-  b{
-    margin-left: 25px;
+.card3 {
+  height: 100px;
+  width: 300px;
+  border-radius: 20%;
+  --background: darkblue;
+  color: white;
+  // margin-left: 64%;
+  // margin-top: -7%;
+}
+
+.class {
+  --background: aqua;
+}
+
+.new {
+  padding-top: 5%;
+}
+
+#class1 {
+  b {
+    margin: 5%;
+    margin-left: 20px;
+    font-weight: bold;
+    font-size: xx-large;
     font-family: Georgia, 'Times New Roman', Times, serif;
   }
 }
-ion-label{
-  font-family: Georgia, 'Times New Roman', Times, serif;
-}
-ion-buttom{
-  font-family: Georgia, 'Times New Roman', Times, serif;
-}
- ion-card-content{
-   padding: 20px;
-  padding-left: 25%;
-  p{
-     color: #000;
-     font-size: large;
-     margin-left: 5%;
-     font-family: Georgia, 'Times New Roman', Times, serif;
-   }
-    
- }
- ion-card-title{
-   text-align: center;
-  padding-top: 20px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  color: rgb(17, 17, 17);
- }
- .grid-container {
-  display: grid;
- grid-template-columns: auto auto auto;
-  padding: 40px;
-  
- }
- .design
- {
-   color: #0f2edf;
-   font-family: Georgia, 'Times New Roman', Times, serif;
-   font-weight: bold;
-   margin-left: 40px;
-   margin-top: 10px;
- }
- .card{
-  background-color:rgb(207, 195, 195);
 
- }
- .grid-container {
+#class2 {
+  margin-left: 20px;
+  font-weight: bold;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: xx-large;
+}
+
+ion-label {
+  font-size: larger;
+}
+
+#c1 {
+  background-color: rgb(240, 213, 237);
+}
+
+#c2 {
+  background-color: rgb(198, 241, 192);
+}
+
+#c3 {
+  background-color: rgb(247, 175, 175);
+}
+
+#c4 {
+  background-color: rgb(243, 243, 159);
+}
+
+#c5 {
+  background-color: rgb(204, 212, 212);
+}
+
+#c6 {
+  background-color: rgb(245, 209, 175);
+
+}
+
+h2 {
+  margin-left: 20px;
+}
+
+ion-label {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+
+}
+
+.card1 {
+  height: 40%;
+  width: 50%;
+  margin-left: 20%;
+  font-size: xx-large;
+  --background: rgb(240, 240, 250);
+
+  p {
+    margin-left: 15%;
+    font-size: medium;
+    color: blanchedalmond
+  }
+}
+
+p {
+  color: #000;
+  font-size: large;
+  margin-left: 5%;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+b {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: xx-large;
+  color: rgb(224, 172, 75);
+
+}
+
+ion-card-content {
+  color: rgb(236, 181, 30);
+  margin-left: 20%;
+}
+
+ion-card-title {
+  margin-top: 5%;
+  color: rgba(153, 5, 121, 0.959);
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+}
+
+.grid-container {
   display: grid;
   grid-template-columns: auto auto auto;
-  padding: 50px;
- 
+  padding: 40px;
+
+  #card {
+    --background: rgb(216, 216, 221);
+  }
 }
- 
 
+.grid-item {
 
+  border: 1px rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 20px;
+  text-align: center;
+}
 
+ion-button {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: medium;
+  font-weight: 100;
 
+}
 
+ion-searchbar {
+  --background: rgb(240, 240, 250);
 
+}
 
+.col {
+  font-weight: bold;
+}
 
+/* Set the color of the range track */
+input[type=range]::-webkit-slider-runnable-track {
+  background-color: red;
+  /* Set the default color to red */
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+}
+
+input[type=range]::-moz-range-track {
+  background-color: red;
+  /* Set the default color to red */
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+}
+
+/* Set the color of the range track between the min and max values */
+input[type=range]::-webkit-slider-runnable-track {
+  background-image: linear-gradient(to right, green, red);
+}
+
+input[type=range]::-moz-range-track {
+  background-image: linear-gradient(to right, green, red);
+}
+
+/* Set the color of the range thumb */
+input[type=range]::-webkit-slider-thumb {
+  background-color: green;
+  /* Set the thumb color to green */
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  -webkit-appearance: none;
+}
+
+input[type=range]::-moz-range-thumb {
+  background-color: green;
+  /* Set the thumb color to green */
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+}
+
+.ms1 {
+  color: black;
+}
+
+h4 {
+  margin-left: 30px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  margin-top: 20px;
+  //color: #E63F1E;
+}
+
+.col {
+  padding-left: 20px;
+  /* Adjust as needed */
+  padding-right: 20px;
+  /* Adjust as needed */
+}
+
+ion-searchbar {
+  padding-left: 25px;
+  padding-right: 50px;
+  border-radius: 3px;
+}
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}

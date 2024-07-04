@@ -1,0 +1,18 @@
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: #f7f7f7; /* Light background color for elegance */
+  }
+  
+  /* Style the button container */
+  .google-pay-button-container {
+    display: inline-block;
+    padding: 20px; /* Padding around the button */
+    border-radius: 10px; /* Rounded corners for the container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    background-color: #ffffff; /* White background for the container */
+  }
+  

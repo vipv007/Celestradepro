@@ -1,0 +1,43 @@
+ion-content {
+    --background: none; /* Remove default background */
+    background: url('/assets/bg.avif') no-repeat center center fixed;
+    background-size: cover;
+  }
+  
+
+ion-header {
+    --background: #3880ff;
+    --color: #ffffff;
+  }
+  
+  ion-toolbar {
+    --background: #3880ff;
+  }
+  
+  ion-card {
+    cursor: pointer;
+    overflow: hidden;
+  }
+  
+  ion-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  ion-card-header {
+    background: rgba(151, 177, 247, 0.6);
+    color: white;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  ion-card-content{
+    height: 50px;
+  }
+  
+  #homeSection, #featuresSection, #aboutSection, #contactSection {
+    margin: 16px 0;
+  }

@@ -1,0 +1,18 @@
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Symbol</th>
+        <th>Trading Hours</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.Product }}</td>
+        <td>{{ product.Symbol }}</td>
+        <td>{{ product.TradingHours }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

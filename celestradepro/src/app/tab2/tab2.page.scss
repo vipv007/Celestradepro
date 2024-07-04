@@ -4,7 +4,7 @@
 }
 *{
   font-family:  'Times New Roman',;
-}
+} 
 
 .tile {
   width: 300px;
@@ -52,44 +52,6 @@
 }
 
 
-  /* Style for the tables */
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-
-  th, td {
-    text-align: left;
-    padding: 8px;
-  }
-
-  th {
-    background-color: #5680f2;
-    color: white;
-  }
-
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-
-  /* Style for the table container */
-  .table-container {
-    display: inline-block;
-    width: 48%;
-    margin-right: 2%;
-    margin-bottom: 20px;
-    vertical-align: top;
-    overflow-x: auto;
-  }
-
-  @media (max-width: 768px) {
-    /* For small screens, make the tables stack on top of each other */
-    .table-container {
-      width: 100%;
-      margin-right: 0;
-    }
-  }
-
 
 
 
@@ -136,10 +98,11 @@ summary{
    font-family: Georgia, 'Times New Roman', Times, serif;
    color:rgb(14, 134, 233) ;
  }
- h2{
-   margin-left: 25px;
+ h4{
+   margin-left: 30px;
+    margin-top: 20px;
    font-family: Georgia, 'Times New Roman', Times, serif;
-   color:rgb(41, 151, 133) ;
+   //color:#E630A2 ;
  }
  .card1{
    --background:rgb(144, 140, 148);
@@ -181,9 +144,10 @@ summary{
  }
  ion-segment{
    ion-label{
-   color: rgb(29, 48, 30);
+   color: #E630A2;
    font-size: medium;
-   font-weight: 100;
+   font-weight: bloder;
+  font-family: Georgia, 'Times New Roman', Times, serif;
  }
  }
  ion-button{
@@ -244,3 +208,280 @@ summary{
 #btn{
   margin-left: 10%;
 }
+/* Light Green Color for first five headings */
+/* Light Green Color for first eight headings */
+
+table {
+  width: 100%; 
+  border-collapse: collapse;
+  overflow-x: auto;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); /* Adjust values for desired effect */
+}
+
+th, td { 
+  text-align: center; /* Centers text horizontally */
+  vertical-align: middle; /* Centers text vertically */
+}
+
+
+thead, tbody, tr, th, td { 
+  border: 1px solid black; /* Basic borders for clarity */
+}
+
+/* Optional: Improve readability on smaller screens */
+@media (max-width: 768px) { 
+  thead tr {
+    position: absolute; /* Make headers stay visible */
+    top: 0;
+    left: 0;
+    width: 100%; 
+  }
+
+  tbody td {
+    display: block;  /* Stack cells vertically */
+  }
+
+  tbody td::before {  /* Add labels before each data cell */
+    content: attr(data-label);
+    display: inline-block;
+    font-weight: bold;
+    width: 130px; /* Adjust label width as needed */
+    min-width: 130px;
+  }
+}
+
+
+
+
+
+th, td {
+  border: 1px solid #ddd;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Apply light brown background color to Strike Price heading and cells */
+th:nth-child(12),
+td:nth-child(12) {
+  background-color: #D2B48C; /* Light brown */
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+  background-color: #C7FFCC; /* Light pink */
+}
+th:nth-child(n+13):nth-child(-n+22) {
+  background-color:  #FFC7D4; /* Light pink */
+}
+th:nth-child(n+1):nth-child(-n+11) {
+  background-color: #C7FFCC; /* Light pink */
+}
+th:nth-child(15),
+td:nth-child(15) {
+  background-color:  #FFC7D4; /* Light pink */
+}
+th:nth-child(1),
+td:nth-child(1) {
+  background-color: #C7FFCC; /* Light pink */
+}
+td:nth-child(4) {
+  color: red;
+}
+td:nth-child(14) {
+  color: rgb(4, 176, 82);
+}
+
+
+.cl1 {
+  background-color: aquamarine;
+}
+
+.c1 {
+  --background: crimson;
+  margin-left: 90px;
+}
+
+.c3 {
+  --background: crimson;
+  margin-left: 230px;
+  margin-top: -65px;
+}
+ion-label {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bolder;
+  font-size: large;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 40px;
+
+  #card {
+    --background: rgb(216, 216, 221);
+  }
+}
+
+.grid-item {
+
+  border: 1px rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 20px;
+  text-align: center;
+}
+h4 {
+  margin-left: 30px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  margin-top: 20px;
+  // color: #E62C1E;
+}
+ion-searchbar {
+  padding-left: 25px;
+  padding-right: 50px;
+  border-radius: 3px;
+
+}
+.col {
+  padding-left: 20px;
+  /* Adjust as needed */
+  padding-right: 20px;
+  /* Adjust as needed */
+  font-weight: bold;
+}
+ion-label {
+  font-size: larger;
+}
+
+#c1 {
+  background-color: rgb(240, 213, 237);
+}
+
+#c2 {
+  background-color: rgb(198, 241, 192);
+}
+
+#c3 {
+  background-color: rgb(247, 175, 175);
+}
+
+#c4 {
+  background-color: rgb(243, 243, 159);
+}
+
+#c5 {
+  background-color: rgb(204, 212, 212);
+}
+
+#c6 {
+  background-color: rgb(245, 209, 175);
+
+}
+
+h2 {
+  margin-left: 20px;
+}
+
+ion-label {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+
+}
+
+.scroll-container {
+  overflow-x: auto;
+  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+  margin-bottom: 20px;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in Chrome, Safari, and Opera */
+}
+
+.table-heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.heading-box {
+  padding: 10px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-wrapper {
+  display: flex;
+}
+
+.option-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-right: 20px;
+}
+
+.option-table th, .option-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.option-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.put-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.put-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.spacer {
+  width: 20px;
+}
+
+.table-container {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent tables from wrapping */
+}
+
+.call-table, .put-table {
+  border-collapse: collapse;
+  width: 45%; /* Adjust the width of the tables as needed */
+}
+
+.call-table th, .call-table td,
+.put-table th, .put-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.spacer {
+  width: 5%; /* Adjust the width of the spacer as needed */
+}
+.scroll-container {
+  overflow-x: auto;
+  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in Chrome, Safari, and Opera */
+}
+

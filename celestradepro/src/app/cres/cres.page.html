@@ -1,69 +1,14 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-back-button defaultHref="detail"></ion-back-button>
-      <ion-title>Update Stocks List</ion-title>
-    </ion-buttons>
+<div *ngFor="let stock of stocks">
+  <input type="radio" name="stockSymbol" [value]="stock.symbol" (change)="onSymbolChange($event)" /> {{ stock.symbol }}
+</div>
 
-  </ion-toolbar>
-</ion-header>
-
-
-
-<ion-content>
-  <ion-list lines="full">
-    <form [formGroup]="StockForm" (ngSubmit)="onSubmit()">
-
-      <ion-item>
-        <ion-label position="floating">StockName</ion-label>
-        <ion-input formControlName="stockname" type="text" required></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">LivePrice<br>Change</ion-label>
-        <ion-input formControlName="liveprice" type="text" required></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">DayGain<br>%Change</ion-label>
-        <ion-input formControlName="daygain" type="text" required>
-        </ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Quantity<br>Cost Per<br>unit</ion-label>
-        <ion-input formControlName="quantity" type="text" required>
-        </ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">InvestmentCost<br>Weight(1%)</ion-label>
-        <ion-input formControlName="investmentcost" type="text" required>
-        </ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">LatestValue<br>Weight(1%)</ion-label>
-        <ion-input formControlName="latestvalue" type="text" required>
-        </ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">UnrealizedGain<br>Weight(%)</ion-label>
-        <ion-input formControlName="unrealizedgain" type="text" required>
-        </ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">RealiseProfitorloss<br>Change</ion-label>
-        <ion-input formControlName="realiseprofitorloss" type="text" required>
-        </ion-input>
-      </ion-item>
-
-
-
-      <ion-row>
-        <ion-col>
-          <ion-button type="submit" color="success" expand="block">Update</ion-button>
-        </ion-col>
-      </ion-row>
-
-    </form>
-  </ion-list>
-</ion-content>
+<div *ngIf="selectedSymbol">
+  <igx-financial-chart
+  width="100%"
+  height="500px"
+  [dataSource]="stockData[selectedSymbol]"
+  chartType="Candle"
+  xAxisMode="Time"
+  yAxisMode="Numeric">
+</igx-financial-chart>
+</div>

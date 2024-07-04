@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Landing Page</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openSettings()">
+        <small>Customize your page!</small>
+        <ion-icon name="settings"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="padding: 20px;">
+    <h1>Welcome to Our Trading Application!</h1>
+    <p>
+      Our trading application is designed to provide you with easy access to a variety of trading options, including stocks, options, forex, commodities, and more.
+    </p>
+    <p>
+      Whether you're a seasoned investor or just starting out, our user-friendly interface and comprehensive features make it simple to manage your investments and stay informed about market trends.
+    </p>
+    <p>
+      Start exploring our application today and take your trading experience to the next level!
+    </p>
+  </div>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4" *ngFor="let card of cards">
+        <ion-card (click)="navigateTo(card.route)">
+          <img [src]="card.image" class="custom-card-img"/>
+          <ion-card-header>
+            <ion-card-title>{{ card.name }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

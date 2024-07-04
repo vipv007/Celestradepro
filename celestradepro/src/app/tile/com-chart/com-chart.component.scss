@@ -1,0 +1,30 @@
+@media (max-width: 575px) {
+    .chart-col {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+  }
+  
+  /* For tablet devices (576px - 991px) */
+  @media (min-width: 576px) and (max-width: 991px) {
+    .chart-col {
+      flex-basis: 50%;
+      max-width: 50%;
+    }
+  }
+  
+  /* For laptop/desktop devices (992px and above) */
+  @media (min-width: 992px) {
+    .chart-col {
+      flex-basis: 33.33%;
+      max-width: 33.33%;
+    }
+  } 
+  .row-item{
+    border-color: red;
+    border-radius: 5%;
+  }
+
+.chart-container {
+  width: 450px;
+}

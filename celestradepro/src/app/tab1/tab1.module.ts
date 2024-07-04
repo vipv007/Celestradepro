@@ -8,6 +8,7 @@ import { ExploreContainerComponentModule } from '../explore-container/explore-co
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
 PlotlyModule.plotlyjs = PlotlyJS;
+import { IgxFinancialChartModule, IgxLegendModule } from "igniteui-angular-charts";
 
 import { Tab1PageRoutingModule } from './tab1-routing.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,12 +19,19 @@ import { EarningComponent } from './earning/earning.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MetricsComponent } from './metrics/metrics.component';
+import { MultichartComponent } from './multichart/multichart.component';
+import { WidgetchartComponent } from './widgetchart/widgetchart.component';
+import { TechanalysisComponent } from './techanalysis/techanalysis.component';
+import { ScreenerComponent } from './screener/screener.component';
+import { HeatmapComponent } from './heatmap/heatmap.component';
+import { StockmarketComponent } from './stockmarket/stockmarket.component';
+
 @NgModule({
     declarations: [Tab1Page, ChartsComponent, RibbonComponent, Chart1Component, EarningComponent,
-        AnalysisComponent, ProfileComponent, MetricsComponent ],
-    exports: [
-        RibbonComponent,
-    ],
+        AnalysisComponent, ProfileComponent, MetricsComponent, MultichartComponent, WidgetchartComponent,
+        TechanalysisComponent, ScreenerComponent,HeatmapComponent, StockmarketComponent],
+
+
     imports: [
         IonicModule,
         CommonModule,
@@ -33,7 +41,9 @@ import { MetricsComponent } from './metrics/metrics.component';
         ExploreContainerComponentModule,
         Tab1PageRoutingModule,
         Ng2SearchPipeModule,
-        HttpClientModule
+        HttpClientModule,
+        IgxFinancialChartModule,
+        IgxLegendModule
 
     ]
 })

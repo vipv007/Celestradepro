@@ -1,11 +1,14 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>db</ion-title>
-  </ion-toolbar>
-</ion-header>
+<div *ngFor="let commodity of Commodities">
+  <input type="radio" name="commoditySymbol" [value]="commodity.Commodity" (change)="onSymbolChange($event)" /> {{ commodity.Commodity }}
+</div>
 
-<ion-content>
-<ion-card>
-  <div *ngFor="let d for data"><b>Name:{{id.name}}</b></div>
-</ion-card>
-</ion-content>
+<div *ngIf="selectedSymbol">
+  <igx-financial-chart
+    width="100%"
+    height="500px"
+    [dataSource]="CommoditiesData[selectedSymbol]"
+    chartType="Candle"
+    xAxisMode="Time"
+    yAxisMode="Numeric">
+  </igx-financial-chart>
+</div>

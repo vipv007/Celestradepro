@@ -1,0 +1,58 @@
+<div class="card-container">
+  <div *ngFor="let company of earns.slice(0, 4)" class="card">
+    <h3>{{ company.name }}</h3>
+    <img [src]="company.logo" alt="{{ company.name }} Logo" />
+    <p>Country: {{ company.country }}</p>
+    <p>Currency: {{ company.currency }}</p>
+    <p>Exchange: {{ company.exchange }}</p>
+    <p>Industry: {{ company.finnhubIndustry }}</p>
+    <p>IPO Date: {{ company.ipo }}</p>
+    <p>Market Capitalization: {{ company.marketCapitalization }}</p>
+    <p>Phone: {{ company.phone }}</p>
+    <p>Share Outstanding: {{ company.shareOutstanding }}</p>
+    <p>Ticker: {{ company.ticker }}</p>
+    <p>Web URL: <a href="{{ company.weburl }}">{{ company.weburl }}</a></p>
+  </div>
+  <div *ngFor="let company of earns.slice(4, 8)" class="card">
+    <h3>{{ company.name }}</h3>
+    <img [src]="company.logo" alt="{{ company.name }} Logo" />
+    <p>Country: {{ company.country }}</p>
+    <p>Currency: {{ company.currency }}</p>
+    <p>Exchange: {{ company.exchange }}</p>
+    <p>Industry: {{ company.finnhubIndustry }}</p>
+    <p>IPO Date: {{ company.ipo }}</p>
+    <p>Market Capitalization: {{ company.marketCapitalization }}</p>
+    <p>Phone: {{ company.phone }}</p>
+    <p>Share Outstanding: {{ company.shareOutstanding }}</p>
+    <p>Ticker: {{ company.ticker }}</p>
+    <p>Web URL: <a href="{{ company.weburl }}">{{ company.weburl }}</a></p>
+  </div>
+  <div *ngFor="let company of earns.slice(8, 12)" class="card">
+    <h3>{{ company.name }}</h3>
+    <img [src]="company.logo" alt="{{ company.name }} Logo" />
+    <p>Country: {{ company.country }}</p>
+    <p>Currency: {{ company.currency }}</p>
+    <p>Exchange: {{ company.exchange }}</p>
+    <p>Industry: {{ company.finnhubIndustry }}</p>
+    <p>IPO Date: {{ company.ipo }}</p>
+    <p>Market Capitalization: {{ company.marketCapitalization }}</p>
+    <p>Phone: {{ company.phone }}</p>
+    <p>Share Outstanding: {{ company.shareOutstanding }}</p>
+    <p>Ticker: {{ company.ticker }}</p>
+    <p>Web URL: <a href="{{ company.weburl }}">{{ company.weburl }}</a></p>
+  </div>
+  <div *ngFor="let company of earns.slice(12, 16)" class="card">
+    <h3>{{ company.name }}</h3>
+    <img [src]="company.logo" alt="{{ company.name }} Logo" />
+    <p>Country: {{ company.country }}</p>
+    <p>Currency: {{ company.currency }}</p>
+    <p>Exchange: {{ company.exchange }}</p>
+    <p>Industry: {{ company.finnhubIndustry }}</p>
+    <p>IPO Date: {{ company.ipo }}</p>
+    <p>Market Capitalization: {{ company.marketCapitalization }}</p>
+    <p>Phone: {{ company.phone }}</p>
+    <p>Share Outstanding: {{ company.shareOutstanding }}</p>
+    <p>Ticker: {{ company.ticker }}</p>
+    <p>Web URL: <a href="{{ company.weburl }}">{{ company.weburl }}</a></p>
+  </div>
+</div>

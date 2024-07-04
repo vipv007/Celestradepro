@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { OptionsService } from '../services/options.service';
+import { OptionsChainService } from '../services/optionschain.service';
 
 @Component({
   selector: 'app-tab2',
@@ -8,35 +9,42 @@ import { OptionsService } from '../services/options.service';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page implements OnInit, OnDestroy {
-  options: any[];
+  options: any[] = [];
+  optionschain: any;
+  clickedOptions: string;
   selectTabs = 'recent';
   index = 0;
   private intervalId: any;
+  filtered: any = {}; // Initialize filtered object to avoid undefined error
 
-  constructor(private optionsService: OptionsService, private http: HttpClient) {}
+  constructor(
+    private optionsService: OptionsService,
+    private router: Router,
+    private optionschainService: OptionsChainService
+  ) {}
 
   ngOnInit() {
-    this.loadOptions(); // Load options initially
-    this.startAutoReload(); // Start auto reload
+    this.loadOptions();
+    this.loadOptionsChain();
   }
 
   ngOnDestroy() {
-    this.stopAutoReload(); // Clear auto reload when the component is destroyed
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
   loadOptions() {
     this.optionsService.getOptions().subscribe((options: any[]) => {
       this.options = options;
-      console.log(this.options);
-      this.resetIndex(); // Reset index when new options are loaded
-      this.updateLastUpdatedTime(); // Update the last updated time on the page
     });
   }
 
-  startAutoReload() {
-    this.intervalId = setInterval(() => {
-      this.loadOptions(); // Reload options data
-    }, 5000); // Reload options every 1 minute (adjust as needed)
+  loadOptionsChain() {
+    this.optionschainService.getoptions().subscribe((optionschain: any[]) => {
+      this.optionschain = optionschain;
+      console.log(this.optionschain);
+    });
   }
 
   stopAutoReload() {
@@ -73,5 +81,12 @@ export class Tab2Page implements OnInit, OnDestroy {
     } else {
       return 'blue'; // Same value, apply blue
     }
+  }
+
+  setClickedOptions(symbol: string) {
+    this.clickedOptions = symbol;
+    console.log('Clicked Options:', this.clickedOptions);
+    this.selectTabs = 'missed';
+    this.router.navigate(['/tabs/tab2'], { queryParams: { symbol } });
   }
 }

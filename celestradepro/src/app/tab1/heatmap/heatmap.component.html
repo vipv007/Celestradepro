@@ -1,0 +1,29 @@
+<!--div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <div class="tradingview-widget-copyright">
+    <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+      <span class="blue-text">Track all markets on TradingView</span>
+    </a>
+  </div>
+</div-->
+
+<div class="heatmap-container">
+  <div class="tabs">
+    <button (click)="setActiveTab('price')" [class.active]="activeTab === 'price'">Price</button>
+    <button (click)="setActiveTab('volume')" [class.active]="activeTab === 'volume'">Volume</button>
+  </div>
+  
+  <div class="heatmap">
+    <div *ngFor="let item of data"  class="heatmap-cell">
+      <strong>{{item.Name}}</strong><br>
+      Change: {{item.Change.toFixed(3)}}%<br>
+      <ng-container *ngIf="activeTab === 'price'">
+        Price: ${{item["Latest Price"].toFixed(3)}}
+      </ng-container>
+      <ng-container *ngIf="activeTab === 'volume'">
+        Volume: {{item.Volume | number}}
+      </ng-container>
+    </div>
+  </div>
+</div>
+

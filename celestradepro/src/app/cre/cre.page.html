@@ -1,49 +1,5 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-back-button defaultHref="tabs/tab1">
-      </ion-back-button>
-      <ion-title>folio</ion-title>
-    </ion-buttons>
 
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <ion-list lines="full">
-    <form [formGroup]="folioForm" (ngSubmit)="onSubmit()">
-
-
-      <ion-item>
-        <ion-label position="floating">Cntrc</ion-label>
-        <ion-input formControlName="symbol" type="text" required></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Martket Value</ion-label>
-        <ion-input formControlName="bit" type="text" required></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Market Price</ion-label>
-        <ion-input formControlName="ask" type="text" required></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Avrx Px</ion-label>
-        <ion-input formControlName="price" type="text" required></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">UnlrzP&L</ion-label>
-        <ion-input formControlName="volume" type="text" required></ion-input>
-      </ion-item>
-     
-
-
-
-      <ion-row>
-        <ion-col>
-          <ion-button type="submit" color="success" expand="block">Add</ion-button>
-        </ion-col>
-      </ion-row>
-    </form>
-  </ion-list>
-</ion-content>
+<div class="tradingview-widget-container">
+  <div id="tradingview-widget"></div>
+</div>
 

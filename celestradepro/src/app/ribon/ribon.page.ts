@@ -1,40 +1,49 @@
+import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild  } from '@angular/core';
 
-import { AfterViewInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { Component } from '@angular/core';
-
-
-declare const TradingView: any;
 @Component({
   selector: 'app-ribon',
   templateUrl: './ribon.page.html',
   styleUrls: ['./ribon.page.scss'],
 })
-  export class RibonPage implements AfterViewInit {
-    @ViewChild('tradingview') tradingview?: ElementRef;
+export class RibonPage implements AfterViewInit {
+  @ViewChild('tradingview') tradingview?: ElementRef;
 
+  constructor(private _renderer2: Renderer2) { }
 
-   constructor(private _renderer2: Renderer2) { }
-
-  ngAfterViewInit(): void {
-    let script = this._renderer2.createElement('script');
+  ngAfterViewInit(){
+    const script = this._renderer2.createElement('script');
     script.type = `text/javascript`;
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js";
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
     script.text = `
     {
-      "symbol": "CEXIO:MHCUSD",
-      "width": 350,
+      "symbols": [
+        {
+          "description": "",
+          "proName": "NASDAQ:AAPL"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:MSFT"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:AMZN"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:GOOGL"
+        },
+        {
+          "description": "",
+          "proName": "NASDAQ:NVDA"
+        }
+      ],
+      "showSymbolLogo": true,
+      "isTransparent": false,
+      "displayMode": "adaptive",
       "colorTheme": "light",
-      "isTransparent": true,
-      "locale": "en"
-    }
-    {
-      "symbol": "CEXIO:MHCUSD",
-      "width": 350,
-      "colorTheme": "light",
-      "isTransparent": true,
       "locale": "en"
     }`;
-
 
     this.tradingview?.nativeElement.appendChild(script);
   }

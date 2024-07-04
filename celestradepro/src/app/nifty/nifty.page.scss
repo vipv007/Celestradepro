@@ -1,24 +1,22 @@
-.grid{
-    background-color: aqua;
+/* trading-hours.component.css */
+table {
+  width: 50%;
+  margin-left: 10%;
+  border-collapse: collapse;
 }
-.reds{
-    background-color: antiquewhite;
-}
-.green{
-    background-color: #00ff7b;
-}
-.yellow{
-    background-color: rgb(240, 240, 121);
-}
-.redss{
-    background-color: rgb(240, 77, 63);
-}
-.content
-{
-    
 
-        font-family:Times New Roman !important;
-          font-size:1.1em;
-    
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
 
+th {
+  background-color: #f2f2f2;
+}
+p{
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 25px;
 }

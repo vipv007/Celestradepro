@@ -1,0 +1,54 @@
+#news {
+    margin-top: 15px;
+    text-decoration: none;
+    margin-left: 30px;
+    color: blue; /* Set the color of the link */
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+  }
+  
+  #news:hover {
+    color: red; /* Change the link color on hover */
+  }
+  
+  .news-article {
+    list-style-type: disc; /* Set the bullet point style */
+    color: green; /* Set the color of the bullet points */
+    margin-left: 20px; /* Add some indentation to the bullet points */
+  
+  }
+  
+  .table {
+   width: 35cm;
+   margin-left: 5%;
+    border: 2px solid gray;
+      padding: 10px;
+  }
+  th{
+    text-align: center;
+  }
+  td{
+    text-align: left;
+  }
+  .pagination {
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .page-item {
+    cursor: pointer;
+  }
+  
+  .page-link {
+    color: #007bff;
+  }
+  input{
+    margin-left: 72%;
+    width: 25%;
+  }
+  .card{
+    margin-left: 2%;
+    width: 95%
+  }
+  
+   

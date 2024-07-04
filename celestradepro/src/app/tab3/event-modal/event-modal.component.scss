@@ -1,0 +1,35 @@
+table {
+    border-collapse: collapse;
+    width: 1300px; /* Set width to 700px */    background-color: #dee0e5;
+    text-align: center;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: left; /* Adjust alignment if needed */
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+  
+  th {
+    font-weight: bold;
+    background-color: #babec7;
+    color:white;
+  }
+  
+td:nth-child(6) {
+    color:red;
+}
+
+.s1{
+  background-color: #babec7;
+  width: 1300px;
+  font-size: 13px;
+  font-weight: bold;
+}
+ion-button{
+  background-color:#babec7 ;
+  width: 40px;
+  height: 25px;
+  font-size: 10px;
+}

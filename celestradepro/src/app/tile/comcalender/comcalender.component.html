@@ -1,0 +1,40 @@
+<button (click)="toggleView()">{{ showTable ? 'Change Calendar' : 'Show Table' }}</button>
+
+<div *ngIf="showTable" >
+          <div class="s1">         
+            <input type="date" [(ngModel)]="startDate" (change)="applyFilters()" />
+            <input type="date" [(ngModel)]="endDate" (change)="applyFilters()" />
+            <input type="text" placeholder="Search..." [(ngModel)]="searchText" (input)="applyFilters()" />
+           </div>
+  <table class="table">
+    <thead class="table-success">
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Event</th>
+        <th>Country</th>
+        <th>Importance</th>
+        <th>Previous</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rate of filteredCalendar">
+        <td>{{rate.Date}}</td>
+        <td>{{rate.Time}}</td>
+        <td>{{rate.Event}}</td>
+        <td>{{rate.Country}}</td>
+        <td>{{rate.Importance}}</td>
+        <td>{{rate.Previous}}</td>
+       
+      
+       
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="iframe" *ngIf="!showTable">
+  <iframe src="https://www.moneycontrol.com/economic-calendar" style="width: 100%; height: 1000px;" frameborder="0"
+    scrolling="auto" sandbox="allow-same-origin allow-scripts"></iframe>
+</div>

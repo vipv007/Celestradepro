@@ -1,7 +1,57 @@
-.chart{
-  //background-color: azure;
-  height: 400px;
-  width: 800px;
-  margin-left: 10%;
-  margin-top: 10px;
+canvas {
+  max-width: 60%;
+  margin-right: 150px;
+}
+.ms1{
+  margin-left: 80px;
+}
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.form-group label {
+  min-width: 180px; /* Adjust based on your needs */
+  text-align: right;
+}
+
+.form-group input {
+  flex: 1;
+}
+input{
+  width: 120px;
+  background-color: #f2f2f2;
+  text-align: center;
+}
+p{
+  text-align: center;
+  font-weight: bold;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+label{
+  font-weight: bold;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  
+
+}
+button{
+  text-align: center;
+}
+table {
+  width: 80%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+.j{
+  background-color: #f2f2f2;
 }

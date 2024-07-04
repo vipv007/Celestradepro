@@ -4,6 +4,11 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+  {
+    path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
@@ -170,7 +175,7 @@ const routes: Routes = [
   },
   {
 
-  path: 'cres/:id',
+  path: 'cres',
     loadChildren: () => import('./cres/cres.module').then( m => m.CresPageModule)
   },
   {
@@ -244,7 +249,8 @@ const routes: Routes = [
   {
     path: 'option1',
     loadChildren: () => import('./option1/option1.module').then( m => m.Option1PageModule)
-  },  {
+  },
+  {
     path: 'opchart',
     loadChildren: () => import('./opchart/opchart.module').then( m => m.OpchartPageModule)
   },
@@ -256,6 +262,33 @@ const routes: Routes = [
     path: 'fchart',
     loadChildren: () => import('./fchart/fchart.module').then( m => m.FchartPageModule)
   },
+  {
+    path: 'order',
+    loadChildren: () => import('./order/order.module').then( m => m.OrderPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'signup',
+    loadChildren: () => import('./signup/signup.module').then( m => m.SignupPageModule)
+  },
+  {
+    path: 'margin',
+    loadChildren: () => import('./margin/margin.module').then( m => m.MarginPageModule)
+  },
+  {
+    path: 'landing',
+    loadChildren: () => import('./landing/landing.module').then( m => m.LandingPageModule)
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
+  },
+
+
+
 
 
 

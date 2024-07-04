@@ -3,6 +3,67 @@
   <p>{{loan.STRIKE}}</p>
  </div>
 </div>-->
-<div class="chart">
-  <canvas #myChart></canvas>
+<p>Options Strategy Builder & Analyzer</p>
+<div class="ms1">
+  <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+    <label for="K_call">Call Strike Price:</label>
+    <input type="number" id="K_call" name="K_call" ngModel>
+    <label for="K_put">Put Strike Price:</label>
+    <input type="number" id="K_put" name="K_put" ngModel>
+    <label for="price_call">Call Premium:</label>
+    <input type="number" id="price_call" name="price_call" ngModel>
+    <label for="price_put">Put Premium:</label>
+    <input type="number" id="price_put" name="price_put" ngModel><br>
+    <button type="submit">Generate Chart</button>
+</form><br>
+<table>
+  <thead>
+    <tr>
+      <th>Buy / Sell</th>
+      <th>Quantity</th>
+      <th>Call / Put / Stock</th>
+      <th>Strike</th>
+      <th>Days to Expiry</th>
+      <th>Volatility (%)</th>
+      <th>Premium</th>
+      <th>Debit / Credit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="j">
+      <td>Buy</td>
+      <td><input type="number" id="K_call" name="K_call" ngModel> </td>
+      <td>Call</td>
+      <td><input type="number" id="K_call" name="K_call" ngModel></td>
+      <td><input type="number" id="K_call" name="K_call" ngModel></td>
+      <td><input type="number" id="K_call" name="K_call" ngModel></td>
+      <td><input type="number" id="K_call" name="K_call" ngModel></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Sell</td>
+      <td><input type="number" id="K_call" name="K_call" ngModel></td>
+      <td>Call</td>
+      <td><input type="number" id="K_call" name="K_call" ngModel></td>
+      <td><input type="number" id="K_call" name="K_call" ngModel></td>
+      <td><input type="number" id="K_call" name="K_call" ngModel></td>
+      <td><input type="number" id="K_call" name="K_call" ngModel></td>
+      <td>8.8641</td>
+    </tr>
+    <tr>
+      <td>Total</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+
+  <canvas id="payoffChart"></canvas>
 </div>
+

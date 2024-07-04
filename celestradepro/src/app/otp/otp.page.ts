@@ -1,67 +1,75 @@
 import { Component, OnInit } from '@angular/core';
-import { StockService } from '../services/stock.service';
+import * as Plotly from 'plotly.js-dist';
 
 @Component({
   selector: 'app-otp',
   templateUrl: 'otp.page.html',
   styleUrls: ['otp.page.scss']
 })
-export class OtpPage implements OnInit {
-  stocks: any[] = [];
-  filteredStocks: any[] = [];
-  filterTerm = '';
-  selectTabs = 'recent';
-  currentIndex = 0;
-  searchTerm = '';
+export class OtpPage {
 
-  highestPrices: { [symbol: string]: number } = {};
-  lowestPrices: { [symbol: string]: number } = {};
+  constructor() { }
 
-  constructor(private stockService: StockService) {}
+  // Function to generate the plot
+  generatePlot() {
+    const S = Array.from(Array(101).keys()).map(x => x + 50); // Stock price range
+    const K = 100; // Strike price
+    const premium = 5; // Option premium
+
+    const long_payoff = S.map(price => Math.max(K - price, 0) - premium);
+    const short_payoff = S.map(price => -Math.max(K - price, 0) + premium);
+
+    const data = [
+      {
+        x: S,
+        y: long_payoff,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Long Put Payoff',
+        line: {
+          color: 'lightgreen' // Light green for profit side of long put
+        }
+      },
+      {
+        x: S,
+        y: short_payoff,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Short Put Payoff',
+        line: {
+          color: 'lightpink' // Light pink for loss side of short put
+        }
+      }
+    ];
+
+    const layout = {
+      title: 'Long vs Short Put Option Payoff',
+      xaxis: {
+        title: 'Stock Price ($)'
+      },
+      yaxis: {
+        title: 'Profit/Loss ($)'
+      },
+      shapes: [
+        {
+          type: 'line',
+          x0: K,
+          y0: Math.min(...long_payoff, ...short_payoff),
+          x1: K,
+          y1: Math.max(...long_payoff, ...short_payoff),
+          line: {
+            color: 'red',
+            width: 1,
+            dash: 'dot'
+          }
+        }
+      ]
+    };
+
+    Plotly.newPlot('plot', data, layout);
+  }
 
   ngOnInit() {
-    this.getStocks();
-  }
-
-  getStocks() {
-    this.stockService.getAllStocks().subscribe((response: any) => {
-      this.stocks = response;
-      this.filteredStocks = this.stocks;
-      this.calculateOHLC();
-    });
-  }
-
-  calculateOHLC() {
-    const today = new Date();
-    const oneYearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
-
-    this.stocks.forEach((stockData: any) => {
-      const stockInRange = stockData.stock.filter((data: any) => {
-        const stockDate = new Date(data.Date);
-        return stockDate >= oneYearAgo && stockDate <= today;
-      });
-
-      if (stockInRange.length > 0) {
-        const symbol = stockData.symbol;
-        const highPrices = stockInRange.map((data: any) => data.High);
-        const lowPrices = stockInRange.map((data: any) => data.Low);
-
-        this.highestPrices[symbol] = Math.max(...highPrices);
-        this.lowestPrices[symbol] = Math.min(...lowPrices);
-      } else {
-        this.highestPrices[stockData.symbol] = 0;
-        this.lowestPrices[stockData.symbol] = 0;
-      }
-    });
-  }
-
-  filterData() {
-    if (this.filterTerm) {
-      this.filteredStocks = this.stocks.filter((stockData: any) =>
-        stockData.symbol.toLowerCase().includes(this.filterTerm.toLowerCase())
-      );
-    } else {
-      this.filteredStocks = this.stocks;
-    }
+    this.generatePlot();
   }
 }

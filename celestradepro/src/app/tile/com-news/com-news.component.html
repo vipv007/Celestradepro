@@ -1,6 +1,148 @@
-<ul >
-  <li class="news-article" *ngFor="let article of com_news">
-    <a href="{{ article.link }}" target="_blank" id="news">{{ article.title }}</a><hr>
-  </li>
+<!-- YourComponent.component.html -->
 
-</ul>
+<!-- Search Input and Button -->
+<input type="text" [(ngModel)]="searchQuery" (keyup)="applySearchFilter()" class="form-control mb-3" placeholder="Search news...">
+<button (click)="togglePopup()" class="btn btn-primary mb-3">All sites</button>
+
+<!-- Popup for URL selection -->
+<div *ngIf="showPopup" class="popup">
+  <div class="popup-content">
+    <ul>
+      <li *ngFor="let mainUrl of mainUrls" (click)="filterByUrl(mainUrl)" style="cursor: pointer;">
+        {{ mainUrl }}
+      </li>
+    </ul>
+    <button (click)="togglePopup()" class="btn btn-secondary">Close</button>
+  </div>
+</div>
+
+<!-- Active News Section -->
+<div class="card">
+  <div class="card-header">
+    <h2 class="mb-0">Active News</h2>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive"> 
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th (click)="sortActiveNews('title')" class="sortable">
+              <span>TITLE</span> &nbsp;
+              <span [ngClass]="{'asc': currentSortProperty === 'title' && currentSortOrder === 'asc', 'desc': currentSortProperty === 'title' && currentSortOrder === 'desc'}">{{ defaultSortSymbol('title') }}</span>
+            </th>
+            <th (click)="sortActiveNews('sentimentScore')" class="sortable">
+              <span>SENTIMENT SCORE</span> &nbsp;
+              <span [ngClass]="{'asc': currentSortProperty === 'sentimentScore' && currentSortOrder === 'asc', 'desc': currentSortProperty === 'sentimentScore' && currentSortOrder === 'desc'}">{{ defaultSortSymbol('sentimentScore') }}</span>
+            </th>
+            <th>SUMMARIZE</th>
+            <th (click)="sortActiveNews('fetchedTime')" class="sortable">
+              <span>UPDATED TIME</span> &nbsp;
+              <span [ngClass]="{'asc': currentSortProperty === 'fetchedTime' && currentSortOrder === 'asc', 'desc': currentSortProperty === 'fetchedTime' && currentSortOrder === 'desc'}">{{ defaultSortSymbol('fetchedTime') }}</span>
+            </th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let article of pagedActiveNews">
+            <td><a href="{{ article.url }}" style="text-decoration: none; color:black;">{{ article.headline }}</a></td>
+            <td>{{ article.sentimentScore }}<br>{{ article.sentiment }}</td>
+            <td>
+              <div *ngIf="!article.showFullSummary">{{ article.summary.slice(0, 150) }}...</div>
+              <div *ngIf="article.showFullSummary">{{ article.summary }}</div>
+              <button (click)="toggleSummary(article)" class="btn btn-outline-primary mt-2">
+                {{ article.showFullSummary ? 'Read less' : 'Read more' }}
+              </button>
+            </td>
+            <td>{{ article.fetchedTime }}</td>
+            <td>
+              <button *ngIf="!article.archive" (click)="archiveArticle(article)" class="btn btn-outline-danger">Archive</button>
+              <button *ngIf="article.archive" disabled class="btn btn-outline-secondary">Archived</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <!-- Pagination for Active News -->
+        <ng-container *ngIf="activeTotalPagesArray().length > 1">
+          <li class="page-item" [class.disabled]="activeCurrentPage === 1">
+            <a class="page-link" (click)="onActivePageChange(activeCurrentPage - 1)" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="visually-hidden">Previous</span>
+            </a>
+          </li>
+          <ng-container *ngFor="let pageNumber of activeTotalPagesArray()">
+            <li class="page-item" [class.active]="pageNumber === activeCurrentPage">
+              <a class="page-link" (click)="onActivePageChange(pageNumber)">{{ pageNumber }}</a>
+            </li>
+          </ng-container>
+          <li class="page-item" [class.disabled]="activeCurrentPage === activeTotalPagesArray().length">
+            <a class="page-link" (click)="onActivePageChange(activeCurrentPage + 1)" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="visually-hidden">Next</span>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Archived News Section -->
+  <div class="card mt-4">
+    <div class="card-header">
+      <h2 class="mb-0">Archived News</h2>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>TITLE</th>
+              <th>SENTIMENT SCORE</th>
+              <th>SUMMARIZE</th>
+              <th>UPDATED TIME</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let article of pagedArchivedNews">
+              <td><a href="{{ article.url }}" style="text-decoration: none; color:black;">{{ article.headline }}</a></td>
+              <td>{{ article.sentimentScore }}<br>{{ article.sentiment }}</td>
+              <td>
+                <div *ngIf="!article.showFullSummary">{{ article.summary.slice(0, 150) }}...</div>
+                <div *ngIf="article.showFullSummary">{{ article.summary }}</div>
+                <button (click)="toggleSummary(article)" class="btn btn-outline-primary mt-2">
+                  {{ article.showFullSummary ? 'Read less' : 'Read more' }}
+                </button>
+              </td>
+              <td>{{ article.fetchedTime }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <!-- Pagination for Archived News -->
+          <ng-container *ngIf="archivedTotalPagesArray().length > 1">
+            <li class="page-item" [class.disabled]="archivedCurrentPage === 1">
+              <a class="page-link" (click)="onArchivedPageChange(archivedCurrentPage - 1)" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="visually-hidden">Previous</span>
+              </a>
+            </li>
+            <ng-container *ngFor="let pageNumber of archivedTotalPagesArray()">
+              <li class="page-item" [class.active]="pageNumber === archivedCurrentPage">
+                <a class="page-link" (click)="onArchivedPageChange(pageNumber)">{{ pageNumber }}</a>
+              </li>
+            </ng-container>
+            <li class="page-item" [class.disabled]="archivedCurrentPage === archivedTotalPagesArray().length">
+              <a class="page-link" (click)="onArchivedPageChange(archivedCurrentPage + 1)" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="visually-hidden">Next</span>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </nav>
+    </div>
+  </div>

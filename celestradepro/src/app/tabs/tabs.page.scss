@@ -1,1 +1,29 @@
 
+// .active-tab {
+//     background-color: rgb(184, 167, 167); /* Set background color for active tab */
+//     border-radius: 20px;
+//     width: 10px; /* Set border radius for active tab */
+//   }
+//   .custom-tab-button {
+//     width: 10px; /* Set the width of the tab button */
+//     height: 50px; /* Set the height of the tab button */
+//   }
+.active-tab {
+    background:rgb(196, 249, 247);/* Gradient background */
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
+    transition: background-color 0.3s ease; /* Smooth transition effect */
+    width: 20px; /* Adjust the width of the active tab */
+    display: flex; /* Ensure content aligns horizontally */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+  }
+  
+  .custom-tab-button {
+    width: 100px; /* Set the width of the tab button */
+    height: 50px; /* Set the height of the tab button */
+    /* Add any additional custom styling here */
+  }
+  .side{
+    margin-top: 2%;
+  }

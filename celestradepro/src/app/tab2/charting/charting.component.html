@@ -1,10 +1,9 @@
-<center>
-<div class="tradingview-widget-container">
-  <div id="tradingview_7ab57"></div>
-  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/AMZN/" rel="noopener" target="_blank"><span class="blue-text">Amazon</span></a> by TradingView</div>
-  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-  <script type="text/javascript">
-
-  </script>
+<div  [class.hidden]="!showWidget">
+  <button (click)="toggleWidget()"><b>x</b></button>
+  <div>
+    <div #tradingview></div>
+  </div>
 </div>
-</center>
+<div *ngIf="!showWidget">
+  <button (click)="toggleWidget()"><b>+</b></button>
+</div>

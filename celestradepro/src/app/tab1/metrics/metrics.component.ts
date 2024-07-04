@@ -1,9 +1,7 @@
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
-
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 import { RatioService } from '../../services/ratio.service';
+import { StockService } from '../../services/stock.service';
 
 @Component({
   selector: 'app-metrics',
@@ -14,15 +12,44 @@ export class MetricsComponent implements OnInit {
 
   ratios: any[] = [];
   selectedFields: string[] = [];
+  selectedSymbols: string[] = [];
 
-  constructor(private ratioService: RatioService) {}
+  constructor(private ratioService: RatioService, private stockService: StockService) {}
 
-  ngOnInit() {
-    this.ratioService.getAllRatios().subscribe((response: any) => {
-      this.ratios = response;
+   ngOnInit() {
+    // Fetch selected stocks from the stock database
+    this.stockService.getSelectedStocks().subscribe((selectedStocks: any[]) => {
+      // Extract symbols of selected stocks
+      this.selectedSymbols = selectedStocks
+        .filter(stock => stock.selected)
+        .map(stock => stock.symbol);
+
+      // Check if any symbols are selected
+      if (this.selectedSymbols.length > 0) {
+        this.fetchRatiosForSelectedSymbols();
+      } else {
+        console.log('No symbols selected.');
+        // Handle the case where no symbols are selected
+      }
+    });
+  }
+
+  fetchRatiosForSelectedSymbols() {
+    // Fetch all ratios
+    this.ratioService.getAllRatios().subscribe((response: any[]) => {
+      // Filter ratios for each selected symbol
+      this.selectedSymbols.forEach(symbol => {
+        const selectedRatios = response.filter(ratio => ratio.symbol === symbol);
+        console.log('Selected Ratios for', symbol + ':', selectedRatios);
+        // Concatenate the fetched ratios with existing ratios array
+        this.ratios = this.ratios.concat(selectedRatios);
+      });
+      // Update chart after fetching ratios for all selected symbols
       this.updateChart();
     });
   }
+
+  
 
   toggleData(field: string) {
     if (this.selectedFields.includes(field)) {
@@ -40,7 +67,7 @@ export class MetricsComponent implements OnInit {
       datasets.push({
         label: field,
         data: this.ratios.map(item => item.metrics[field]),
-        backgroundColor: getBackgroundColorForField(field),
+        backgroundColor: this.getBackgroundColorForField(field),
       });
     });
 
@@ -84,33 +111,33 @@ export class MetricsComponent implements OnInit {
       }
     });
   }
-}
 
-function getBackgroundColorForField(field: string): string {
-  switch (field) {
-    case 'P/B':
-      return '#cc8424';
-    case 'P/E':
-      return '#2dbdc7';
-    case 'Forward P/E':
-      return '#ecb59c';
-    case 'PEG':
-      return '#9c8459';
-    case 'Debt/Eq':
-      return '#bca471';
-    case 'EPS (ttm)':
-      return '#d44133';
-    case 'Dividend %':
-      return '#ecb59c';
-    case 'ROE':
-      return '#b78167';
-    case 'ROI':
-      return '#cf9c90';
-    case 'EPS Q/Q':
-      return 'rgba(153, 102, 255, 0.2)';
-    case 'Insider Own':
-      return 'rgba(54, 162, 235, 0.2)';
-    default:
-      return '';
+  getBackgroundColorForField(field: string): string {
+    switch (field) {
+      case 'P/B':
+        return '#cc8424';
+      case 'P/E':
+        return '#2dbdc7';
+      case 'Forward P/E':
+        return '#ecb59c';
+      case 'PEG':
+        return '#9c8459';
+      case 'Debt/Eq':
+        return '#bca471';
+      case 'EPS (ttm)':
+        return '#d44133';
+      case 'Dividend %':
+        return '#ecb59c';
+      case 'ROE':
+        return '#b78167';
+      case 'ROI':
+        return '#cf9c90';
+      case 'EPS Q/Q':
+        return 'rgba(153, 102, 255, 0.2)';
+      case 'Insider Own':
+        return 'rgba(54, 162, 235, 0.2)';
+      default:
+        return '';
+    }
   }
 }

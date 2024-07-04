@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OpeninterestService } from '../../services/openinterest.service';
+import { OptionsService } from '../../services/options.service';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -9,63 +9,61 @@ import { Chart } from 'chart.js';
 })
 export class OptionIoComponent implements OnInit {
 
-  openintrest: any[];
-  chart: Chart;
+ details: any[];
 
-  constructor(private openinterestService: OpeninterestService) { }
+  constructor(private optionsService: OptionsService) { }
 
   ngOnInit() {
-    this.getOpenintrest();
+    this.optionsService.getOptions().subscribe(
+      (data: any) => {
+        this.details = data;
+        this.renderChart();
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
-  private getOpenintrest(): void {
-    this.openinterestService.getOpenintrest().subscribe(data => {
-      this.openintrest = Object.values(data);
-      this.createChart();
-    });
-  }
-
-  private createChart(): void {
-    if (!this.openintrest) {
-      return;
-    }
-  
-    const callOpenInterest = this.openintrest.filter(item => item.type === 'call');
-    const putOpenInterest = this.openintrest.filter(item => item.type === 'put');
-  
-    const callLabels = callOpenInterest.map(item => item.strike.toString());
-    const callData = callOpenInterest.map(item => item.openInterest);
-  
-    const putLabels = putOpenInterest.map(item => item.strike.toString());
-    const putData = putOpenInterest.map(item => item.openInterest);
-  
-    const canvas = <HTMLCanvasElement>document.getElementById('chart');
-    this.chart = new Chart(canvas, {
-      type: 'line',
-      data: {
-        labels: callLabels,
-        datasets: [{
-          label: 'Call Open Interest',
-          data: callData,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
+  renderChart() {
+    const chartData = {
+     labels: this.details.map(detail => detail['Strike Price']),
+      datasets: [
+        {
+          label: 'Call Open  Interest',
+         data: this.details.map(detail => detail['Call-Open Interest']),
+          backgroundColor: '#de2cc9', // Set the background color of "Price" bars to blue
+          borderColor: '#4bc0c0'
         },
         {
           label: 'Put Open Interest',
-          data: putData,
-          fill: false,
-          borderColor: 'rgb(255, 99, 132)',
+         data: this.details.map(detail => detail['Put-Open Interest']),
+          backgroundColor: '#0c6be8', // Set the background color of "Implied Volatility" bars to pink
+          borderColor: '#f44336'
+        },
+        // {
+        //   label: 'Open Interest',
+        //   data: this.details.map(detail => detail.open_interest),
+        //   fill: false,
+        //   borderColor: '#565656'
+        // }
+      ]
+    };
+
+    const chartOptions = {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
         }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          yAxes: [{
-            ticks: { beginAtZero: true }
-          }]
-        }
       }
+    };
+
+    const chart = new Chart('canvas', {
+      type: 'bar',
+      data: chartData,
+      options: chartOptions
     });
   }
 }

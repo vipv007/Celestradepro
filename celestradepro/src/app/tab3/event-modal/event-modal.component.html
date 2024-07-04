@@ -1,0 +1,63 @@
+<!-- 
+<div class="eve">
+  <ion-button (click)="toggleEvents()">Events</ion-button>
+  <div *ngIf="showButton">
+    <ion-list *ngIf="events.length > 0">
+      <ion-item *ngFor="let event of events">
+        <ion-label>
+          <h2>{{ event.event }}</h2>
+          <p>{{ event.date | date }}</p>
+          <p>{{ event.country }} - {{ event.currency }}</p>
+          <p>Previous: {{ event.previous }}</p>
+          <p>Estimate: {{ event.estimate }}</p>
+          <p>Actual: {{ event.actual }}</p>
+          <p>Impact: {{ event.impact }}</p>
+          <p>Change: {{ event.change }} {{ event.unit }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <div *ngIf="events.length === 0">
+      <ion-spinner></ion-spinner>
+    </div>
+  </div>
+</div> -->
+<div class="s1">
+  <label for="startDate">Start Date:</label>
+  <input type="date" id="startDate" [(ngModel)]="startDate" (change)="filterEvents()">
+  
+  <label for="endDate">End Date:</label>
+  <input type="date" id="endDate" [(ngModel)]="endDate" (change)="filterEvents()">
+
+
+  <label for="searchTerm">Search:</label>
+  <input type="text" id="searchTerm" [(ngModel)]="searchTerm" (input)="filterEvents()">
+</div>
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Currency</th>
+      <th>Impact</th>
+      <th>Forecast</th>
+      <th>Previous</th>
+      <th>Graph</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let event of filteredEvents">
+      <td>{{ event.Title }}</td>
+      <td>{{ event.Date | date: 'shortDate' }}</td>
+      <td>{{ event.Time }}</td>
+      <td>{{ event.Country }}</td>
+      <td><img alt="logo" id="header_logo" height="25" src="assets/folder.png">{{ event.Impact }}</td>
+      <td>{{ event.Forecast }}</td>
+      <td>{{ event.Previous }}</td>
+      <td><img alt="logo" id="header_logo" height="35" src="assets/candlestick-graph-icon-png.webp"></td>
+    </tr>
+  </tbody>
+</table>

@@ -1,9 +1,207 @@
-<div class="commodity-container">
-  <h2>Commodity Chart</h2>
-  <div>
-    <label *ngFor="let symbol of symbols">
-      <input type="checkbox" [(ngModel)]="symbol.checked" (change)="updateChart()" /> {{ symbol.name }}
-    </label>
+<div class="ion-padding">
+  <button expand="block" class="buys" (click)="showBox = !showBox">Order&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
+    <button class="buys" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button><br>
+    <div class="adj">
+  <div class="box" *ngIf="showBox">
+
+
+    <ion-label style="font-size: 20px; font-weight: bold; margin-left: 40%;"> {{ this.Symbol }}</ion-label>
+    <input class="m1" type="number" [(ngModel)]="quantity" placeholder="quantity">
+
+    <ion-row>
+      <ion-card class="buy" color="primary" (click)="onSubmit('BUY')">
+        <ion-row *ngFor="let commodity of  commoditys">
+
+          <ng-container *ngIf="commodity.Symbol === Symbol">
+            <button expand="block" class="asks" (click)="showPrice(commodity.Data[1].Bid.toFixed(0))">{{
+              commodity.Data[1].Bid.toFixed(0) }}:<small>Bid</small></button>
+          </ng-container>
+        </ion-row>
+        <small>BUY</small>
+      </ion-card>
+
+
+      <input type="number" class="ms" [(ngModel)]="price" placeholder="0" (change)="updateChart()">
+      <ion-card class="sell" color="danger" (click)="onSubmit('SELL')">
+        <ion-row *ngFor="let commodity of  commoditys">
+          <ng-container *ngIf="commodity.Symbol === Symbol">
+            <button expand="block" class="asks" (click)="showPrice(commodity.Data[1].Ask.toFixed(0))">{{
+              commodity.Data[1].Ask.toFixed(0) }}:<small>Ask</small></button>
+          </ng-container>
+        </ion-row>
+        <small>SELL</small>
+      </ion-card>
+      <ion-row *ngFor="let  commodity of  commoditys">
+        <ng-container *ngIf="commodity.Symbol === Symbol">
+          <button expand="block" class="asks" (click)="showlow(commodity.Data[1].Low.toFixed(0))">{{
+            commodity.Data[1].Low.toFixed(0) }}<small>:Low</small></button><br><br>
+
+          <button expand="block" class="asks" (click)="showhigh(commodity.Data[1].High.toFixed(0))">{{
+            commodity.Data[1].High.toFixed(0)}}<small>:High</small></button>
+        </ng-container>
+      </ion-row>
+    </ion-row>
+    <ion-row>
+
+      <button expand="block" class="ask"><small>SL</small></button>
+      <input type="number" [(ngModel)]="low" [(ngModel)]="stoploss" placeholder="0" (change)="updateChart()">
+
+      <!-- <input type="number" [(ngModel)]="stoploss" placeholder="0" (change)="updateChart()"> -->
+      <input type="number" [(ngModel)]="target" [(ngModel)]="high" placeholder="0" (change)="updateChart()">
+      <button expand="block" class="ask" (click)="showHigh(folio.target)"><small>TP</small></button>
+
+
+    </ion-row>
   </div>
-  <canvas #commodityChart></canvas>
-</div>
+
+          <div class="sto" *ngIf="showButton" style="color: black;">
+                    <table class="table table-borderless table-hover">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>Quantity</th>
+                          <th>Orders</th>
+                          <th>Buy Price</th>
+                          <th>Sell Price</th>
+                          <th>Orders</th>
+                          <th>Quantity</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngFor="let depth of marketDepthData" class="ms1">
+                          <ng-container *ngFor="let item of depth.market_depth; let i = index">
+                            <tr *ngIf="i >= 0" class="border-top">
+                              <td colspan="8"></td> <!-- Spanning all columns -->
+                            </tr>
+                            <tr>
+                              <td>{{ item.buy_quantity }}</td>
+                              <td>{{ item.b_order }}</td>
+                              <td class="buy-price">{{ item.buy_price }}</td>
+                              <td>{{ item.sell_price }}</td>
+                              <td>{{ item.s_order }}</td>
+                              <td>{{ item.sell_quantity }}</td>
+                            </tr>
+                          </ng-container>
+                  
+                          <tr  *ngIf="1 >= 0" class="border-top">
+                            <td>{{ getTotalOrders(depth.market_depth, 'buy') }}</td>
+                            <td></td>
+                            <td style="font-size: 13px; width: 50%; font-weight: bold;">Total </td>
+                            <td style="font-size: 13px; width: 50%; font-weight: bold;">Quantity</td>
+                            <td></td>
+                            <td>{{ getTotalOrder(depth.market_depth, 'sell') }}</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+    <!-- <ion-item>
+    <ion-label style="font-size: 20px; font-weight: bold;"> {{ this.Symbol }} : {{ priceValue }}</ion-label>
+    <ion-button expand="block" color="success" (click)="openLoginForm()" class="buy-button">BUY</ion-button>
+    <input type="text" id="lname" name="lname" [(ngModel)]="priceValue"><br> 
+    <ion-button expand="block" color="danger" class="cancel-button">SELL</ion-button>
+    <pre>............</pre>
+  </ion-item>
+
+
+  <ion-item class="dns">
+    <ion-row *ngFor="let Data of commoditys">
+      <ng-container *ngIf="Data.Symbol === Symbol">
+        <button expand="block" class="asks" (click)="showPrice(Data.Data[0].High.toFixed(2))">{{
+          Data.Data[0].Ask.toFixed(2) }}<small>High</small></button>
+        <button expand="block" class="asks" (click)="showPrice(Data.Data[0].Bid.toFixed(2))">{{
+          Data.Data[0].Bid.toFixed(2) }}<small>Bid</small></button>
+        <button expand="block" class="ask" (click)="showPrice(Data.Data[0].Close.toFixed(2))">{{
+          Data.Data[0].Close.toFixed(2) }}<small>Last</small></button>
+        <button expand="block" class="ask" (click)="showPrice(Data.Data[0].Ask.toFixed(2))"> {{
+          Data.Data[0].High.toFixed(2) }}<small>Ask</small></button>
+        <button expand="block" class="ask" (click)="showPrice(Data.Data[0].Low.toFixed(2))">{{
+          Data.Data[0].Low.toFixed(2) }}<small>Low</small></button>
+      </ng-container>
+    </ion-row>
+  </ion-item> -->
+
+  <button (click)="toggleDarkMode()"> Dark Mode</button>
+
+  <div>
+    <!-- Other template code -->
+  <br>
+  <div class="chart-container" [ngClass]="{'dark-mode': isDarkMode}">
+    <!-- Other template code -->
+    <br>
+    <igx-financial-chart
+      [dataSource]="chartData"
+      width="100%"
+      height="500px"
+      class="financial-chart">
+    </igx-financial-chart>
+
+    <!-- Other template code -->
+  </div>
+  
+  
+
+    <!-- <div  class="modal" [ngStyle]="{ 'display': modalOpen ? 'block' : 'none' }">
+    <div >
+      <div class="form-container" >  
+        <ion-row class="input-boxes" style="border: 2px solid gray; padding: 20px;">
+          <span class="close" (click)="closeLoginForm()">&times;</span>
+          <ion-col size="2">
+            <ion-item class="input-item">
+              <ion-label position="floating">Quantity</ion-label>
+              <ion-input type="number" [(ngModel)]="quantity" placeholder="0"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="2">
+            <ion-item class="input-item">
+              <ion-label position="floating">Price</ion-label>
+              <ion-input type="number" [(ngModel)]="price" placeholder="0" [(ngModel)]="straightLineValue" (change)="updateChart()" cdkDrag></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="2">
+            <ion-item class="input-item">
+              <ion-label position="floating">Trigger Price</ion-label>
+              <ion-input type="number" [(ngModel)]="triggerprice" placeholder="0"></ion-input>
+            </ion-item>
+            <ion-button color="success" class="cbutton" (click)="closeLoginForm()" (click)="onSubmit()">Done</ion-button>
+          </ion-col>
+          <ion-col size="2">
+            <ion-item class="input-item">
+              <ion-label  position="floating">Target</ion-label>
+              <ion-input type="number" [(ngModel)]="target" placeholder="0" [(ngModel)]="target" (change)="updateChart()"></ion-input>
+            </ion-item> 
+          </ion-col>
+          <ion-col size="2">
+            <ion-item class="input-item">
+              <ion-label position="floating">Stoploss</ion-label>
+            <ion-input type="number" [(ngModel)]="stoploss" placeholder="0" [(ngModel)]="stoploss"
+              (change)="updateChart()"></ion-input>
+             
+            </ion-item>
+           
+          </ion-col>
+          
+         </ion-row>
+            
+      </div>
+    </div>
+  </div>
+  </div>
+  <div id="chart">-->
+  
+  </div>
+
+  <div>
+    <!-- Display commodity prices here -->
+    <div *ngIf="commodityPrices">
+      <p>Gold Price: {{ commodityPrices.gold }}</p>
+      <p>Oil Price: {{ commodityPrices.oil }}</p>
+      <!-- Add more commodity prices as needed -->
+    </div>
+  
+    <!-- Display a message if JavaScript is disabled -->
+    <noscript>
+      To get <a href="http://www.oil-price.net/dashboard.php?lang=en#COMMODITIES">gold, oil, and commodity prices</a>,
+      please enable Javascript.
+    </noscript>
+  </div>

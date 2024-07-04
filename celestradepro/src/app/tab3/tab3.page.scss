@@ -90,7 +90,8 @@ h2{
 
 ion-label{
   font-family: Georgia, 'Times New Roman', Times, serif;
-
+  font-weight: bolder;
+  font-size: large;
 }
 #h1{
   text-align: center;
@@ -99,9 +100,9 @@ ion-label{
 }
 ion-segment{
   ion-label{
-  color: rgb(29, 48, 30);
+  color:#E62C1E;
   font-size: medium;
-  font-weight: 100;
+  font-weight: bolder;
 }
 }
 ion-button{
@@ -130,14 +131,15 @@ ion-card-title{
   text-align: center;
   padding-top: 20px;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  color: whitesmoke;
+  color:rgba(153, 5, 121, 0.959);
+  font-weight: bold;
 }
 .grid-container {
   display: grid;
   grid-template-columns: auto auto auto;
   padding: 40px;
 #card{
-  --background:rgb(144, 140, 148);
+  --background:rgb(216, 216, 221);
 }
 }
 .grid-item {
@@ -164,4 +166,64 @@ ion-card-title{
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: medium;
   background-color: rgb(216, 223, 223);
+}
+
+h4{
+  margin-left: 30px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  margin-top: 20px;
+ // color: #E62C1E;
+}
+.ch{
+  color: #E62C1E;
+}
+.col {
+  padding-left: 20px; /* Adjust as needed */
+  padding-right: 20px; /* Adjust as needed */
+}
+ion-searchbar{
+  padding-left: 25px;
+  padding-right: 50px;
+  border-radius: 3px;
+}
+#c5{
+  background-color: rgb(204, 212, 212);
+}
+.red{
+margin-left: 70px;
+}
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
 }

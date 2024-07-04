@@ -1,147 +1,360 @@
-  <ion-header>
+
+<div >
   <app-ribbon></app-ribbon>
-  </ion-header>
-
-  <ion-content class="cl1">
-
-    <ion-segment [(ngModel)]="selectTabs">
-      <ion-segment-button value="recent">
-        <ion-label>List View</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="missed">
-        <ion-label>Chart View</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="contact">
-        <ion-label>Tile View</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="contacts">
-        <ion-label>Research</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-
-    <ion-col  id="btn"><ion-button  [routerLink]="['/bill']">AAPL</ion-button></ion-col>
-    <ion-col  id="btn"><ion-button  [routerLink]="['/trading']">AMZN</ion-button></ion-col>
-    <ion-col  id="btn"><ion-button  [routerLink]="['/trading-view']">MSFT</ion-button></ion-col>
-    <ion-col  id="btn"><ion-button  [routerLink]="['/ge']">GOOGL</ion-button></ion-col>
-
-<div *ngIf="selectTabs === 'missed'">
-  <app-analysis></app-analysis>
 </div>
 
-<div *ngIf="selectTabs ==='recent'">
-  <ion-searchbar [(ngModel)]="searchTerm"></ion-searchbar>
-  <ion-grid class="col">
-      <ion-row style="border-top:groove">
-        <ion-col col-4>
-          <ion-label>Symbol</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>Last</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label >Change</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label >%Chg</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label >Day Range</ion-label>
-        </ion-col>
-       <ion-col col-4>
-          <ion-label >Volume</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label >Week Range</ion-label>
-        </ion-col>
 
-        </ion-row>
-    </ion-grid>
+<ion-content class="cl1">
+  <ion-segment [(ngModel)]="selectTabs">
+    <ion-segment-button value="recent">
+      <ion-label>List View</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="missed" >
+      <ion-label>Chart View</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="contact">
+      <ion-label>Tile View</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="contacts">
+      <ion-label>Research</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
-    <div *ngIf="selectTabs === 'recent'">
-      <ion-grid *ngFor="let stock of stocks | filter: searchTerm">
-        <ion-row style="border-top: groove">
-          <ion-col col-4 id="c5">
-            <ion-label>{{ stock.symbol }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ stock.stock[0].Close.toFixed(1) }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5" [ngClass]="{'positive-value': stock.stock[0].Change_price > 0, 'negative-value': stock.stock[0].Change_price < 0}">
-            <ion-label>{{ stock.stock[0].Change_price.toFixed(2) }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5" [ngClass]="{'positive-value': stock.stock[0].Change_percentage > 0, 'negative-value': stock.stock[0].Change_percentage < 0}">
-            <ion-label>{{ stock.stock[0].Change_percentage.toFixed(2) }}%</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ stock.stock[0].Low.toFixed(1) }}</ion-label>
-            <input type="range" [min]="stock.stock[0].Low" [max]="stock.stock[0].High" [value]="stock.stock[0].Close" #rangeSlider>
-            <ion-label>{{ stock.stock[0].High.toFixed(1) }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ (stock.stock[0].Volume / 1000000).toFixed(1) }}M</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ lowestPrices[stock.symbol].toFixed(2) }}</ion-label>
-            <input type="range" [min]=" lowestPrices[stock.symbol]" [max]=" highestPrices[stock.symbol]" [value]="stock.stock[0].Close" #rangeSlider>
-            <ion-label>{{ highestPrices[stock.symbol].toFixed(2) }}</ion-label>
-          </ion-col>
-       </ion-row>
-      </ion-grid>
-    </div>
-</div>
 
-  <div *ngIf="selectTabs === 'contact'" class="grid-container">
 
-    <ion-card *ngFor="let stock of stocks" id="card">
-      <ion-card-title>{{stock.symbol}}</ion-card-title>
-      <ion-card-content>
-        <ion-row class="ion-apgn-items-center">
-          <ion-col>
-            <p>Buy<br></p>
-            <b style="color: red">
-              {{ stock.stock[currentIndex].Bid.toFixed(1) }}
-            </b>
-          </ion-col>
-          <ion-col>
-            <p>Sell<br></p>
-            <b style="color: green">
-              {{ stock.stock[currentIndex].Ask.toFixed(1) }}
-            </b>
-          </ion-col>
-        </ion-row>
-      </ion-card-content>
-    </ion-card>
+  <div *ngIf="selectTabs === 'missed'" class="chart-container">
+    <app-analysis></app-analysis>
   </div>
 
+  <div *ngIf="selectTabs === 'recent'">
+    
+    <div class="tab">
+      <button class="tablinks" (click)="openTab($event, 'watchlist')">Watchlist</button>
+      <button class="tablinks" (click)="openTab($event, 'gainer')">Top Gainer</button>
+      <button class="tablinks" (click)="openTab($event, 'loser')">Top Loser</button>
+      <button class="tablinks" (click)="openTab($event, 'index')">Indices</button>
+    </div>
+    
+    <div id="watchlist" class="tabcontent">
+      <h4>Stock Search/Add</h4>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="getStocksBySymbol(searchTerm)"></ion-searchbar>
+    <ion-row *ngFor="let stock of searchedStocks | filter: searchTerm">
+      <ion-button (click)="addSelectedStock(stock)">+Add</ion-button>
+    </ion-row>
 
+    <ion-grid class="col">
+      <ion-row *ngFor="let stock of searchedStocks | filter: searchTerm" style="border-top:groove">
+        <ion-col col-4 class="ch">
+          {{ stock.symbol }}
+        </ion-col>
+        <ion-col col-4 >
+          <ion-label>{{ stock.stock[stock.currentDataIndex].Latest_price.toFixed(1) }}</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label style="color: green;">{{ stock.stock[stock.currentDataIndex].High.toFixed(1) }}</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label style="color: red;">{{ stock.stock[stock.currentDataIndex].Low.toFixed(1) }}</ion-label>
+        </ion-col>
+        <ion-col col-4 >
+          <ion-label>{{ stock.stock[stock.currentDataIndex].Low.toFixed(1) }}</ion-label>
+          <div style="width: 120px; position: relative;">
+            <div class="progress position-relative" style="height: 20px;">
+              <div
+                [ngStyle]="{
+                  backgroundColor: stock.stock[stock.currentDataIndex].Close > stock.stock[stock.currentDataIndex].Open ? 'green' : 'red',
+                  width: ((stock.stock[stock.currentDataIndex].High - stock.stock[stock.currentDataIndex].Low) / (stock.stock[stock.currentDataIndex].High - stock.stock[stock.currentDataIndex].Low)) * 100 + '%',
+                  left: '0',
+                  height: '50%'
+                }"
+              ></div>
+              <div
+                class="caret-down"
+                [ngStyle]="{
+                  position: 'absolute',
+                  left: ((stock.stock[stock.currentDataIndex].Close - stock.stock[stock.currentDataIndex].Low) / (stock.stock[stock.currentDataIndex].High - stock.stock[stock.currentDataIndex].Low)) * 100 + '%',
+                  transform: 'translateX(-20%)',
+                  top: '50%',
+                  fontSize: '6px',
+                  color: stock.stock[stock.currentDataIndex].Close > stock.stock[stock.currentDataIndex].Open ? 'green' : 'red'
+                }"
+              >
+                ▼
+              </div>
+            </div>
+          </div>
+          <ion-label>{{ stock.stock[stock.currentDataIndex].High.toFixed(1) }}</ion-label>
+        </ion-col>
+        <ion-col col-4 >
+          <ion-label>{{ (stock.stock[stock.currentDataIndex].Volume / 1000000).toFixed(1) }}M</ion-label>
+        </ion-col>
+        <ion-col col-4  [ngClass]="{'positive-value': stock.stock[stock.currentDataIndex].Change_price > 0, 'negative-value': stock.stock[stock.currentDataIndex].Change_price< 0}">
+          <ion-label>{{ stock.stock[stock.currentDataIndex].Change_price.toFixed(2) }}</ion-label>
+        </ion-col>
+        <ion-col col-4 [ngClass]="{'positive-value': stock.stock[stock.currentDataIndex].Change_percentage > 0, 'negative-value': stock.stock[stock.currentDataIndex].Change_percentage < 0}">
+          <ion-label>{{ stock.stock[stock.currentDataIndex].Change_percentage.toFixed(2) }}</ion-label>
+        </ion-col>
+        <ion-col col-4 >
+          <ion-label>{{ stock.stock[stock.currentDataIndex].Low.toFixed(1) }}</ion-label>
+          <input type="range" [min]="stock.stock[stock.currentDataIndex].Low" [max]="stock.stock[stock.currentDataIndex].High" [value]="stock.stock[stock.currentDataIndex].Close" #rangeSlider>
+          <ion-label>{{ stock.stock[stock.currentDataIndex].High.toFixed(1) }}</ion-label>
+        </ion-col>
+        <ion-col col-4>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-grid class="col">
+      <ion-row style="border-top:groove">
+        <ion-col col-4>
+          <ion-label (click)="sortSymbols()" class="sort-label"> Symbol
+            <ion-icon name="arrow-down-outline" *ngIf="sortOrder === 'asc'"></ion-icon>
+            <ion-icon name="arrow-up-outline" *ngIf="sortOrder === 'desc'"></ion-icon>
+            <ion-icon name="swap-vertical" *ngIf="sortOrder === ''"></ion-icon>
+          </ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Live Price</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>High</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Low</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Day Range</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Volume</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Change</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Chg%</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Week Range</ion-label>
+        </ion-col>
+        <ion-col col-4>
+          <ion-label>Chart</ion-label>
+        </ion-col>
+        <ion-col col-4></ion-col>
+      </ion-row>
+    </ion-grid>
 
+    <ion-grid *ngIf="selectedStocks && selectedStocks.length > 0" class="col">
+      <ion-row *ngFor="let stock of selectedStocks" style="border-top:groove">
+        <ng-container *ngIf="stock.currentDataIndex !== undefined">
+          <ion-col col-4 id="c5">
+            <ion-label class="ch" (click)="setClickedStock(stock.symbol)">
+              {{ stock.symbol }}
+            </ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ stock.stock[stock.currentDataIndex].Latest_price.toFixed(1) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label style="color: green;">{{ stock.stock[stock.currentDataIndex].High.toFixed(1) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label style="color: red;">{{ stock.stock[stock.currentDataIndex].Low.toFixed(1) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ stock.stock[stock.currentDataIndex].Low.toFixed(1) }}</ion-label>
+            <div style="width: 120px; position: relative;">
+              <div class="progress position-relative" style="height: 20px;">
+                <div
+                  [ngStyle]="{
+                    backgroundColor: stock.stock[stock.currentDataIndex].Close > stock.stock[stock.currentDataIndex].Open ? 'green' : 'red',
+                    width: ((stock.stock[stock.currentDataIndex].High - stock.stock[stock.currentDataIndex].Low) / (stock.stock[stock.currentDataIndex].High - stock.stock[stock.currentDataIndex].Low)) * 100 + '%',
+                    left: '0',
+                    height: '50%'
+                  }"
+                ></div>
+                <div
+                  class="caret-down"
+                  [ngStyle]="{
+                    position: 'absolute',
+                    left: ((stock.stock[stock.currentDataIndex].Close - stock.stock[stock.currentDataIndex].Low) / (stock.stock[stock.currentDataIndex].High - stock.stock[stock.currentDataIndex].Low)) * 100 + '%',
+                    transform: 'translateX(-20%)',
+                    top: '50%',
+                    fontSize: '6px',
+                    color: stock.stock[stock.currentDataIndex].Close > stock.stock[stock.currentDataIndex].Open ? 'green' : 'red'
+                  }"
+                >
+                  ▼
+                </div>
+              </div>
+            </div>
+            <ion-label>{{ stock.stock[stock.currentDataIndex].High.toFixed(1) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ (stock.stock[stock.currentDataIndex].Volume / 1000000).toFixed(1) }}M</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5" [ngClass]="{'positive-value': stock.stock[stock.currentDataIndex].Change_price > 0, 'negative-value': stock.stock[stock.currentDataIndex].Change_price< 0}">
+            <ion-label>{{ stock.stock[stock.currentDataIndex].Change_price.toFixed(2) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5" [ngClass]="{'positive-value': stock.stock[stock.currentDataIndex].Change_percentage > 0, 'negative-value': stock.stock[stock.currentDataIndex].Change_percentage < 0}">
+            <ion-label>{{ stock.stock[stock.currentDataIndex].Change_percentage.toFixed(2) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ stock.stock[stock.currentDataIndex].Low.toFixed(1) }}</ion-label>
+            <input type="range" [min]="stock.stock[stock.currentDataIndex].Low" [max]="stock.stock[stock.currentDataIndex].High" [value]="stock.stock[stock.currentDataIndex].Close" #rangeSlider>
+            <ion-label>{{ stock.stock[stock.currentDataIndex].High.toFixed(1) }}</ion-label>
+          </ion-col>
+       
+          <ion-col col-4 id="c5">
+            <ion-button (click)="removeSelectedStock(stock)">Remove</ion-button>
+          </ion-col>
+        </ng-container>
+      </ion-row>
+    </ion-grid>
+    </div>
+    
+    <div id="gainer" class="tabcontent">
+      <h4>Top Gainer</h4>
+      <ion-grid class="col">
+        <ion-row style="border-top: groove">
+          <ion-col col-4><ion-label>Symbol</ion-label></ion-col>
+          <ion-col col-4><ion-label>Company Name</ion-label></ion-col>
+          <ion-col col-4><ion-label>Latest Price</ion-label></ion-col>
+          <ion-col col-4><ion-label>Chg%</ion-label></ion-col>
+          <ion-col col-4><ion-label>Change</ion-label></ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-grid class="col">
+        <ion-row *ngFor="let topGainer of topGainers" style="border-top: groove">
+          <ion-col col-4 id="c5"><ion-label>{{ topGainer.symbol }}</ion-label></ion-col>
+          <ion-col col-4 id="c5"><ion-label>{{ topGainer.name }}</ion-label></ion-col>
+          <ion-col col-4 id="c5"><ion-label>{{ topGainer.price }}</ion-label></ion-col>
+          <ion-col col-4 id="c5" ><ion-label>{{ topGainer.change }}%</ion-label></ion-col>
+          <ion-col col-4 id="c5" style="color:green"><ion-label>{{ topGainer.changesPercentage }}</ion-label></ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>   
+    <div id="loser" class="tabcontent">
+      <h4>Top Loser</h4>
+      <ion-grid class="col">
+        <ion-row style="border-top: groove">
+          <ion-col col-4><ion-label>Symbol</ion-label></ion-col>
+          <ion-col col-4><ion-label>Company Name</ion-label></ion-col>
+          <ion-col col-4><ion-label>Latest Price</ion-label></ion-col>
+          <ion-col col-4><ion-label>Chg%</ion-label></ion-col>
+          <ion-col col-4><ion-label>Change</ion-label></ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-grid class="col">
+        <ion-row *ngFor="let topLoser of topLosers" style="border-top: groove">
+          <ion-col col-4 id="c5"><ion-label>{{ topLoser?.symbol }}</ion-label></ion-col>
+          <ion-col col-4 id="c5"><ion-label>{{ topLoser?.name }}</ion-label></ion-col>
+          <ion-col col-4 id="c5"><ion-label>{{ topLoser.price }}</ion-label></ion-col>
+          <ion-col col-4 id="c5"><ion-label>{{ topLoser.change }}%</ion-label></ion-col>
+          <ion-col col-4 id="c5"  style="color:red"><ion-label>{{ topLoser.changesPercentage }}</ion-label></ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    
+      
 
+    <div id="index" class="tabcontent">
+      <h4>Indices</h4>
+      <ion-grid class="col">
+        <ion-row style="border-top:groove">
+          <ion-col col-4>
+            <ion-label>Symbol</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Live Price</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Open</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>High</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Low</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Close</ion-label>
+          </ion-col>
+          <ion-col col-4>
+            <ion-label>Chg%</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+     
+      <ion-grid class="col" >
+        <ion-row *ngFor="let vix of vixData" style="border-top:groove">
+          <ion-col col-4 id="c5">
+            <ion-label>{{ vix.symbol }}</ion-label>
+          </ion-col>
+         <ion-col col-4 id="c5">
+            <ion-label>{{ vix.option[0].open.toFixed(2) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ vix.option[0].high.toFixed(2) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ vix.option[0].low.toFixed(2) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ vix.option[0].close.toFixed(2) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ vix.option[0].volume.toFixed(2) }}</ion-label>
+          </ion-col>
+          <ion-col col-4 id="c5">
+            <ion-label>{{ vix.option[0].adj_close.toFixed(2) }}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    
+    
+  </div>
 
+  <div *ngIf="selectTabs === 'contact'" class="grid-container">
+    <app-multichart></app-multichart>
+  </div>
 
-<div *ngIf="selectTabs === 'contacts'">
-  <details>
-  <summary>RATIOS/PROFITABLITY</summary>
-    <app-metrics></app-metrics>
-  </details>
-<details>
-  <summary>NEWS</summary>
-  <app-charts></app-charts>
-</details>
-<details>
-  <summary>ANALYST CONSENSUS & TRENDS</summary>
-  <app-chart1></app-chart1>
-</details>
-<details>
-  <summary>EARNINGS PROJECTIONS</summary>
-  <app-earning></app-earning>
-</details>
-<details>
-  <summary>PROFILE</summary>
-  <app-profile></app-profile>
-</details>
-</div>
-
-
-
-
+  <div *ngIf="selectTabs === 'contacts'">
+    <details>
+      <summary>RATIOS/PROFITABLITY</summary>
+      <app-metrics></app-metrics>
+    </details>
+    <details>
+      <summary>NEWS</summary>
+      <app-charts></app-charts>
+    </details>
+    <details>
+      <summary>ANALYST CONSENSUS & TRENDS</summary>
+      <app-chart1></app-chart1>
+    </details>
+    <details>
+      <summary>SCREENER CROSS RATES</summary>
+      <app-screener></app-screener>
+    </details>
+    <details>
+      <summary>EARNINGS PROJECTIONS</summary>
+      <app-earning></app-earning>
+    </details>
+    <details>
+      <summary>PROFILE</summary>
+      <app-profile></app-profile>
+    </details>
+    <details>
+      <summary>HEATMAP</summary>
+      <app-heatmap></app-heatmap>
+    </details>
+    <details>
+      <summary>EARNINGS CALENDAR</summary>
+      <app-techanalysis></app-techanalysis>
+    </details>
+    <details>
+      <summary>MARKET HOURS</summary>
+      <app-stockmarket></app-stockmarket>
+    </details>
+  </div>
 

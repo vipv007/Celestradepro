@@ -1,94 +1,269 @@
 <ion-header>
   <app-ribbon></app-ribbon>
-
 </ion-header>
 
-
-<ion-content >
+<ion-content>
   <div class="row mt-2">
-    <div class="col-xl-6 col-lg-6 col-md-6 col-sm4 col-16 my-16">
-      <div class="card border-radius-15 p-3">
-        <canvas id="barChart"></canvas>
-
-          <th>Performance today</th>
-
-
-      </div>
-    </div>  <div class="col-xl-6 col-lg-6 col-md-6 col-sm4 col-16 my-16 box">
-
-        <div class="table-responsive">
-
-          <table class="table font-12">
-            <thead class="bg-gray">
-              <tr class="border-0">
-                <th class="border-0">Symbol</th>
-                <th class="border-0">Name</th>
-                <th class="border-0">Percentage</th>
-
-              </tr>
+    <div class="heading">
+      <div class="table-responsive-md" id="">
+        <div style="display: flex; align-items: center;">
+          <h2 style="margin-right: 10px;">Portfolio</h2>
+          
+          <!-- Dropdown Filter -->
+          <select class="custom-select" (change)="filterByType($event)">
+            <option value="">All Type</option>
+            <option *ngFor="let type of uniqueTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+        
+        <table class="table table-borderless table-hover">
+            <!-- Table Header -->
+            <thead class="thead-light">
+                <tr>
+                    <th>Symbol</th>
+                    <!-- <th>Status</th> -->
+                    <th>Type</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>S/L</th>
+                    <th>T/P</th>
+                    <!-- <th>Trigger Price</th> -->
+                    <th>Profit</th>
+                    <th>Credit/Debit</th>
+                    <th>Margin(Initial)</th>
+                    <th>Margin(Maint)</th>
+                    
+                </tr>
             </thead>
+    
+            <!-- Table Body -->
             <tbody>
-
-
-                <tr *ngFor="let stock of stocks">
-                  <td><button>{{ stock.symbol }}</button></td>
-                  <td><button>{{ stock.symbol }}</button></td>
-                  <td><button> {{stock.stock[0].Close.toFixed(1)}} </button></td>
-
-              </tr>
+                <ng-container *ngFor="let folio of filteredPortfolio">
+                    <tr [ngClass]="getClassForOrderType(folio.type)">
+                        <td (click)="navigateToMissedTab(folio.stock, folio.stock, folio.type)">{{ folio.stock }}</td>
+                        <!-- <td>{{ folio.order}}</td> -->
+                        <td>{{ folio.type }}</td>
+                        <td>{{ folio.quantity }}</td>
+                        <td>{{ folio.price.toFixed(2) }}</td>
+                        <td>{{ folio.stoploss.toFixed(2) }}</td>
+                        <td>{{ folio.target.toFixed(2) }}</td>
+                        <!-- <td>{{ folio.triggerprice }}</td> -->
+                        <td>{{ folio.totalamount }}</td>
+                        <td>{{ folio.credit }}</td>
+                        <td>{{ folio.margininitial }}</td>
+                        <td>{{ folio.marginmaint }}</td>
+                        
+                    </tr>
+                </ng-container>
             </tbody>
-          </table>
-        </div>
-
-
-        <th>Over all return</th>
-
-      </div>
-    </div>
-    <div class="ion-padding">
-      <ion-item>
-        <ion-label>Select Symbol</ion-label>
-        <div *ngFor="let stock of stocks">
-          <input type="checkbox" [(ngModel)]="stock.selected" (change)="onSelectionChange()">
-          {{stock.symbol}}
-        </div>
-      </ion-item>
-      <div id="chart"></div>
-    </div>
-
-
-  <div class="col-xl-12 col-lg-12 col-md-12 col-sm12 col-16 my-16">
-    <div class="card border-radius-15 p-3">
-      <div class="container mt-3">
-        <table class="table table-bordered ">
-          <thead class="thead-dark-blue">
-            <tr>
-              <th scope="col">Symbol</th>
-              <th scope="col">Today Price</th>
-              <th scope="col">Number of Security</th>
-              <th scope="col">Value</th>
-              <th scope="col">Grant Total</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let folio of portfolio">
-
-             <td> <label>{{ folio.ticker_symbol}}</label></td>
-              <td><p>{{ folio.today_price}}</p></td>
-              <td><p>{{ folio.quantity}}</p><td>
-              <td><p>{{ folio.total_amount}}</p></td>
-
-            </tr>
-          </tbody>
         </table>
+    </div>
+  </div>
+  
+  <!--canvas id="doughnutChart" ></canvas-->
+    
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-16 my-16">
+     
+      <!--div class="chart">
+        <ion-toggle color="success" [(ngModel)]="displayChart" (ionChange)="toggleDisplay()">Show Market Depth Data</ion-toggle> 
+        
+        <ion-item>
+          <ion-label>Select Symbol</ion-label>
+          <div *ngFor="let stock of stocks">
+            <input type="checkbox" [(ngModel)]="stock.selected" (change)="onSelectionChange(stock)">
+            {{ stock.symbol }}
+          </div>
+        </ion-item>
+        <div id="chart-container" *ngIf="displayChart" ></div>
+      </div-->
+
+      
+
+      <canvas id="pieChart" class="chart" style="margin-left: 3%;margin-top:4%;height: 40%;" ></canvas>
 
 
+    </div>
+
+
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-8 my-8 box">
+      <div class="table-responsive">
+        <div class="buy-order-form">
+          <div class="modal-content">
+            <div class="center-box">
+              <div class="boxs">
+                
+              <ion-segment [(ngModel)]="selectTabs">
+                <ion-segment-button value="recent">
+                  <ion-label>ORDER</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="missed">
+                  <ion-label  >MARKET DEPTHDATA</ion-label>
+              
+                </ion-segment-button>
+              </ion-segment>
+              <div *ngIf="selectTabs === 'recent'">
+                <div class="content">
+                  <div [ngClass]="{'buy-top-color': selectedOption === 'Buy', 'sell-top-color': selectedOption === 'Sell'}"
+                    id="top-color">
+                    <small>NIFTY 22nd FEB 22000 CE</small>
+                    <p>188.45</p>
+                  </div>
+                
+                  <div class="form-container">
+                    <ion-row class="segment-row">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled"
+                          [checked]="selectedOption === 'Buy'" (change)="toggleOption()">
+                        <label class="form-check-label" for="flexSwitchCheckDisabled"
+                          [ngClass]="{'text-success': selectedOption === 'Buy', 'text-danger': selectedOption === 'Sell'}">
+                          {{ selectedOption }}
+                        </label>
+                        
+                      </div>
+                    </ion-row>
+                    <ion-row class="input-boxes">
+                      <ion-col size="12">
+                        <ion-item>
+                          <ion-label>Select Date</ion-label>
+                          <input type="date" [(ngModel)]="selectedDateTime">
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+
+                    <!-- Order Type Selection -->
+                    <ion-row class="input-boxes">
+                      <ion-col size="12">
+                        <ion-item class="input-item">
+                          <ion-label>Order Type</ion-label>
+                          <ion-select [(ngModel)]="selectedOrderType">
+                            <ion-select-option value="MIS">MIS</ion-select-option>
+                            <ion-select-option value="Limit">NRML</ion-select-option>
+                            <ion-select-option value="SL">SL</ion-select-option>
+                          </ion-select>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+
+                    <!-- Other Input Fields -->
+                    <ion-row class="input-boxes">
+                      <ion-col size="4">
+                        <ion-item class="input-item">
+                          <ion-label position="floating">Quantity</ion-label>
+                          <ion-input type="number" [(ngModel)]="quantity" placeholder="0"></ion-input>
+                        </ion-item>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-item class="input-item">
+                          <ion-label position="floating">Price</ion-label>
+                          <ion-input type="number" [(ngModel)]="price" placeholder="0" [(ngModel)]="straightLineValue"
+                            (change)="updateChart()" cdkDrag></ion-input>
+                        </ion-item>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-item class="input-item">
+                          <ion-label position="floating">Trigger Price</ion-label>
+                          <ion-input type="number" [(ngModel)]="triggerprice" placeholder="0"></ion-input>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row class="input-boxes">
+                      <ion-col size="4">
+                        <ion-item class="input-item">
+                          <ion-label position="floating">Target</ion-label>
+                          <ion-input type="number" [(ngModel)]="target" placeholder="0" [(ngModel)]="target"
+                            (change)="updateChart()"></ion-input>
+                        </ion-item>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-item class="input-item">
+                          <ion-label position="floating">Stoploss</ion-label>
+                          <ion-input type="number" [(ngModel)]="stoploss" placeholder="0" [(ngModel)]="stoploss"
+                            (change)="updateChart()"></ion-input>
+                        </ion-item>
+                      </ion-col>
+                      <ion-col size="4">
+                        <ion-item class="input-item">
+                          <ion-label position="floating">Trailing Stoploss</ion-label>
+                          <ion-input type="number" [(ngModel)]="trailingstoploss" placeholder="0"></ion-input>
+                        </ion-item>
+                      </ion-col>
+                    </ion-row>
+                    <!-- Buttons Container -->
+                    <ion-row class="button-row">
+                      <ion-col size="12" class="button-col">
+                        <ion-button expand="block" [color]="selectedOption === 'Buy' ? 'success' : 'danger'" class="buy-button"
+                          (click)="onSubmit()">{{ selectedOption }}</ion-button>
+                        <!--ion-button expand="block" color="danger" class="cancel-button">Cancel</ion-button-->
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="selectTabs === 'missed'">
+               
+                 <div  class="sto" *ngFor="let depth of marketDepthData">
+                  <ion-item>
+                  <ion-label slot="start">{{ depth.symbol }}  :  122.00</ion-label>
+                  </ion-item>
+                  <!-- <ion-button color="primary" class="op" (click)="open()" (click)="fetchMarketDepthData()">DepthData</ion-button>
+                     -->
+                    <table style="margin-top: 0%;" class="table table-borderless table-hover">
+                      <thead class="thead-light">
+                        <tr>
+                          <th> Quantity</th>
+                          <th>Orders</th>
+                          <th >Buy Price</th>
+                          <th>Sell Price</th>
+                          <th>Orders</th>
+                          <th>Quantity</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngFor="let item of depth.market_depth; let i = index">
+                          <tr *ngIf="i >= 0" class="border-top">
+                            <td colspan="8"></td> <!-- Spanning all columns -->
+                          </tr>
+                          <tr>
+                            <td>{{ item.buy_quantity }}</td>
+                            <td>{{ item.b_order }}</td>
+                            <td class="buy-price">{{ item.buy_price }}</td>
+                            <td>{{ item.sell_price }}</td>
+                            <td>{{ item.s_order }}</td>
+                            <td>{{ item.sell_quantity }}</td>
+                          </tr>
+                        </ng-container>
+
+                        <tr class="ms1"  *ngIf="1 >= 0" class="border-top">
+                          <td>{{ getTotalOrders(depth.market_depth, 'buy') }}</td>
+                          <td></td>
+                          <td style="font-size: 20px; width: 50%;">Total </td>
+                          <td style="font-size: 20px; width: 50%;">Quantity</td>
+                          <td></td>
+                          <td>{{ getTotalOrder(depth.market_depth, 'sell') }}</td>
+                        </tr>
+                      </tbody>
+                      
+                    </table>
+                    
+                    <tr class="sm1" >
+                      <th style="background-color: white; color: black;">OPEN </th>
+                      <th style="background-color: white; color: black;">HIGH</th>
+                      <th style="background-color: white; color: black;">LOW</th>
+                      <th style="background-color: white; color: black; " >CLOSE</th></tr>
+                      <tr class="sm2">
+                        <td>120.00</td>
+                        <td>180.00</td>
+                        <td>90.00</td>
+                        <td>110.00</td>
+                      </tr>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  </ion-content>
-
-
-
+</div>
+</ion-content>

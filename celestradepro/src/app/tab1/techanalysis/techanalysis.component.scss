@@ -1,0 +1,22 @@
+table {
+    border-collapse: collapse;
+    width: 1500px; /* Set width to 700px */    
+    text-align: center;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: left; /* Adjust alignment if needed */
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+  
+  th {
+    font-weight: bold;
+    background-color: #babec7;
+    color:rgb(27, 26, 26);
+  }
+  
+ td:nth-child(1) {
+   color:rgb(9, 169, 249);
+}

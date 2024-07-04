@@ -1,115 +1,19 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-back-button defaultHref="/tabs/tab1" color="danger"></ion-back-button>
-    <ion-title>NIFTY OPTIONS</ion-title>
-  </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-
-  <ion-content class="content">
-    <img src="../../assets/ch2.jpg" />
-
-  <ion-grid>
-    <center>
-    <ion-button color="success">Call</ion-button>
-    
-  </center>
-  </ion-grid><br>
-  
-  <ion-grid class="grid">
-    <ion-row style="border-top:groove">
-      <ion-col col-4>
-        <ion-label>DELTA</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >BUILTUP</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >OI</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >CHG IN OI</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >IV</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label>LTP(CHI%)</ion-label>
-      </ion-col>
-      
-      </ion-row>
-  </ion-grid>
-  
-    <ion-grid *ngFor="let nifty of niftys" class="green">
-      <ion-row style="border-top:groove">
-        <ion-col col-4>
-          <ion-label>{{ nifty.DELTA }}</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label >{{ nifty.BUILTUP }}</ion-label> 
-        </ion-col>
-        <ion-col col-4>
-          <ion-label >{{ nifty.OI }}</ion-label>
-        </ion-col>
-        <ion-col col-4> 
-          <ion-label >{{ nifty.CHGINOI }}</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label >{{ nifty.IV}}</ion-label>
-        </ion-col>
-        <ion-col col-4> 
-          <ion-label>{{ nifty.LTP }}</ion-label>
-        </ion-col>
-        </ion-row>
-    </ion-grid>
-    
-     
-  <center><ion-button color="success">Put</ion-button></center>
-  <ion-grid class="reds">
-    <ion-row style="border-top:groove">
-      <ion-col col-4>
-        <ion-label>LTP (CHG %)
-        </ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >IV</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >CHG IN OI</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >OI</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >BUILTUP</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label>DELTA</ion-label>
-      </ion-col>
-      </ion-row>
-  </ion-grid>
-  <ion-grid *ngFor="let np of nps"class="red">
-    <ion-row style="border-top:groove">
-      <ion-col col-4>
-        <ion-label>{{np.LTP}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >{{np.IV}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >{{np.CHGINOI}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >{{np.OI}}</ion-label>
-      </ion-col>
-      <ion-col col-4 class="green">
-        <ion-label >{{np.BUILTUP}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label>{{np.DELTA}}</ion-label>
-      </ion-col>
-      </ion-row>
-  </ion-grid>
-  </ion-content>
+<div>
+  <p>{{ title }}</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Trading Session</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let technical of technicals">
+        <td>{{ technical.pivot_levels.pivot }}</td>
+        <td>{{ hour.Start }}</td>
+        <td>{{ hour.End }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

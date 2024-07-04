@@ -17,3 +17,37 @@
   margin-left: 20px; /* Add some indentation to the bullet points */
 
 }
+
+.table {
+ width: 35cm;
+ margin-left: 5%;
+  border: 2px solid gray;
+    padding: 10px;
+}
+th{
+  text-align: center;
+}
+td{
+  text-align: left;
+}
+.pagination {
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-item {
+  cursor: pointer;
+}
+
+.page-link {
+  color: #007bff;
+}
+input{
+  margin-left: 72%;
+  width: 25%;
+}
+.card{
+  margin-left: 2%;
+  width: 95%
+}
+

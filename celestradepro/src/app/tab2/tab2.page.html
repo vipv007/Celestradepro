@@ -1,9 +1,8 @@
-<ion-header>
-  <app-ribbon></app-ribbon>
+
   <meta charset="utf-8">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js" defer></script>
-</ion-header>
 
+<app-charting></app-charting>
 <ion-content >
 
   <ion-segment [(ngModel)]="selectTabs">
@@ -18,6 +17,12 @@
     <ion-segment-button value="contact">
       <ion-label>Tile View</ion-label>
     </ion-segment-button>
+    <ion-segment-button value="matrix">
+      <ion-label>Matrix View</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="strategy">
+      <ion-label>Strategy View</ion-label>
+    </ion-segment-button>
 
     <ion-segment-button value="contacts">
       <ion-label>Research</ion-label>
@@ -25,67 +30,95 @@
     </ion-segment>
 
     <div *ngIf="selectTabs === 'recent'">
-      <h2>Options Data</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Symbol</th>
-            <th>Type</th>
-            <th>Last Trade Date</th>
-            <th>Strike</th>
-            <th>Last Price</th>
-            <!-- <th>Bid</th>
-            <th>Ask</th>
-            <th>Change</th>
-            <th>Percent Change</th> -->
-            <th>Volume</th>
-            <!-- <th>Open Interest</th> -->
-            <th>Implied Volatility</th>
-            <th>In the Money</th>
-            <!-- <th>Contract Size</th>
-            <th>Currency</th> -->
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let option of options">
+      
+    <h4>Option Chain</h4>
+
+    <div class="scroll-container">
+      <div class="table-heading">
+        <div class="heading-box">
+          <h2>Call</h2>
+        </div>
+        <div class="heading-box">
+          <h2>Put</h2>
+        </div>
+      </div>
+      <div *ngIf="optionschain" class="table-wrapper">
+        <table class="call-table">
+          <thead>
             <tr>
-              <td>{{ option.symbol }}</td>
-              <td>Call</td>
-              <td>{{ option.calls[0].lastTradeDate }}</td>
-              <td>{{ option.calls[0].strike }}</td>
-              <td>{{ option.calls[0].lastPrice }}</td>
-              <!-- <td>{{ option.calls[0].bid }}</td>
-              <td>{{ option.calls[0].ask }}</td>
-              <td>{{ option.calls[0].change }}</td>
-              <td>{{ option.calls[0].percentChange }}</td> -->
-              <td>{{ option.calls[0].volume }}</td>
-              <!-- <td>{{ option.calls[0].openInterest }}</td> -->
-              <td>{{ option.calls[0].impliedVolatility.toFixed(4) }}</td>
-              <td>{{ option.calls[0].inTheMoney }}</td>
-              <!-- <td>{{ option.calls[0].contractSize }}</td>
-              <td>{{ option.calls[0].currency }}</td> -->
+              <th>Contract Name</th>
+              <th>Underlying Symbol</th>
+              <th>Strike</th>
+              <th>Last Price</th>
+              <th>Bid</th>
+              <th>Ask</th>
+              <th>Change</th>
+              <th>% Change</th>
+              <th>Volume</th>
+              <th>Open Interest</th>
+              <th>Implied Volatility</th>
             </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let option of optionschain">
+              <tr>
+                <td>{{ option.calls[0]?.contractSymbol }}</td>
+                <td><span class="symbol" (click)="setClickedOptions( option.symbol)">{{ option.symbol }}</span></td>
+                <td>{{ option.calls[0]?.strike }}</td>
+                <td>{{ option.calls[0]?.lastPrice }}</td>
+                <td>{{ option.calls[0]?.bid }}</td>
+                <td>{{ option.calls[0]?.ask }}</td>
+                <td>{{ option.calls[0]?.change }}</td>
+                <td>{{ option.calls[0]?.percentChange }}</td>
+                <td>{{ option.calls[0]?.volume }}</td>
+                <td>{{ option.calls[0]?.openInterest }}</td>
+                <td>{{ option.calls[0]?.impliedVolatility.toFixed(3) }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+    
+        <div class="spacer"></div>
+    
+        <table class="put-table">
+          <thead>
             <tr>
-              <td>{{ option.symbol }}</td>
-              <td>Put</td>
-              <td>{{ option.puts[0].lastTradeDate }}</td>
-              <td>{{ option.puts[0].strike }}</td>
-              <td>{{ option.puts[0].lastPrice }}</td>
-              <!-- <td>{{ option.puts[0].bid }}</td>
-              <td>{{ option.puts[0].ask }}</td>
-              <td>{{ option.puts[0].change }}</td>
-              <td>{{ option.puts[0].percentChange }}</td> -->
-              <td>{{ option.puts[0].volume }}</td>
-              <!-- <td>{{ option.puts[0].openInterest }}</td> -->
-              <td>{{ option.puts[0].impliedVolatility }}</td>
-              <td>{{ option.puts[0].inTheMoney }}</td>
-              <!-- <td>{{ option.puts[0].contractSize }}</td>
-              <td>{{ option.puts[0].currency }}</td>  -->
+              <th>Contract Name</th>
+              <th>Underlying Symbol</th>
+              <th>Strike</th>
+              <th>Last Price</th>
+              <th>Bid</th>
+              <th>Ask</th>
+              <th>Change</th>
+              <th>% Change</th>
+              <th>Volume</th>
+              <th>Open Interest</th>
+              <th>Implied Volatility</th>
             </tr>
-          </ng-container>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let option of optionschain">
+              <tr>
+                <td>{{ option.puts[0]?.contractSymbol }}</td>
+                <td><span class="symbol" (click)="setClickedOptions( option.symbol)">{{ option.symbol }}</span></td>
+                <td>{{ option.puts[0]?.strike }}</td>
+                <td>{{ option.puts[0]?.lastPrice }}</td>
+                <td>{{ option.puts[0]?.bid }}</td>
+                <td>{{ option.puts[0]?.ask }}</td>
+                <td>{{ option.puts[0]?.change }}</td>
+                <td>{{ option.puts[0]?.percentChange }}</td>
+                <td>{{ option.puts[0]?.volume }}</td>
+                <td>{{ option.puts[0]?.openInterest }}</td>
+                <td>{{ option.puts[0]?.impliedVolatility.toFixed(3) }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
     </div>
+    
+    
+</div>
     
 
 <div *ngIf="selectTabs === 'missed'">
@@ -94,7 +127,7 @@
 
 <div *ngIf="selectTabs === 'contact'" class="grid-container">
   <div class="tiles-container">
-    <div [ngClass]="{'tile': true, 'call-tile': true}" *ngFor="let option of options">
+    <div [ngClass]="{'tile': true, 'call-tile': true}" *ngFor="let option of optionschain">
       <div class="tile-header">{{ option.symbol }}</div>
       <div class="tile-content">
         <div class="tile-row">
@@ -121,25 +154,123 @@
     </div>
   </div>
 </div>
+<div *ngIf="selectTabs === 'matrix'">
+  <div *ngIf="options && options.length > 0">
+     
+    <h4>Options Data</h4>
+   
+    <div class="table-wrapper"> 
 
+    <table >
+      
+        <thead>
+          <tr>
+          </tr>
+          <tr>
+            <th>SYMBOL</th>
+            <th>EXPIRY</th>
+            <th>PRICE</th>
+            <th>LTP(CHG%)</th>
+            <th> OI</th>
+            <th>VOLUME</th>
+            <th> IV</th>
+            <th> DELTA</th>
+            <th>THETA</th>
+            <th>VEGA</th>
+            <th>GAMMA</th>
+            <th>STRIKE PRICE</th>
+
+            <th>PRICE</th>
+            <th>LTP(CHG%)</th>
+            <th> OI</th>
+            <th>VOLUME</th>
+            <th> IV</th>
+            <th> RATIO</th>
+            <th> DELTA</th>
+            <th>THETA</th>
+            <th>VEGA</th>
+            <th>GAMMA</th>
+          </tr>
+        </thead>
+      <tbody>
+        <tr *ngFor="let option of options">
+          <td>{{ option['Underlying Name'] }}</td>
+          <td>{{ option['Expiration Date'] }}</td>
+          <td>{{ option['Call-Price'] }}</td>
+          <td>{{ option['Call-Change in Price (%)'] }}</td>
+          <td>{{ option['Call-Open Interest'] }}</td>
+          <td>{{ option['Call-Volume'] }}</td>
+          <td>{{ option['Call-Implied Volatility'] }}</td>
+          <td>{{ option['Greeks: Call Delta'] }}</td>
+          <td>{{ option['Greeks: Call Theta'] }}</td>
+          <td>{{ option['Greeks: Call Vega'] }}</td>
+          <td>{{ option['Greeks: Call Gamma'] }}</td>
+          <td>{{ option['Strike Price'] }}</td>
+
+          <td>{{ option['Put-Price'] }}</td>
+          <td>{{ option['Put-Change in Price (%)'] }}</td>
+          <td>{{ option['Put-Open Interest'] }}</td>
+          <td>{{ option['Put-Volume'] }}</td>
+          <td>{{ option['Put-Implied Volatility'] }}</td>
+          <td>{{ option['Put-Call Ratio'] }}</td>
+          <td>{{ option['Greeks: Put Delta'] }}</td>
+          <td>{{ option['Greeks: Put Theta'] }}</td>
+          <td>{{ option['Greeks: Put Vega'] }}</td>
+          <td>{{ option['Greeks: Put Gamma'] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</div>
+
+<div *ngIf="selectTabs === 'strategy'">
+  <app-vol-chart></app-vol-chart>
+
+</div>
 <!-- <p>Last Updated: <span id="last-updated"></span></p> -->
 
 <div *ngIf="selectTabs === 'contacts'">
+  
   <details>
-  <summary>OPEN INTEREST</summary>
-  <app-option-io></app-option-io>
+    <summary>OPEN INTEREST</summary>
+    <app-option-io></app-option-io>
   </details>
   <details>
     <summary>VOLATILITY</summary>
-    <!--app-vol-chart></app-vol-chart-->
-    <app-volatility></app-volatility>
+   <app-volatility></app-volatility>
    </details>
    <details>
-    <summary>STRATEGY</summary>
-
+    <summary>NEWS</summary>
+   <app-optionnews></app-optionnews>
    </details>
-  </div>
 
+  <details>
+    <summary>MARKET HOURS</summary>
+    <app-nifty></app-nifty>
+  </details>
+  
+
+   <!-- <details>
+    <summary>STRIKE PEGGER </summary>
+    <app-strike-pegger></app-strike-pegger>
+   </details> -->
+
+   <details>
+    <summary>OPTION STRIKE PEGGER </summary>
+    <app-opstrike-pegger></app-opstrike-pegger>
+   </details>
+
+   <details>
+    <summary>MOST ACTIVE OPTIONS </summary>
+    <app-active-options></app-active-options>
+   </details>
+
+   
+   <!-- <app-option-io></app-option-io> -->
+
+  </div>
+  
 </ion-content>
 
 

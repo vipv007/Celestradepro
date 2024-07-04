@@ -1,6 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Chart, ChartOptions } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
 import { CommodityService } from 'src/app/services/commodity.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PortfolioService } from '../../services/portfolio.service';
+import { MarketdepthService } from 'src/app/services/marketdepth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface CommodityData {
   _id: string;
@@ -24,93 +27,247 @@ interface CommodityData {
   styleUrls: ['./commodity.component.scss'],
 })
 export class CommodityComponent implements OnInit {
-  @ViewChild('commodityChart') commodityChart: ElementRef;
+  isDarkMode: boolean = false; // Initial state
 
-  chart: Chart;
-  symbols: { name: string; checked: boolean }[] = [
-    { name: 'Gold', checked: false },
-    { name: 'Silver', checked: false },
-    { name: 'Crude Oil', checked: false },
-    
-  ];
+  // Function to toggle dark mode
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+  }
+  
+  priceValue: string;
+  commoditys: any;
+  Symbol: string;
+  portfolio: any[] = []; // Initialize portfolio array
+  currentIndex = 0;
+  selectedSegment: any;
+  quantity: number;
+  price: number;
+  triggerprice: number;
+  target: number;
+  stoploss: number;
+  trailingstoploss: number;
+  selectedDateTime: Date = new Date();
+  selectedOrderType: string = ''; 
+  modalOpen: boolean;
+  low: number;
+  high: number;
+  showBox = false;
+  TargetsValue: string;
+  StoplossValue: string;
+  mk: any;
+  marketDepthData: any[];
+  commodityPrices: any;
+  chartData: any[] = [];
+  linesData: any[] = [];
 
-  constructor(private commodityService: CommodityService) {}
+  constructor(
+    private commodityService: CommodityService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private portfolioService: PortfolioService,
+    private marketdepthService: MarketdepthService
+  ) { }
+
+  openLoginForm() {
+    this.modalOpen = true;
+  }
+
+  closeLoginForm() {
+    this.modalOpen = false;
+  }
+
+  showPrice(price: number) {
+    this.price = price;
+    this.addLineData();
+  }
+
+  showlow(low: number) {
+    this.low = low;
+  }
+
+  showhigh(high: number) {
+    this.high = high;
+  }
+
+  showPrices(price: string) {
+    this.StoplossValue = price;
+    this.addLineData();
+  }
+
+  showPricess(price: string) {
+    this.TargetsValue = price;
+    this.addLineData();
+  }
+
+  onSubmit(orderType: string): void {
+    const dateTimeString = this.selectedDateTime.toString().slice(0, 19).replace('T', ' ');
+
+    const portfolioData = {
+      stock: this.Symbol,
+      type: 'commodity',
+      order: orderType,
+      quantity: this.quantity,
+      price: this.price,
+      triggerprice: this.triggerprice,
+      target: this.target,
+      stoploss: this.stoploss,
+      trailingstoploss: this.trailingstoploss,
+      selectedDateTime: dateTimeString,
+      selectedOrderType: this.selectedOrderType,
+      totalamount: this.quantity * this.price,
+      credit: 1000 + this.price,
+      margininitial: this.price * this.quantity,
+      marginmaint: 200 + this.target
+    };
+
+    this.portfolioService.createPortfolio(portfolioData)
+      .subscribe(
+        (response) => {
+          console.log('Portfolio created successfully:', response);
+          // If needed, perform any additional actions upon successful portfolio creation
+        },
+        (error) => {
+          console.error('Error occurred while creating portfolio:', error);
+        }
+      );
+  }
 
   ngOnInit() {
-    this.updateChart();
+    this.route.queryParams.subscribe(params => {
+      this.Symbol = params.Symbol;
+      this.mk = params.Symbol;
+      console.log('Received:', this.Symbol);
+      this.loadChartData();
+      this.fetchMarketDepthData();
+      this.fetchCommodityPrices();
+    });
+  }
+
+  loadChartData() {
+    this.commodityService.getCommodities().subscribe((response) => {
+      this.commoditys = response;
+      console.log(this.commoditys);
+      if (this.Symbol) {
+        this.updateChart();
+      }
+    });
+  }
+
+  onSelectionChange(Data: any) {
+    if (Data.selected) {
+      this.Symbol = Data.Symbol;
+      // Deselect other stocks
+      this.commoditys.forEach(s => {
+        if (s !== Data) {
+          s.selected = false;
+        }
+      });
+      this.updateChart();
+    }
   }
 
   updateChart() {
-    const selectedSymbols = this.symbols.filter((symbol) => symbol.checked);
+    const selectedCommodity = this.commoditys.find(Data => Data.Symbol === this.Symbol);
+    this.chartData = selectedCommodity.Data.map(dataPoint => ({
+      date: new Date(dataPoint.Date),
+      open: dataPoint.Open,
+      high: dataPoint.High,
+      low: dataPoint.Low,
+      close: dataPoint.Close
+    }));
 
-    this.commodityService.getCommodities().subscribe(
-      (data: CommodityData[]) => {
-        const symbolToColorMap: { [key: string]: string } = {
-          Gold: 'gold',
-          Silver: 'silver',
-          'Crude Oil': 'blue',
-        
-        };
+    this.addLineData();
+  }
 
-        const filteredData = data.filter((commodity) =>
-          selectedSymbols.find((symbol) => commodity.Commodity === symbol.name)
-        );
+  addLineData() {
+    this.linesData = [];
+    
+    if (this.price !== undefined && !isNaN(this.price)) {
+      this.linesData.push({
+        value: this.price,
+        label: 'Price Line',
+        thickness: 2,
+        color: 'blue'
+      });
+    }
+    
+    if (this.target !== undefined && !isNaN(this.target)) {
+      this.linesData.push({
+        value: this.target,
+        label: 'Target Line',
+        thickness: 2,
+        color: 'red'
+      });
+    } else {
+      this.linesData.push({
+        value: null, // Or any default value you prefer
+        label: 'Target Line',
+        thickness: 2,
+        color: 'red'
+      });
+    }
+    
+    if (this.stoploss !== undefined && !isNaN(this.stoploss)) {
+      this.linesData.push({
+        value: this.stoploss,
+        label: 'Stoploss Line',
+        thickness: 2,
+        color: 'green'
+      });
+    }
+    
+    // Add drop line logic
+    const dropLineThreshold = 25; // Change this value to your desired threshold
+    if (this.price !== undefined && this.price < dropLineThreshold) {
+      this.linesData.push({
+        value: dropLineThreshold,
+        label: 'Drop Line',
+        thickness: 2,
+        color: 'red'
+      });
+    }
+  }
+  
+  
 
-        const datasets = filteredData.map((commodity) => {
-          const prices = commodity.Data.map((d) => d.Close);
-          return {
-            label: commodity.Commodity,
-            data: prices,
-            borderColor: symbolToColorMap[commodity.Commodity],
-            fill: false,
-          };
-        });
-
-        const dates = filteredData.length > 0 ? filteredData[0].Data.map((d) => d.Date) : [];
-
-        if (!this.chart) {
-          this.chart = new Chart(this.commodityChart.nativeElement, {
-            type: 'line',
-            data: {
-              labels: dates,
-              datasets: datasets,
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                title: {
-                  display: true,
-                  text: 'Commodity Prices in 2022',
-                },
-              },
-              scales: {
-                x: {
-                  display: true,
-                  title: {
-                    display: true,
-                    text: 'Date',
-                  },
-                  type: 'time',
-                },
-                y: {
-                  display: true,
-                  title: {
-                    display: true,
-                    text: 'Price ($)',
-                  },
-                },
-              },
-            } as ChartOptions,
-          });
-        } else {
-          this.chart.data.labels = dates;
-          this.chart.data.datasets = datasets;
-          this.chart.update();
-        }
+  fetchMarketDepthData() {
+    this.marketdepthService.getAllMarketDepth().subscribe(
+      (data: any[]) => {
+        this.marketDepthData = data.filter((depth: any) => depth.symbol === this.mk);
       },
       (error) => {
-        console.error('Error fetching commodity data:', error);
+        console.error('Error fetching marketDepthData:', error);
       }
     );
+  }
+
+  getTotalOrders(marketDepth: any[], side: string): number {
+    return marketDepth.reduce((total, item) => total + (side === 'buy' ? item.buy_quantity : 0), 0);
+  }
+
+  getTotalOrder(marketDepth: any[], side: string): number {
+    return marketDepth.reduce((total, item) => total + (side === 'sell' ? item.sell_quantity : 0), 0);
+  }
+
+  fetchCommodityPrices() {
+    this.commodityService.getCommodityPrices().subscribe(
+      (data) => {
+        this.commodityPrices = data;
+      },
+      (error) => {
+        console.error('Error fetching commodity prices:', error);
+        // Handle error message based on error status or type
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 0) {
+            console.error('Network error occurred. Please check your internet connection.');
+          } else {
+            console.error('An error occurred while fetching commodity prices. Please try again later.');
+          }
+        } else {
+          console.error('An unexpected error occurred. Please try again later.');
+        }
+      }
+    );
+ 
   }
 }

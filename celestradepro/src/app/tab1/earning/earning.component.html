@@ -1,3 +1,10 @@
-<div class="chart-container">
+<div class="chart">
+  <label *ngFor="let year of uniqueYears">
+    <input type="checkbox" [(ngModel)]="selectedYears[year]" (change)="updateChart(year)">
+    {{ year }}
+  </label>
+</div><br>
+<div>
   <canvas id="myChart"></canvas>
 </div>
+

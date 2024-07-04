@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CresPageRoutingModule } from './cres-routing.module';
+import { IgxFinancialChartModule, IgxLegendModule } from "igniteui-angular-charts";
 
 import { CresPage } from './cres.page';
 
@@ -15,6 +16,8 @@ import { CresPage } from './cres.page';
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
+    IgxFinancialChartModule,
+    IgxLegendModule,
     CresPageRoutingModule
   ],
   declarations: [CresPage]

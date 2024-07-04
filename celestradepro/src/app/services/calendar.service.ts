@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class CalendarService {
+export class CalendarService { 
  
   private baseUrl = 'http://localhost:3000/api/calendar';
 

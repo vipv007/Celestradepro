@@ -1,135 +1,222 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ForexService } from '../services/forex.service';
-import * as Plotly from 'plotly.js/dist/plotly.js';
-import moment from 'moment';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PortfolioService } from '../services/portfolio.service';
+import { MarketdepthService } from 'src/app/services/marketdepth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-forexch',
   templateUrl: './forexch.component.html',
   styleUrls: ['./forexch.component.scss'],
 })
-
 export class ForexchComponent implements OnInit {
 
+  priceValue: string;
+  forexs: any;
+  symbol: string;
+  portfolio: any[];
+  currentIndex = 0;
+  selectedSegment: any;
+  quantity: number;
+  price: number;
+  triggerprice: number;
+  target: number;
+  stoploss: number;
+  trailingstoploss: number;
+  selectedDateTime: Date = new Date();
+  selectedOrderType = '';
+  modalOpen: boolean;
+  low: number;
+  high: number;
+  showBox = false;
+  TargetsValue: string;
+  StoplossValue: string;
+  mk: any;
+  marketDepthvalues: any[];
+  forexPrices: any;
+  chartvalues: any[] = [];
+  linesvalues: any[] = [];
+  showButton: any;
+  folio: any;
+  marketDepthData: any;
+  chartData: any[];
+  selectedTheme = 'light';
+
+  constructor(
+    private forexService: ForexService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private portfolioService: PortfolioService,
+    private marketdepthService: MarketdepthService
+  ) { }
+
+  openLoginForm() {
+    this.modalOpen = true;
+  }
+
+  closeLoginForm() {
+    this.modalOpen = false;
+  }
+
+  showPrice(price: number) {
+    this.price = price;
+    this.addLinevalues();
+  }
+
+  showlow(low: number) {
+    this.low = low;
+  }
+
+  showhigh(high: number) {
+    this.high = high;
+  }
+
+  showPrices(price: string) {
+    this.StoplossValue = price;
+    this.addLinevalues();
+  }
+
+  showPricess(price: string) {
+    this.TargetsValue = price;
+    this.addLinevalues();
+  }
+
+  onSubmit(orderType: string): void {
+    const dateTimeString = this.selectedDateTime.toString().slice(0, 19).replace('T', ' ');
+
+    const portfoliovalues = {
+      stock: this.symbol,
+      type: 'forex',
+      order: orderType,
+      quantity: this.quantity,
+      price: this.price,
+      triggerprice: this.triggerprice,
+      target: this.target,
+      stoploss: this.stoploss,
+      trailingstoploss: this.trailingstoploss,
+      selectedDateTime: dateTimeString,
+      selectedOrderType: this.selectedOrderType,
+      totalamount: this.quantity * this.price,
+      credit: 1000 + this.price,
+      margininitial: this.price * this.quantity,
+      marginmaint: 200 + this.target
+    };
+
+    this.portfolioService.createPortfolio(portfoliovalues)
+      .subscribe(
+        (response) => {
+          console.log('Portfolio created successfully:', response);
+        },
+        (error) => {
+          console.error('Error occurred while creating portfolio:', error);
+        }
+      );
+  }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.symbol = params.symbol || '';
+      console.log('Query Params Symbol:', this.symbol);
+      this.loadChartvalues();
+      this.fetchMarketDepthvalues();
+    });
+
+    this.selectedTheme = localStorage.getItem('selectedTheme') || 'light';  // Load saved theme
+  }
+
+  onThemeToggle(event: any) {
+    this.selectedTheme = event.target.checked ? 'dark' : 'light';
+    localStorage.setItem('selectedTheme', this.selectedTheme);  // Save theme preference
+  }
 
 
-  @ViewChild('chart') chartElement: ElementRef;
-  chart: any;
-  validForexs: any[];
-  selectedForexSymbols: string[] = [];
-
-  
-  constructor(private forexService: ForexService) {}
-
-  ngOnInit() {
-    this.forexService.getAllForexs().subscribe((response: any[]) => {
-      // Filter out forex pairs with no historical data
-      this.validForexs = response.filter(forex => forex.values && forex.values.length > 0);
-      if (this.validForexs.length > 0) {
-        this.selectedForexSymbols = [this.validForexs[0].symbol];
+  loadChartvalues() {
+    this.forexService.getAllForexs().subscribe((response) => {
+      this.forexs = response;
+      console.log(this.forexs);
+      if (this.symbol) {
         this.updateChart();
-      } else {
-        console.error('No valid forex pairs found.');
       }
-    }, error => {
-      console.error(error);
     });
   }
-  
 
-
-  ngAfterViewInit() {
-    if (this.selectedForexSymbols.length > 0) {
+  onSelectionChange(values: any) {
+    if (values.selected) {
+      this.symbol = values.symbol;
+      // Deselect other stocks
+      this.forexs.forEach(s => {
+        if (s !== values) {
+          s.selected = false;
+        }
+      });
       this.updateChart();
     }
   }
-  
-
-  ionViewDidEnter() {
-    this.forexService.getAllForexs().subscribe((response: any[]) => {
-      // Filter out forex pairs with no historical data
-      this.validForexs = response.filter(forex => forex.values && forex.values.length > 0);
-      if (this.validForexs.length > 0) {
-        this.selectedForexSymbols = [this.validForexs[0].symbol];
-        this.updateChart();
-      } else {
-        console.error('No valid forex pairs found.');
-      }
-    }, error => {
-      console.error(error);
-    });
-  }
-
 
   updateChart() {
-    const selectedForexs = this.validForexs.filter(forex => this.selectedForexSymbols.includes(forex.symbol));
+    const selectedforex = this.forexs.find(values => values.symbol === this.symbol);
+    this.chartData = selectedforex.values.map(valuesPoint => ({
+      date: new Date(valuesPoint.Date),
+      open: valuesPoint.Open,
+      high: valuesPoint.High,
+      low: valuesPoint.Low,
+      close: valuesPoint.Close
+    }));
 
-
-    const chartData = selectedForexs.map(selectedForex => {
-      const ohlcData = selectedForex.values;
-
-
-      const dates = [];
-      const opens = [];
-      const highs = [];
-      const lows = [];
-      const closes = [];
-
-
-      ohlcData.forEach((doc) => {
-        dates.push(moment(doc.Date).format('YYYY-MM-DD'));
-        opens.push(doc.Open);
-        highs.push(doc.High);
-        lows.push(doc.Low);
-        closes.push(doc.Close);
-      });
-
-
-      return {
-        type: 'candlestick',
-        x: dates,
-        open: opens,
-        high: highs,
-        low: lows,
-        close: closes,
-        yaxis: 'y2',
-        name: selectedForex.symbol,
-        increasing: { line: { color: '#00C805' } },
-        decreasing: { line: { color: '#FF4545' } }
-      };
-    });
-
-
-    const layout = {
-      dragmode: 'zoom',
-      margin: {
-        r: 10,
-        t: 25,
-        b: 40,
-        l: 60
-      },
-      showlegend: true,
-      xaxis: {
-        autorange: true,
-        domain: [0, 1],
-        range: [Date[0], Date[Date.length - 1]],
-        rangeslider: { range: [Date[Date.length - 60], Date[Date.length - 1]] },
-        type: 'date'
-      },
-      yaxis: {
-        autorange: true,
-        domain: [0, 0.2],
-        showticklabels: false,
-        type: 'linear'
-      },
-      yaxis2: {
-        autorange: true,
-        domain: [0.2, 1],
-        type: 'linear'
-      }
-    }; 
-
-
-    Plotly.newPlot(this.chartElement.nativeElement, chartData, layout);
+    this.addLinevalues();
   }
+
+  addLinevalues() {
+    this.linesvalues = [];
+
+    if (this.price !== undefined && !isNaN(this.price)) {
+      this.linesvalues.push({
+        value: this.price,
+        label: 'Straight Line',
+        thickness: 2,
+        color: 'blue'
+      });
+    }
+
+    if (this.target !== undefined && !isNaN(this.target)) {
+      this.linesvalues.push({
+        value: this.target,
+        label: 'Target Line',
+        thickness: 2,
+        color: 'red'
+      });
+    }
+
+    if (this.stoploss !== undefined && !isNaN(this.stoploss)) {
+      this.linesvalues.push({
+        value: this.stoploss,
+        label: 'Stoploss Line',
+        thickness: 2,
+        color: 'green'
+      });
+    }
+  }
+
+  fetchMarketDepthvalues() {
+    this.marketdepthService.getAllMarketDepth().subscribe(
+      (values: any[]) => {
+        this.marketDepthvalues = values.filter((depth: any) => depth.symbol === this.symbol);
+        console.log('market', this.mk);
+      },
+      (error) => {
+        console.error('Error fetching marketDepthvalues:', error);
+      }
+    );
+  }
+
+  getTotalOrders(marketDepth: any[], side: string): number {
+    return marketDepth.reduce((total, item) => total + (side === 'buy' ? item.buy_quantity : 0), 0);
+  }
+
+  getTotalOrder(marketDepth: any[], side: string): number {
+    return marketDepth.reduce((total, item) => total + (side === 'sell' ? item.sell_quantity : 0), 0);
+  }
+
+
 }

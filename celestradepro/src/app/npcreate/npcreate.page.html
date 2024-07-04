@@ -1,54 +1,5 @@
- 
- <ion-header>
-  <ion-toolbar>
-    <ion-title>Add Details</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <ion-list lines="full">
-    <form [formGroup]="npForm" (ngSubmit)="onSubmit()">
-     
-
-      <ion-item>
-        <ion-label position="floating">LTP(CHI%)</ion-label>
-        <ion-input formControlName="LTP" type="text" required></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">IV</ion-label>
-        <ion-input formControlName="IV" type="text" required></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">CHGINOI</ion-label>
-        <ion-input formControlName="CHGINOI" type="text" required>
-        </ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">OI</ion-label>
-        <ion-input formControlName="OI" type="text" required>
-        </ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">BUILTUP</ion-label>
-        <ion-input formControlName="BUILTUP" type="text" required>
-        </ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">DELTA</ion-label>
-        <ion-input formControlName="DELTA" type="text" required>
-        </ion-input>
-      </ion-item>
-
-     
-      <ion-row>
-        <ion-col>
-          <ion-button type="submit" color="success" expand="block">Add</ion-button>
-        </ion-col>
-      </ion-row>
-    </form>
-  </ion-list>
-</ion-content>
-
+<div class="center-container">
+    <div class="google-pay-button-container">
+      <div #googlePayButton></div>
+    </div>
+  </div>

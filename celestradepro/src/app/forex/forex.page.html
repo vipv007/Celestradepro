@@ -1,68 +1,29 @@
-<ion-header>
-
-  <ion-toolbar >
-    <ion-buttons><ion-back-button defaultHref="/tabs/tab3"></ion-back-button>
-    <ion-title>Forex</ion-title>
-  </ion-buttons>
-
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
 
 
-  <ion-searchbar type="text" class="form-control" placeholder="Search..." [(ngModel)]="filterTerm" ></ion-searchbar>
+<!--div class="right_box">
+  <h5> <span id="home-top5stock">TOP 5 STOCKS</span> - <span data-nse-translate="symbol" data-nse-translate-symbol="NIFTY 50">NIFTY 50</span></h5>
+  <div class="common-tabs small-tabs">
+      <nav>
+          <div class="nav nav-tabs" role="tablist">
+              <a class="nav-item nav-link active" data-toggle="tab" href="#gainers_loosers" role="tab" aria-selected="true" id="gainers_loosers_tab1">GAINERS/LOSERS</a>
+              <a class="nav-item nav-link" data-toggle="tab" href="#most_active" role="tab" aria-selected="false" id="most_active_tab1">MOST ACTIVE </a>
+          </div>
+      </nav>
+      <div class="tab-content">
+          <div class="tab-pane fade active show" id="gainers_loosers" role="tabpanel">
+              <div class="table-container gainers"><div id="tab1_tableGainer"><table id="tab1Ganier" class=""><thead><tr><th width="30%" class="" id="Symboltab1Ganier" data-nse-translate="columnheader" data-nse-translate-columnheader="symbol"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="symbol">Symbol</span></th><th width="18%" class="" title="Last Traded Price" id="LTPtab1Ganier" data-nse-translate="columnheader" data-nse-translate-columnheader="lastPrice"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="lastPrice">LTP</span></th><th width="18%" class="text-right" title="Percentage Change" id="%Chngtab1Ganier" data-nse-translate="columnheader" data-nse-translate-columnheader="pChange"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="pChange">%Chng</span></th><th width="34%" class="text-right" id="Volumetab1Ganier" data-nse-translate="columnheader" data-nse-translate-columnheader="totalTradedVolume"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="totalTradedVolume">Volume</span></th></tr></thead><tbody><tr class=" "><td width="30%" headers="M&amp;M"><a href="/get-quotes/equity?symbol=M%26M" target="_blank" class="symbol-word-break">M&amp;M</a></td><td width="18%" class="" headers="M&amp;M 2159.9">2159.9</td><td width="18%" class="text-right greenTxt" headers="M&amp;M 4.745277757571344">4.75</td><td width="34%" class="text-right" headers="M&amp;M 5745143">57,45,143</td></tr><tr class=" "><td width="30%" headers="POWERGRID"><a href="/get-quotes/equity?symbol=POWERGRID" target="_blank" class="symbol-word-break">POWERGRID</a></td><td width="18%" class="" headers="POWERGRID 301.85">301.85</td><td width="18%" class="text-right greenTxt" headers="POWERGRID 2.774940415389865">2.77</td><td width="34%" class="text-right" headers="POWERGRID 33288857">3,32,88,857</td></tr><tr class=" "><td width="30%" headers="SHRIRAMFIN"><a href="/get-quotes/equity?symbol=SHRIRAMFIN" target="_blank" class="symbol-word-break">SHRIRAMFIN</a></td><td width="18%" class="" headers="SHRIRAMFIN 2545">2545</td><td width="18%" class="text-right greenTxt" headers="SHRIRAMFIN 2.1186100633978087">2.12</td><td width="34%" class="text-right" headers="SHRIRAMFIN 2685245">26,85,245</td></tr><tr class=" "><td width="30%" headers="HEROMOTOCO"><a href="/get-quotes/equity?symbol=HEROMOTOCO" target="_blank" class="symbol-word-break">HEROMOTOCO</a></td><td width="18%" class="" headers="HEROMOTOCO 4551">4551</td><td width="18%" class="text-right greenTxt" headers="HEROMOTOCO 2.0930076048186326">2.09</td><td width="34%" class="text-right" headers="HEROMOTOCO 828084">8,28,084</td></tr><tr class=" "><td width="30%" headers="BAJAJ-AUTO"><a href="/get-quotes/equity?symbol=BAJAJ-AUTO" target="_blank" class="symbol-word-break">BAJAJ-AUTO</a></td><td width="18%" class="" headers="BAJAJ-AUTO 8915.7">8915.7</td><td width="18%" class="text-right greenTxt" headers="BAJAJ-AUTO 1.776235431102389">1.78</td><td width="34%" class="text-right" headers="BAJAJ-AUTO 360403">3,60,403</td></tr></tbody></table></div></div>
+              <div class="table-container loosers"><div id="tab1_tableLoser"><table id="tab1Loser" class=""><thead><tr><th width="30%" class="" id="Symboltab1Loser" data-nse-translate="columnheader" data-nse-translate-columnheader="symbol"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="symbol">Symbol</span></th><th width="18%" class="" title="Last Traded Price" id="LTPtab1Loser" data-nse-translate="columnheader" data-nse-translate-columnheader="lastPrice"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="lastPrice">LTP</span></th><th width="18%" class="text-right" title="Percentage Change" id="%Chngtab1Loser" data-nse-translate="columnheader" data-nse-translate-columnheader="pChange"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="pChange">%Chng</span></th><th width="34%" class="text-right" id="Volumetab1Loser" data-nse-translate="columnheader" data-nse-translate-columnheader="totalTradedVolume"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="totalTradedVolume">Volume</span></th></tr></thead><tbody><tr class=" "><td width="30%" headers="TECHM"><a href="/get-quotes/equity?symbol=TECHM" target="_blank" class="symbol-word-break">TECHM</a></td><td width="18%" class="" headers="TECHM 1262.5">1262.5</td><td width="18%" class="text-right redTxt" headers="TECHM -2.0026391368470042">-2.00</td><td width="34%" class="text-right" headers="TECHM 2613213">26,13,213</td></tr><tr class=" "><td width="30%" headers="TATASTEEL"><a href="/get-quotes/equity?symbol=TATASTEEL" target="_blank" class="symbol-word-break">TATASTEEL</a></td><td width="18%" class="" headers="TATASTEEL 164.75">164.75</td><td width="18%" class="text-right redTxt" headers="TATASTEEL -1.58303464755078">-1.58</td><td width="34%" class="text-right" headers="TATASTEEL 55043389">5,50,43,389</td></tr><tr class=" "><td width="30%" headers="DRREDDY"><a href="/get-quotes/equity?symbol=DRREDDY" target="_blank" class="symbol-word-break">DRREDDY</a></td><td width="18%" class="" headers="DRREDDY 6200.35">6200.35</td><td width="18%" class="text-right redTxt" headers="DRREDDY -1.5364215273697417">-1.54</td><td width="34%" class="text-right" headers="DRREDDY 381304">3,81,304</td></tr><tr class=" "><td width="30%" headers="SUNPHARMA"><a href="/get-quotes/equity?symbol=SUNPHARMA" target="_blank" class="symbol-word-break">SUNPHARMA</a></td><td width="18%" class="" headers="SUNPHARMA 1498.6">1498.6</td><td width="18%" class="text-right redTxt" headers="SUNPHARMA -1.511566771819138">-1.51</td><td width="34%" class="text-right" headers="SUNPHARMA 1991646">19,91,646</td></tr><tr class=" "><td width="30%" headers="HCLTECH"><a href="/get-quotes/equity?symbol=HCLTECH" target="_blank" class="symbol-word-break">HCLTECH</a></td><td width="18%" class="" headers="HCLTECH 1367.45">1367.45</td><td width="18%" class="text-right redTxt" headers="HCLTECH -1.4379414732593372">-1.44</td><td width="34%" class="text-right" headers="HCLTECH 7606726">76,06,726</td></tr></tbody></table></div></div>
+              <div class="link-wrap"> <a href="/market-data/live-equity-market?symbol=NIFTY 50"><span id="viewall">View All</span> <img src="/assets/images/Read_more_CTA.svg" width="14" height="10" alt="View All" title="View All"></a> </div>
+          </div>
+          <div class="tab-pane fade" id="most_active" role="tabpanel">
+              <div class="table-container"><div id="tab1_tableValue"><table id="tab1Val"><thead><tr><th width="30%" class="" id="Symboltab1Val" data-nse-translate="columnheader" data-nse-translate-columnheader="symbol"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="symbol">Symbol</span></th><th width="18%" class="text-right" title="Last Traded Price" id="LTPtab1Val" data-nse-translate="columnheader" data-nse-translate-columnheader="lastPrice"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="lastPrice">LTP</span></th><th width="18%" class="text-right" title="Percentage Change" id="%Chngtab1Val" data-nse-translate="columnheader" data-nse-translate-columnheader="pChange"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="pChange">%Chng</span></th><th width="34%" class="text-right" id="Valuetab1Val" data-nse-translate="columnheader" data-nse-translate-columnheader="totalTradedValue"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="totalTradedValue">Value</span><span id="(₹ Lakhs)">(₹ Lakhs)</span></th></tr></thead><tbody><tr class=" "><td width="30%" headers="HDFCBANK"><a href="/get-quotes/equity?symbol=HDFCBANK" target="_blank" class="symbol-word-break">HDFCBANK</a></td><td width="18%" class="bold text-right" headers="HDFCBANK 1515.45">1,515.45</td><td width="18%" class="text-right redTxt" headers="HDFCBANK -0.9186008499509614">-0.92</td><td width="34%" class="text-right" headers="HDFCBANK 399696.4">3,99,696.40</td></tr><tr class=" "><td width="30%" headers="ICICIBANK"><a href="/get-quotes/equity?symbol=ICICIBANK" target="_blank" class="symbol-word-break">ICICIBANK</a></td><td width="18%" class="bold text-right" headers="ICICIBANK 1150.25">1,150.25</td><td width="18%" class="text-right redTxt" headers="ICICIBANK -0.853337930440037">-0.85</td><td width="34%" class="text-right" headers="ICICIBANK 342633.76">3,42,633.76</td></tr><tr class=" "><td width="30%" headers="KOTAKBANK"><a href="/get-quotes/equity?symbol=KOTAKBANK" target="_blank" class="symbol-word-break">KOTAKBANK</a></td><td width="18%" class="bold text-right" headers="KOTAKBANK 1623.65">1,623.65</td><td width="18%" class="text-right redTxt" headers="KOTAKBANK -1.0210924164837845">-1.02</td><td width="34%" class="text-right" headers="KOTAKBANK 297189.31">2,97,189.31</td></tr><tr class=" "><td width="30%" headers="SBIN"><a href="/get-quotes/equity?symbol=SBIN" target="_blank" class="symbol-word-break">SBIN</a></td><td width="18%" class="bold text-right" headers="SBIN 821">821.00</td><td width="18%" class="text-right redTxt" headers="SBIN -0.6654567453115547">-0.67</td><td width="34%" class="text-right" headers="SBIN 227154.8">2,27,154.80</td></tr><tr class=" "><td width="30%" headers="AXISBANK"><a href="/get-quotes/equity?symbol=AXISBANK" target="_blank" class="symbol-word-break">AXISBANK</a></td><td width="18%" class="bold text-right" headers="AXISBANK 1162.45">1,162.45</td><td width="18%" class="text-right greenTxt" headers="AXISBANK 0.2760405434548239">0.28</td><td width="34%" class="text-right" headers="AXISBANK 221304.5">2,21,304.50</td></tr></tbody></table></div></div>
+              <div class="table-container"><div id="tab1_tableVolume"><table id="tab1Vol" class=""><thead><tr><th width="30%" class="" id="Symboltab1Vol" data-nse-translate="columnheader" data-nse-translate-columnheader="symbol"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="symbol">Symbol</span></th><th width="18%" class="" title="Last Traded Price" id="LTPtab1Vol" data-nse-translate="columnheader" data-nse-translate-columnheader="lastPrice"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="lastPrice">LTP</span></th><th width="18%" class="text-right" title="Percentage Change" id="%Chngtab1Vol" data-nse-translate="columnheader" data-nse-translate-columnheader="pChange"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="pChange">%Chng</span></th><th width="34%" class="text-right" id="Volumetab1Vol" data-nse-translate="columnheader" data-nse-translate-columnheader="totalTradedVolume"><span class="columnheader-uppercase" data-nse-translate="columnheader" data-nse-translate-columnheader="totalTradedVolume">Volume</span></th></tr></thead><tbody><tr class=" "><td width="30%" headers="TATASTEEL"><a href="/get-quotes/equity?symbol=TATASTEEL" target="_blank" class="symbol-word-break">TATASTEEL</a></td><td width="18%" class="" headers="TATASTEEL 164.75">164.75</td><td width="18%" class="text-right redTxt" headers="TATASTEEL -1.58303464755078">-1.58</td><td width="34%" class="text-right" headers="TATASTEEL 55043389">5,50,43,389</td></tr><tr class=" "><td width="30%" headers="POWERGRID"><a href="/get-quotes/equity?symbol=POWERGRID" target="_blank" class="symbol-word-break">POWERGRID</a></td><td width="18%" class="" headers="POWERGRID 301.85">301.85</td><td width="18%" class="text-right greenTxt" headers="POWERGRID 2.774940415389865">2.77</td><td width="34%" class="text-right" headers="POWERGRID 33288857">3,32,88,857</td></tr><tr class=" "><td width="30%" headers="ICICIBANK"><a href="/get-quotes/equity?symbol=ICICIBANK" target="_blank" class="symbol-word-break">ICICIBANK</a></td><td width="18%" class="" headers="ICICIBANK 1150.25">1150.25</td><td width="18%" class="text-right redTxt" headers="ICICIBANK -0.853337930440037">-0.85</td><td width="34%" class="text-right" headers="ICICIBANK 29568491">2,95,68,491</td></tr><tr class=" "><td width="30%" headers="SBIN"><a href="/get-quotes/equity?symbol=SBIN" target="_blank" class="symbol-word-break">SBIN</a></td><td width="18%" class="" headers="SBIN 821">821</td><td width="18%" class="text-right redTxt" headers="SBIN -0.6654567453115547">-0.67</td><td width="34%" class="text-right" headers="SBIN 27449073">2,74,49,073</td></tr><tr class=" "><td width="30%" headers="HDFCBANK"><a href="/get-quotes/equity?symbol=HDFCBANK" target="_blank" class="symbol-word-break">HDFCBANK</a></td><td width="18%" class="" headers="HDFCBANK 1515.45">1515.45</td><td width="18%" class="text-right redTxt" headers="HDFCBANK -0.9186008499509614">-0.92</td><td width="34%" class="text-right" headers="HDFCBANK 26153691">2,61,53,691</td></tr></tbody></table></div></div>
+              <div class="link-wrap"> <a href="/market-data/live-equity-market?symbol=NIFTY 50"><span id="viewall">View All</span> <img src="/assets/images/Read_more_CTA.svg" width="14" height="10" alt="View All" title="View All"></a> </div>
+          </div>
+      </div>
+  </div>
+</div-->
 
-  <h2>Stocks</h2>
-
-
-  <ion-grid class="col" id="grid-item">
-    <ion-row style="border-top:groove">
-
-      <ion-col col-4>
-        <ion-label>Open</ion-label>
-      </ion-col>
-      <ion-col col-4>
-      <ion-label >High</ion-label>
-      </ion-col>
-      <ion-col col-4>
-     <ion-label >Low</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >Close</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >Volume</ion-label>
-      </ion-col>
-
-
-    </ion-row>
-  </ion-grid>
-
-<div class="grid-container">
-    <ion-grid *ngFor="let forex of stocks " class="col">
-      <ion-row style="border-top:groove">
-
-        <ion-col col-4 id="c1">
-          <ion-label>{{ forex.Open }}</ion-label>
-        </ion-col>
-        <ion-col col-4 id="c2">
-          <ion-label>{{  forex.High }}</ion-label>
-        </ion-col><ion-col col-4 id="c3">
-          <ion-label>{{  forex.Low }}</ion-label>
-        </ion-col><ion-col col-4 id="c4">
-          <ion-label>{{  forex.Close}}</ion-label>
-        </ion-col><ion-col col-3 id="c5">
-          <ion-label>{{  forex.Volume}}</ion-label>
-        </ion-col>
-
-        <div class="item-note" item-end>
-          <button ion-button clear [routerLink]="['/forex-update/', forex._id]">
-            <ion-icon name="create" style="zoom:1.5"></ion-icon>
-          </button>
-        </div>
-        </ion-row>
-      </ion-grid>
-    </div>
-
-</ion-content>
+<div class="tradingview-widget-container" style="width: 100%;" 
+  #tradingViewWidget>
+</div>

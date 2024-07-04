@@ -1,0 +1,163 @@
+.market-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px 0;
+    width: calc(30% - 20px);
+    position: relative;
+    height: 150px;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.m1 {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    
+}
+
+.m2 {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  
+}
+
+.iframe {
+    padding-left: 30px;
+    padding-right: 30px;
+    width: 100%;
+    height: 100%;
+    margin-top: 1%;
+    //padding: 5px;
+}
+
+
+/* Container for the entire heatmap page */
+.heatmap-container {
+    padding: 20px;
+    background-color: #f4f4f9;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: #333;
+    
+}
+
+/* Title styling */
+.heatmap-container h2 {
+    text-align: center;
+    color: #444;
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+/* Tabs styling */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tabs button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #6c757d; /* Dark gray background */
+    color: #f0f0f0; /* Light gray text */
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.tabs button:hover {
+    background-color: #5a6268; /* Slightly darker gray on hover */
+    transform: scale(1.05);
+}
+
+.tabs button.active {
+    background-color: #097dfa; /* Highlight active tab */
+    color: whitesmoke; /* White text for active tab */
+}
+
+.tabs button:focus {
+    outline: none;
+}
+
+/* Heatmap grid styling */
+.heatmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.heatmap-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center; /* Center align text */
+}
+
+.heatmap-cell:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust colors and text styling within the heatmap cells */
+.heatmap-cell strong {
+    font-size: 16px;
+    color: #525151;
+    margin-bottom: 5px;
+}
+
+.heatmap-cell span {
+    font-size: 14px;
+    color: #444; /* Use darker gray for better readability */
+}
+
+/* Different background colors for heatmap cells */
+.heatmap-cell:nth-child(2n) {
+    background-color: #fff3cd; /* Light yellow */
+}
+
+.heatmap-cell:nth-child(3n) {
+    background-color: #d4edda; /* Light green */
+}
+
+.heatmap-cell:nth-child(4n) {
+    background-color: #d1ecf1; /* Light blue */
+}
+
+.heatmap-cell:nth-child(5n) {
+    background-color: #f8d7da; /* Light pink */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .heatmap {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .tabs button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .heatmap-cell {
+        padding: 15px;
+    }
+}

@@ -1,0 +1,105 @@
+/* Container for the entire heatmap page */
+.heatmap-container {
+  padding: 20px;
+  background-color: #f4f4f9;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+/* Title styling */
+.heatmap-container h2 {
+  text-align: center;
+  color: #444;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+/* Tabs styling */
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #6c757d; /* Dark gray background */
+  color: #f0f0f0; /* Light gray text */
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.tabs button:hover {
+  background-color: #5a6268; /* Slightly darker gray on hover */
+  transform: scale(1.05);
+}
+
+.tabs button.active {
+  background-color: #007bff; /* Highlight active tab */
+  color: #fff; /* White text for active tab */
+}
+
+.tabs button:focus {
+  outline: none;
+}
+
+/* Heatmap grid styling */
+.heatmap {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.heatmap-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #e0e0e0; /* Slightly darker gray background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: center; /* Center align text */
+}
+
+.heatmap-cell:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust colors and text styling within the heatmap cells */
+.heatmap-cell strong {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.heatmap-cell span, .heatmap-cell br {
+  font-size: 14px;
+  color: #444; /* Use darker gray for better readability */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .heatmap {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .tabs button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .heatmap-cell {
+    padding: 15px;
+  }
+}

@@ -1,0 +1,13 @@
+<ion-grid class="chart-grid">
+  <iframe src="https://fxpricing.com/fx-widget/ticker-quote-widget.php?id=1,2,3,5,14,20" width="2000" height="340" style="border: unset;"></iframe> <div id="fx-pricing-widget-copyright"> <a href="https://fxpricing.com/" target="_blank"></a> </div> <style type="text/css"> #fx-pricing-widget-copyright{ text-align: center; font-size: 13px; font-family: sans-serif; margin-top: 10px; margin-bottom: 20px; color: #9db2bd; } #fx-pricing-widget-copyright a{ text-decoration: unset; color: #bb3534; font-weight: 600; } </style>
+
+  <ion-row class="chart-row">
+    
+    <ion-col size="12" size-md="6" size-lg="4" *ngFor="let com of commoditys" class="chart-col">
+      <ion-card class="row-item">
+        
+        <div [attr.id]="'chartContainer_' + com.symbol" class="chart-container"></div>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>

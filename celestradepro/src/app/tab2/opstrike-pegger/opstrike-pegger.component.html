@@ -1,0 +1,56 @@
+<div>
+  <h1>Strike Pegger</h1>
+
+  <div>
+    <label for="symbol">Enter Symbol:</label>
+    <input type="text" id="symbol" (input)="onSymbolChange($event)" placeholder="Enter symbol, e.g., AMZN" />
+
+    <label for="date">Select Expiration Date:</label>
+    <select id="date" (change)="onDateChange($event)">
+      <option *ngFor="let date of availableDates" [value]="date">{{ date }}</option>
+    </select>
+
+    <button (click)="fetchData()">Fetch Data</button>
+  </div>
+
+  <table *ngIf="data.length > 0">
+    <thead>
+      <tr>
+        <th>HIGH</th>
+        <th>LOW</th>
+        <th>DIVIDEND DATE</th>
+        <th>OPEN</th>
+        <th>CLOSE</th>
+        <th>DIVIDEND AMOUNT</th>
+        <th>BID</th>
+        <th>ASK</th>
+        <th>YIELD</th>
+        <th>VOLUME</th>
+        <th>SPLIT DATE</th>
+        <th>DATE/TIME</th>
+        <th>OPTION VOLUME</th>
+        <th>IMPLIED VOLATILITY</th>
+        <th>HISTORICAL VOL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data">
+        <td>{{ item.high }}</td>
+        <td>{{ item.low }}</td>
+        <td>{{ item.dividend_date }}</td>
+        <td>{{ item.open }}</td>
+        <td>{{ item.close }}</td>
+        <td>{{ item.dividend_amount }}</td>
+        <td>{{ item.bid }}</td>
+        <td>{{ item.ask }}</td>
+        <td>{{ item.yield }}</td>
+        <td>{{ item.volume }}</td>
+        <td>{{ item.split_date }}</td>
+        <td>{{ item.date_time }}</td>
+        <td>{{ item.option_volume }}</td>
+        <td>{{ item.implied_volatility }}</td>
+        <td>{{ item.historical_vol }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

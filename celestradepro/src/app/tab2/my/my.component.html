@@ -1,0 +1,35 @@
+<div class="horizontal-layout">
+    <div class="options-calculator">
+      <h2>Options Strategy Payoff Calculator</h2>
+      <div class="input-container">
+        <label for="underlyingPrice">Underlying Price:</label>
+        <input type="number" [(ngModel)]="underlyingPrice">
+      </div>
+      <div class="input-container">
+        <label for="strikePrice">Strike Price:</label>
+        <input type="number" [(ngModel)]="strikePrice">
+      </div>
+      <div class="input-container">
+        <label for="optionPrice">Option Price:</label>
+        <input type="number" [(ngModel)]="optionPrice">
+      </div>
+      <div class="input-container">
+        <label for="quantity">Quantity:</label>
+        <input type="number" [(ngModel)]="quantity">
+      </div>
+      <button (click)="calculatePayoff()">Calculate Payoff</button>
+      <div *ngIf="result !== undefined" class="result-container">
+        <h3>Payoff:</h3>
+        <p>{{ result }}</p>
+      </div>
+      <div *ngIf="chartData" class="chart-container">
+        <canvas baseChart
+          [datasets]="chartData.datasets"
+          [labels]="chartData.labels"
+          [chartType]="'line'">
+        </canvas>
+      </div>
+    </div>
+  </div>
+  
+  

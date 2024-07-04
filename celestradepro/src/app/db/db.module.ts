@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { DbPageRoutingModule } from './db-routing.module';
+import { IgxFinancialChartModule, IgxLegendModule } from "igniteui-angular-charts";
 
 import { DbPage } from './db.page';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,7 +15,9 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     IonicModule,
     DbPageRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    IgxFinancialChartModule,
+    IgxLegendModule
   ],
   declarations: [DbPage]
 })
