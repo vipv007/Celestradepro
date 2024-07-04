@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "openbbenv"
+version = "0.1.0"
+description = ""
+authors = ["sd sk <sd+sk@cloudmatiq.com>"]
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.12"
+openbb-core = "^1.2.3"
+openbb = "^4.2.2"
+pymongo = "^4.7.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
