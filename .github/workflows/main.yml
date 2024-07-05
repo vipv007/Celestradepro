@@ -54,7 +54,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t vipv/kuber:${{ github.run_number }} -f ./celestradepro/Dockerfile .
+          docker build -t vipv/kuber:${{ github.run_number }} -f ./Celestradepro/celestradepro/Dockerfile .
       
       - name: Log in to Docker Hub
         run: |
