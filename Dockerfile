@@ -7,6 +7,10 @@ WORKDIR /app
 # Copy the package.json and package-lock.json from the Angular app directory to the container
 COPY ./celestradepro/package*.json ./
 
+# Add debugging steps
+RUN ls -la
+RUN cat package.json
+
 # Install dependencies
 RUN npm install
 
@@ -31,8 +35,12 @@ COPY --from=build /app/dist ./dist
 # Copy the Node.js server files to the container
 COPY ./celestradepro/Backend .
 
-# Install server dependencies with debugging steps
-RUN ls -la && cat package.json && npm install
+# Add debugging steps
+RUN ls -la
+RUN cat package.json
+
+# Install server dependencies
+RUN npm install
 
 # Expose the ports your apps will listen on
 EXPOSE 4200
