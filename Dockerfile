@@ -1,5 +1,6 @@
+# Stage 1: Build Angular app
 FROM node:16 as build
- 
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -12,13 +13,10 @@ RUN npm install
 # Copy the entire Angular app source code from the Angular app directory to the container
 COPY ./celestradepro .
 
-# Set the Node.js memory limit
-ENV NODE_OPTIONS=--max_old_space_size=4096
-
 # Build the Angular app
 RUN npm run build -- --output-path=dist
 
-# Use a smaller base image to serve the Angular app
+# Stage 2: Set up the Node.js server
 FROM node:16
 
 # Install a simple HTTP server to serve the Angular app
@@ -28,10 +26,17 @@ RUN npm install -g http-server
 WORKDIR /app
 
 # Copy the built Angular app from the build stage to the container
-COPY --from=build /app/dist .
+COPY --from=build /app/dist ./dist
 
-# Expose the port your app will listen on (e.g., 8080)
-EXPOSE 4200:4200
+# Copy the Node.js server files to the container
+COPY ./celestradepro/Backend .
 
-# Start the HTTP server to serve your Angular app
-CMD ["http-server", "-p", "4200"]
+# Install server dependencies
+RUN npm install
+
+# Expose the ports your apps will listen on
+EXPOSE 4200
+EXPOSE 3000
+
+# Start the Node.js server
+CMD ["node", "server.js"]
