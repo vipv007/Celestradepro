@@ -1,26 +1,35 @@
-# Define from what image we want to build from
-FROM node:14
+# Use an official Node.js runtime as the base image for the build stage
+FROM node:16 as build
 
-# Use a Windows base image
-#FROM mcr.microsoft.com/windows/servercore:ltsc2019
+# Set the working directory in the container
+WORKDIR /app
 
-# Create app directory
-WORKDIR /usr/src/app 
+# Copy the package.json and package-lock.json from the Angular app directory to the container
+COPY ./celestradepro/package*.json ./
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./ 
-
-# If you are building your code for production
-# RUN npm ci --only=production
+# Install dependencies
 RUN npm install
 
-# Bundle app source
-COPY . . 
+# Copy the entire Angular app source code from the Angular app directory to the container
+COPY ./celestradepro .
 
-# Bind to port 8000
-EXPOSE 8000
+# Build the Angular app
+RUN npm run build
 
-# Start the server
-CMD [ "node", "helloworld.js" ]
+# Use a smaller base image to serve the Angular app (e.g., "http-server")
+FROM node:16
+
+# Install a simple HTTP server to serve the Angular app
+RUN npm install -g http-server
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the built Angular app from the build stage to the container
+COPY --from=build /app/dist/celestradepro .
+
+# Expose the port your app will listen on (e.g., 8080)
+EXPOSE 8080
+
+# Start the HTTP server to serve your Angular app
+CMD ["http-server", "-p", "8080"]
