@@ -3,7 +3,7 @@ name: Build, Test, and Deploy Angular
 on:
   push:
     branches:
-      - master
+      - main
 
 
 jobs:
