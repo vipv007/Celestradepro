@@ -29,7 +29,7 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 
 # Copy the Node.js server files to the container
-COPY ./celestradepro/Backend .
+COPY ./celestradepro/Backend/package*.json . 
 
 # Install server dependencies
 RUN npm install
