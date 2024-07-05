@@ -29,10 +29,10 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 
 # Copy the Node.js server files to the container
-COPY ./celestradepro/Backend/package*.json ./
+COPY ./celestradepro/Backend .
 
-# Install server dependencies
-RUN npm install
+# Install server dependencies with debugging steps
+RUN ls -la && cat package.json && npm install
 
 # Expose the ports your apps will listen on
 EXPOSE 4200
