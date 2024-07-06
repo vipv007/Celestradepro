@@ -45,7 +45,7 @@ jobs:
         run: docker-compose build
 
       - name: Log in to Docker Hub
-         run: |
+        run: |
           docker login -u vipv -p 9092897730
 
       - name: Push Docker Image
