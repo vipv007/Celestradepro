@@ -26,7 +26,7 @@ FROM node:16
 WORKDIR /app
 
 # Copy the server files
-COPY ./server .  
+COPY ./celestradepro/server .  
 # Adjust this path to your server files location
 
 # Copy the built Angular app from the build stage to the container
