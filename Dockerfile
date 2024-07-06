@@ -1,5 +1,6 @@
+# Stage 1: Build the Angular application
 FROM node:16 as build
- 
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -18,20 +19,25 @@ ENV NODE_OPTIONS=--max_old_space_size=4096
 # Build the Angular app
 RUN npm run build -- --output-path=dist
 
-# Use a smaller base image to serve the Angular app
+# Stage 2: Set up the server and serve the Angular app
 FROM node:16
-
-# Install a simple HTTP server to serve the Angular app
-RUN npm install -g http-server
 
 # Set the working directory in the container
 WORKDIR /app
 
+# Copy the server files
+COPY ./server .  
+# Adjust this path to your server files location
+
 # Copy the built Angular app from the build stage to the container
-COPY --from=build /app/dist .
+COPY --from=build /app/dist ./dist
 
-# Expose the port your app will listen on (e.g., 8080)
-EXPOSE 4200:4200
+# Install server dependencies
+RUN npm install
 
-# Start the HTTP server to serve your Angular app
-CMD ["http-server", "-p", "4200"]
+# Expose the port your app will listen on
+EXPOSE 3000 
+ # Change this to the port your server listens on
+
+# Start the server
+CMD ["node", "server.js"]

@@ -5,7 +5,6 @@ on:
     branches:
       - main
 
-
 jobs:
   build-test-and-deploy:
     runs-on: ubuntu-latest
@@ -26,16 +25,6 @@ jobs:
           npm uninstall igniteui-angular-charts igniteui-angular-core
           npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
-
-      # - name: Install Jest
-      #   run: |
-      #     npm install --save-dev jest @types/jest jest-preset-angular
-      #   working-directory: ./celestradepro
-
-      # - name: Run Jest Tests
-      #   run: npm test
-      #  # env:
-      #   # CI: true
 
       - name: Modify TypeScript Files
         run: |
@@ -64,6 +53,6 @@ jobs:
         run: |
           docker push vipv/kuber:${{ github.run_number }}
 
-      - name: Run Docker Container
+      - name: Start Docker Compose
         run: |
-          docker run -d -p 4200:4200 vipv/kuber:${{ github.run_number }}
+          docker-compose up -d
