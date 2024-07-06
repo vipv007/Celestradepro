@@ -1,4 +1,4 @@
-name: Build, Test, and Deploy Angular and Node.js
+name: Build, Test, and Deploy Angular and Backend
 
 on:
   push:
@@ -18,15 +18,41 @@ jobs:
         with:
           node-version: 14
 
-      - name: Build Docker Image
-        run: docker build -t vipv/combined-app:latest -f ./Dockerfile .
+      - name: Install Dependencies
+        run: |
+          npm install
+          npm install highcharts
+          npm uninstall igniteui-angular-charts igniteui-angular-core
+          npm install igniteui-angular-charts igniteui-angular-core
+        working-directory: ./celestradepro
 
+      - name: Modify TypeScript Files
+        run: |
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+
+      - name: Build Angular App
+        run: |
+          export NODE_OPTIONS=--max_old_space_size=4096
+          npm run build
+        working-directory: ./celestradepro
+        env:
+          NG_BUILD_OPTIMIZATION: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Docker Image
+        run: |
+          docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
+      
       - name: Log in to Docker Hub
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push Docker Image
-        run: docker push vipv/combined-app:latest
+        run: |
+          docker push vipv/kuber:${{ github.run_number }}
 
       - name: Run Docker Container
-        run: docker run -d -p 4200:4200 -p 3000:3000 vipv/combined-app:latest
+        run: |
+          docker run -d -p 4200:4200 -p 5000:5000 vipv/kuber:${{ github.run_number }}
