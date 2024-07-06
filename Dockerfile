@@ -32,7 +32,7 @@ RUN npm install -g http-server
 COPY --from=build /app/dist ./dist
 
 # Copy the Node.js backend files to the container
-COPY ./Backend ./Backend
+COPY ./Backend .
 
 # Install backend dependencies
 WORKDIR /app/Backend
