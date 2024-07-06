@@ -8,14 +8,17 @@ WORKDIR /app
 COPY ./celestradepro/package*.json ./
 
 # Add debugging steps
-RUN ls -la
-RUN cat package.json
+# RUN ls -la
+# RUN cat package.json
 
 # Install dependencies
 RUN npm install
 
 # Copy the entire Angular app source code from the Angular app directory to the container
 COPY ./celestradepro .
+
+# Set the Node.js memory limit
+ENV NODE_OPTIONS=--max_old_space_size=4096
 
 # Build the Angular app
 RUN npm run build -- --output-path=dist
@@ -36,9 +39,11 @@ COPY --from=build /app/dist ./dist
 COPY ./celestradepro/Backend .
 
 # Add debugging steps
-RUN ls -la
-RUN cat package.json
+# RUN ls -la
+# RUN cat package.json
 
+# Install server dependencies
+# RUN npm install 
 
 # Expose the ports your apps will listen on
 EXPOSE 4200
