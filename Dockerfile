@@ -26,8 +26,7 @@ FROM node:16
 WORKDIR /app
 
 # Copy the server files
-COPY ./celestradepro/Backend/server .  
-# Adjust this path to your server files location
+COPY ./celestradepro/Backend/server . 
 
 # Copy the built Angular app from the build stage to the container
 COPY --from=build /app/dist ./dist
@@ -36,8 +35,7 @@ COPY --from=build /app/dist ./dist
 RUN npm install
 
 # Expose the port your app will listen on
-EXPOSE 3000 
- # Change this to the port your server listens on
+EXPOSE 3000  
 
 # Start the server
 CMD ["node", "server.js"]
