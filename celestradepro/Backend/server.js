@@ -5,7 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const router = require('./router');
 const { MongoClient } = require('mongodb');
-const mongoUrl = 'mongodb://127.0.0.1';
+// const mongoUrl = 'mongodb://127.0.0.1';
 const dbName = 'FinanceDB';
 const newsRoutes = require('./newsRoutes');
 const fnewsRoutes = require('./fnewsRoutes');
@@ -14,15 +14,10 @@ const comProfRouter = require('./comProfRouter');
 const { fetchData,fetchAvailableDates  } = require('./peggerController');
 const optionnewsRoutes = require('./optionnewsRoutes');
 
-mongoose.connect('mongodb://127.0.0.1/FinanceDB', {
-//mongoose.connect('mongodb://localhost/my_database', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log('Database connected');
-}).catch((error) => {
-  console.log('Database connection error', error);
-});
+const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/FinanceDB';
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected...'))
+  .catch(err => console.log(err));
 
 
 app.use(bodyParser.json());
