@@ -46,7 +46,7 @@ jobs:
           docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
       
       - name: Log in to Docker Hub
-               run: |
+        run: |
           docker login -u vipv -p 9092897730
 
       - name: Push Docker Image
