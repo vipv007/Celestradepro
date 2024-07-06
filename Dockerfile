@@ -10,11 +10,17 @@ RUN npm run build -- --output-path=dist
 
 # Stage 2: Set up the backend and serve both frontend and backend
 FROM node:16
+
 WORKDIR /app
+
+# Install http-server
 RUN npm install -g http-server
 
+# Copy frontend build
 COPY --from=build /app/dist ./dist
-COPY ./celestradepro ./Backend
+
+# Copy backend files
+COPY ./celestradepro/Backend ./Backend
 
 WORKDIR /app/Backend
 RUN npm install

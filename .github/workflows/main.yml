@@ -20,21 +20,22 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          cd celestradepro
           npm install
           npm install highcharts
           npm uninstall igniteui-angular-charts igniteui-angular-core
           npm install igniteui-angular-charts igniteui-angular-core
-        working-directory: ./celestradepro
 
       - name: Modify TypeScript Files
         run: |
+          cd celestradepro
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
       - name: Build Angular App
         run: |
+          cd celestradepro
           export NODE_OPTIONS=--max_old_space_size=4096
           npm run build
-        working-directory: ./celestradepro
         env:
           NG_BUILD_OPTIMIZATION: false
 
@@ -43,11 +44,13 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
+          docker build -t vipv/kuber:${{ github.run_number }} -f Dockerfile .
 
       - name: Log in to Docker Hub
-        run: |
-          docker login -u vipv -p 9092897730
+        uses: docker/login-action@v2
+        with:
+          username: ${{ vipv }}
+          password: ${{ 9092897730 }}
 
       - name: Push Docker Image
         run: |
