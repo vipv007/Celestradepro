@@ -40,7 +40,7 @@ RUN ls -la
 RUN cat package.json
 
 # Install server dependencies
-RUN npm install
+RUN npm install --force
 
 # Expose the ports your apps will listen on
 EXPOSE 4200
