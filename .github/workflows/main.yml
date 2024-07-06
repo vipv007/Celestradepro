@@ -50,7 +50,9 @@ jobs:
           docker login -u vipv -p 9092897730
 
       - name: Push Docker Image
-        run: docker-compose push
+        run: |
+          docker push vipv/kuber:${{ github.run_number }}
 
-      - name: Run Docker Compose
-        run: docker-compose up -d
+      - name: Run Docker Container
+        run: |
+          docker run -d -p 4200:4200 vipv/kuber:${{ github.run_number }}
