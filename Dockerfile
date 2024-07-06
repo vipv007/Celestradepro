@@ -26,7 +26,7 @@ FROM node:16
 WORKDIR /app
 
 # Copy the server files
-COPY ./celestradepro/Backend/ .
+COPY ./celestradepro/Backend .  
 
 # Copy the built Angular app from the build stage to the container
 COPY --from=build /app/dist ./dist
