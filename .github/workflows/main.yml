@@ -41,17 +41,25 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build Docker Image
+      - name: Build Frontend Docker Image
         run: |
-          docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
-      
+          docker build -t vipv/frontend:${{ github.run_number }} -f ./Dockerfile.frontend .
+
+      - name: Build Backend Docker Image
+        run: |
+          docker build -t vipv/backend:${{ github.run_number }} -f ./Dockerfile.backend .
+
       - name: Log in to Docker Hub
         run: |
           docker login -u vipv -p 9092897730
 
-      - name: Push Docker Image
+      - name: Push Frontend Docker Image
         run: |
-          docker push vipv/kuber:${{ github.run_number }}
+          docker push vipv/frontend:${{ github.run_number }}
+
+      - name: Push Backend Docker Image
+        run: |
+          docker push vipv/backend:${{ github.run_number }}
 
       - name: Start Docker Compose
         run: |

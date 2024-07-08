@@ -1,0 +1,25 @@
+# Stage 1: Build the Angular application
+FROM node:16 AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy Angular package files and install dependencies
+COPY ./celestradepro/package*.json ./
+RUN npm install
+
+# Copy the Angular source code and build it
+COPY ./celestradepro .
+RUN npm run build -- --output-path=dist
+
+# Stage 2: Serve the Angular application using Nginx
+FROM nginx:alpine
+
+# Copy the built Angular app from Stage 1
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expose the port the frontend runs on
+EXPOSE 4200
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
