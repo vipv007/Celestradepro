@@ -22,6 +22,11 @@ jobs:
         run: npm install
         working-directory: ./celestradepro
 
+      - name: Debug Highcharts Installation
+        run: |
+          ls -la node_modules/highcharts/
+        working-directory: ./celestradepro
+
       - name: Build Frontend
         run: npm run build -- --output-path=dist
         working-directory: ./celestradepro
