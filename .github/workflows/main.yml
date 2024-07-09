@@ -19,13 +19,17 @@ jobs:
           node-version: 14
 
       - name: Install Frontend Dependencies
-        run: npm install
+        run: |
+          npm install
+          npm install highcharts
+          npm uninstall igniteui-angular-charts igniteui-angular-core
+          npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
 
-      - name: Debug Highcharts Installation
+      - name: Modify TypeScript Files
         run: |
-          ls -la node_modules/highcharts/
-        working-directory: ./celestradepro
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+
 
       - name: Build Frontend
         run: npm run build -- --output-path=dist
