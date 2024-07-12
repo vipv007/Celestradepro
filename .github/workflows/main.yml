@@ -14,7 +14,11 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
-        options: --health-cmd "mongo --eval 'db.runCommand({ connectionStatus: 1 })'" --health-interval 10s --health-timeout 5s --health-retries 5
+        options: |
+          --health-cmd "mongo --eval 'db.runCommand({ connectionStatus: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -23,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: '14'
 
       - name: Install Dependencies
         run: |
@@ -79,3 +83,5 @@ jobs:
       - name: Verify MongoDB Connection
         run: |
           mongo --host localhost:27017 --eval "db.runCommand({ connectionStatus: 1 })"
+
+      
