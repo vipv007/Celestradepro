@@ -33,7 +33,17 @@ jobs:
           npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
 
+      # Uncomment if you need to run tests
+      # - name: Install Jest
+      #   run: |
+      #     npm install --save-dev jest @types/jest jest-preset-angular
+      #   working-directory: ./celestradepro
 
+      # - name: Run Jest Tests
+      #   run: npm test
+      #   working-directory: ./celestradepro
+      #   env:
+      #     CI: true
 
       - name: Modify TypeScript Files
         run: |
