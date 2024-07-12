@@ -5,10 +5,16 @@ on:
     branches:
       - main
 
-
 jobs:
   build-test-and-deploy:
     runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: --health-cmd "mongo --eval 'db.runCommand({ connectionStatus: 1 })'" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -27,15 +33,7 @@ jobs:
           npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
 
-      # - name: Install Jest
-      #   run: |
-      #     npm install --save-dev jest @types/jest jest-preset-angular
-      #   working-directory: ./celestradepro
 
-      # - name: Run Jest Tests
-      #   run: npm test
-      #  # env:
-      #   # CI: true
 
       - name: Modify TypeScript Files
         run: |
@@ -55,7 +53,7 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
-      
+
       - name: Log in to Docker Hub
         run: |
           docker login -u vipv -p 9092897730
@@ -67,3 +65,7 @@ jobs:
       - name: Run Docker Container
         run: |
           docker run -d -p 4200:4200 vipv/kuber:${{ github.run_number }}
+
+      - name: Verify MongoDB Connection
+        run: |
+          mongo --host localhost:27017 --eval "db.runCommand({ connectionStatus: 1 })"
