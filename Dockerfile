@@ -1,48 +1,37 @@
-# Stage 1: Build the Angular application
-FROM node:14 as frontend-builder
+FROM node:16 as build
+ 
+# Set the working directory in the container
+WORKDIR /app
 
-WORKDIR /app/frontend
+# Copy the package.json and package-lock.json from the Angular app directory to the container
+COPY ./celestradepro/package*.json ./
 
 # Install dependencies
-COPY ./celestradepro/package*.json ./
 RUN npm install
-RUN npm install highcharts
-RUN npm uninstall igniteui-angular-charts igniteui-angular-core
-RUN npm install igniteui-angular-charts igniteui-angular-core
 
-# Copy the Angular source code and build it
+# Copy the entire Angular app source code from the Angular app directory to the container
 COPY ./celestradepro .
-RUN export NODE_OPTIONS=--max_old_space_size=4096 && npm run build -- --output-path=dist
 
-# Stage 2: Build the backend
-FROM node:14 as backend-builder
+# Set the Node.js memory limit
+ENV NODE_OPTIONS=--max_old_space_size=4096
 
-WORKDIR /app/backend
+# Build the Angular app
+RUN npm run build -- --output-path=dist
 
-# Copy the package.json and package-lock.json files
-COPY ./Backend/package*.json ./
+# Use a smaller base image to serve the Angular app
+FROM node:16
 
-# Install the dependencies
-RUN npm install
+# Install a simple HTTP server to serve the Angular app
+RUN npm install -g http-server
 
-# Copy the rest of the application code
-COPY ./Backend .
+# Set the working directory in the container
+WORKDIR /app
 
-# Stage 3: Combine and Serve the Applications
-FROM nginx:alpine
+# Copy the built Angular app from the build stage to the container
+COPY --from=build /app/dist .
 
-# Copy the built frontend application
-COPY --from=frontend-builder /app/frontend/dist /usr/share/nginx/html
+# Expose the port your app will listen on (e.g., 8080)
+EXPOSE 4200:4200
 
-# Copy the backend application code
-COPY --from=backend-builder /app/backend /app/backend
-
-# Copy Nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Install necessary backend dependencies
-WORKDIR /app/backend
-RUN npm install --only=production
-
-EXPOSE 4200
-CMD ["nginx", "-g", "daemon off;"]
+# Start the HTTP server to serve your Angular app
+CMD ["http-server", "-p", "4200"]
