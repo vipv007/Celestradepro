@@ -1,4 +1,4 @@
-name: Build, Test, and Deploy Angular
+name: Build, Test, and Deploy Angular and Node.js App
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-test-and-deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     services:
       mongodb:
@@ -24,11 +24,11 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Install MongoDB Client
-        run: |
-          choco install mongodb --version=4.4.6
+      - name: Install Dependencies (Backend)
+        run: npm install
+        working-directory: ./Backend
 
-      - name: Install Dependencies
+      - name: Install Dependencies (Frontend)
         run: |
           npm install
           npm install highcharts
@@ -50,12 +50,13 @@ jobs:
 
       - name: Modify TypeScript Files
         run: |
-          Get-ChildItem -Recurse -Filter *.ts | ForEach-Object { (Get-Content $_) -replace 'server\?: HTTPServer<V> \| HTTPSServer<V> \| undefined;', '// @ts-ignore`n$&' | Set-Content $_ }
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+        working-directory: ./celestradepro
 
       - name: Build Angular App
         run: |
-          $env:NODE_OPTIONS="--max_old_space_size=4096"
-          npm run build
+          export NODE_OPTIONS=--max_old_space_size=4096
+          npm run build -- --output-path=dist
         working-directory: ./celestradepro
         env:
           NG_BUILD_OPTIMIZATION: false
@@ -77,7 +78,7 @@ jobs:
 
       - name: Run Docker Container
         run: |
-          docker run -d -p 4200:4200 vipv/kuber:${{ github.run_number }}
+          docker run -d -p 4200:4200 --name celestrade_container vipv/kuber:${{ github.run_number }}
 
       - name: Verify MongoDB Connection
         run: |
