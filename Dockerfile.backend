@@ -7,7 +7,7 @@ FROM node:16
 WORKDIR /app
 
 # Copy application dependency manifests to the container image.
-COPY ./Backend/package*.json ./
+COPY ./celestradepro/Backend/package*.json ./
 
 # Install production dependencies.
 RUN npm install --only=production
