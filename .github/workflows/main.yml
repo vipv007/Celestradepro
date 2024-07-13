@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Install Dependencies (Backend)
         run: npm install
@@ -35,18 +35,6 @@ jobs:
           npm uninstall igniteui-angular-charts igniteui-angular-core
           npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
-
-      # Uncomment if you need to run tests
-      # - name: Install Jest
-      #   run: |
-      #     npm install --save-dev jest @types/jest jest-preset-angular
-      #   working-directory: ./celestradepro
-
-      # - name: Run Jest Tests
-      #   run: npm test
-      #   working-directory: ./celestradepro
-      #   env:
-      #     CI: true
 
       - name: Modify TypeScript Files
         run: |
@@ -64,17 +52,25 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build Docker Image
+      - name: Build Backend Docker Image
         run: |
-          docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile.frontend .
+          docker build -t vipv/backend:${{ github.run_number }} -f ./Dockerfile.backend .
+
+      - name: Build Frontend Docker Image
+        run: |
+          docker build -t vipv/frontend:${{ github.run_number }} -f ./Dockerfile.frontend .
 
       - name: Log in to Docker Hub
         run: |
           docker login -u vipv -p 9092897730
 
-      - name: Push Docker Image
+      - name: Push Backend Docker Image
         run: |
-          docker push vipv/kuber:${{ github.run_number }}
+          docker push vipv/backend:${{ github.run_number }}
+
+      - name: Push Frontend Docker Image
+        run: |
+          docker push vipv/frontend:${{ github.run_number }}
 
       - name: Run Docker Compose
         run: |
