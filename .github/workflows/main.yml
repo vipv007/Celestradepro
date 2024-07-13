@@ -28,7 +28,7 @@ jobs:
           npm install highcharts
           npm uninstall igniteui-angular-charts igniteui-angular-core
           npm install igniteui-angular-charts igniteui-angular-core
-        working-directory: ./celestradepro
+        working-directory: ./Celestradepro/celestradepro
 
       # Uncomment if you need to run tests
       # - name: Install Jest
