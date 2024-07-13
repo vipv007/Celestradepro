@@ -26,7 +26,7 @@ jobs:
 
       - name: Install Dependencies (Backend)
         run: npm install
-        working-directory: ./celestradepro/Backend
+        working-directory: ./Backend
 
       - name: Install Dependencies (Frontend)
         run: |
@@ -76,10 +76,17 @@ jobs:
         run: |
           docker push vipv/kuber:${{ github.run_number }}
 
-      - name: Run Docker Container
+      - name: Install MongoDB Client Tools
         run: |
-          docker run -d -p 4200:4200 --name celestrade_container vipv/kuber:${{ github.run_number }}
+          wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+          echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-org-shell
 
       - name: Verify MongoDB Connection
         run: |
           mongo --host localhost:27017 --eval "db.runCommand({ connectionStatus: 1 })"
+
+      - name: Run Docker Container
+        run: |
+          docker run -d -p 4200:4200 --name celestrade_container vipv/kuber:${{ github.run_number }}
