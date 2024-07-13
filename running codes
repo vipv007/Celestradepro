@@ -1,9 +1,50 @@
-name: Build, Test, and Deploy Angular and Node.js App
+FROM node:16 as build
+ 
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the package.json and package-lock.json from the Angular app directory to the container
+COPY ./celestradepro/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the entire Angular app source code from the Angular app directory to the container
+COPY ./celestradepro .
+
+# Set the Node.js memory limit
+ENV NODE_OPTIONS=--max_old_space_size=4096
+
+# Build the Angular app
+RUN npm run build -- --output-path=dist
+
+# Use a smaller base image to serve the Angular app
+FROM node:16
+
+# Install a simple HTTP server to serve the Angular app
+RUN npm install -g http-server
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the built Angular app from the build stage to the container
+COPY --from=build /app/dist .
+
+# Expose the port your app will listen on (e.g., 8080)
+EXPOSE 4200:4200
+
+# Start the HTTP server to serve your Angular app
+CMD ["http-server", "-p", "4200"]
+
+
+
+name: Build, Test, and Deploy Angular
 
 on:
   push:
     branches:
       - main
+
 
 jobs:
   build-test-and-deploy:
@@ -16,13 +57,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: 14
 
-      - name: Install Dependencies (Backend)
-        run: npm install
-        working-directory: ./celestradepro/Backend
-
-      - name: Install Dependencies (Frontend)
+      - name: Install Dependencies
         run: |
           npm install
           npm install highcharts
@@ -30,7 +67,6 @@ jobs:
           npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
 
-      # Uncomment if you need to run tests
       # - name: Install Jest
       #   run: |
       #     npm install --save-dev jest @types/jest jest-preset-angular
@@ -38,19 +74,17 @@ jobs:
 
       # - name: Run Jest Tests
       #   run: npm test
-      #   working-directory: ./celestradepro
-      #   env:
-      #     CI: true
+      #  # env:
+      #   # CI: true
 
       - name: Modify TypeScript Files
         run: |
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-        working-directory: ./celestradepro
 
       - name: Build Angular App
         run: |
           export NODE_OPTIONS=--max_old_space_size=4096
-          npm run build -- --output-path=dist
+          npm run build
         working-directory: ./celestradepro
         env:
           NG_BUILD_OPTIMIZATION: false
@@ -58,10 +92,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build Docker Images
+      - name: Build Docker Image
         run: |
-          docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile.frontend .
-
+          docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
+      
       - name: Log in to Docker Hub
         run: |
           docker login -u vipv -p 9092897730
@@ -70,15 +104,6 @@ jobs:
         run: |
           docker push vipv/kuber:${{ github.run_number }}
 
-      - name: Cleanup Docker
+      - name: Run Docker Container
         run: |
-          docker-compose down
-          docker system prune -a --volumes -f
-
-      - name: Run Docker Compose
-        run: |
-          docker-compose up -d
-
-      - name: Verify MongoDB Connection
-        run: |
-          docker exec -it backend_container mongo --host mongodb:27017 --eval "db.runCommand({ connectionStatus: 1 })"
+          docker run -d -p 4200:4200 vipv/kuber:${{ github.run_number }}

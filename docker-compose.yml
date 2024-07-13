@@ -5,7 +5,7 @@ services:
     image: mongo:latest
     container_name: mongodb
     ports:
-      - 27017:27017
+      - 27018:27017 # Map host port 27018 to container port 27017
 
   backend:
     image: vipv/kuber:${GITHUB_RUN_NUMBER}
@@ -16,3 +16,11 @@ services:
       - mongodb
     environment:
       - MONGO_URL=mongodb://mongodb:27017/FinanceDB
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.frontend
+    container_name: frontend_container
+    ports:
+      - 4200:4200
