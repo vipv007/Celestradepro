@@ -76,10 +76,6 @@ jobs:
         run: |
           docker push vipv/kuber:${{ github.run_number }}
 
-      - name: Run Docker Container
+      - name: Run Docker Compose
         run: |
-          docker run -d -p 3000:3000 --name backend_container --link mongodb:mongodb vipv/kuber:${{ github.run_number }}
-
-      - name: Verify MongoDB Connection
-        run: |
-          mongo --host mongodb:27017 --eval "db.runCommand({ connectionStatus: 1 })"
+          docker-compose up -d

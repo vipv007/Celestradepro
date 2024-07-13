@@ -1,22 +1,20 @@
-# Stage 1: Build Angular app
-FROM node:16 AS build
+# Use the official Node.js image.
+FROM node:14
 
+# Set the working directory.
 WORKDIR /app
 
-COPY ./celestradepro/package*.json ./
+# Copy package.json and package-lock.json.
+COPY package*.json ./
+
+# Install dependencies.
 RUN npm install
 
-COPY ./celestradepro .
-ENV NODE_OPTIONS=--max_old_space_size=4096
-RUN npm run build -- --output-path=dist
+# Copy the rest of the application code.
+COPY . .
 
-# Stage 2: Serve Angular app
-FROM node:16
+# Expose port 3000.
+EXPOSE 3000
 
-RUN npm install -g http-server
-
-WORKDIR /app
-COPY --from=build /app/dist .
-
-EXPOSE 4200
-CMD ["http-server", "-p", "4200"]
+# Start the Node.js application.
+CMD ["npm", "start"]
