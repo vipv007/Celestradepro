@@ -9,6 +9,12 @@ jobs:
   build-test-and-deploy:
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -16,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '14'
 
       - name: Install Dependencies (Backend)
         run: npm install
@@ -58,9 +64,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build Docker Images
+      - name: Build Docker Image
         run: |
-          docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile.frontend .
+          docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
 
       - name: Log in to Docker Hub
         run: |
@@ -70,15 +76,6 @@ jobs:
         run: |
           docker push vipv/kuber:${{ github.run_number }}
 
-      - name: Cleanup Docker
-        run: |
-          docker-compose down
-          docker system prune -a --volumes -f
-
       - name: Run Docker Compose
         run: |
           docker-compose up -d
-
-      - name: Verify MongoDB Connection
-        run: |
-          docker exec -it backend_container mongo --host mongodb:27017 --eval "db.runCommand({ connectionStatus: 1 })"
