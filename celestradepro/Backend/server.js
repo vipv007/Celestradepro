@@ -22,7 +22,6 @@ mongoose.connect(mongoUrl, {
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('Failed to connect to MongoDB', err));
 
-  const mongoose = require('mongoose');
 
 
 app.use(bodyParser.json());
