@@ -5,7 +5,7 @@ services:
     image: mongo:latest
     container_name: mongodb
     ports:
-      - 27017:27017 # Exposing MongoDB port
+      - 27018:27017 # Change the host port to 27018
 
   backend:
     build:
