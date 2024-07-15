@@ -13,10 +13,17 @@ const comProfRouter = require('./comProfRouter');
 const { fetchData, fetchAvailableDates } = require('./peggerController');
 const optionnewsRoutes = require('./optionnewsRoutes');
 
-const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/FinanceDB';
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected...'))
-  .catch(err => console.log(err));
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/FinanceDB';
+
+mongoose.connect(mongoUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('Failed to connect to MongoDB', err));
+
+  const mongoose = require('mongoose');
+
 
 app.use(bodyParser.json());
 app.use(cors());
