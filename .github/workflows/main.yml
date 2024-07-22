@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Backend Dependencies
         run: npm install
-        working-directory: ./backend
+        working-directory: ./celestradepro/backend
 
       - name: Install Frontend Dependencies
         run: |
