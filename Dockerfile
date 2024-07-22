@@ -11,7 +11,7 @@ COPY ./backend/package*.json ./
 RUN npm install
 
 # Copy the entire backend source code to the container
-COPY ./backend .
+COPY ./celestradepro/backend .
 
 # Build the backend (optional, if you have a build step)
 # RUN npm run build
