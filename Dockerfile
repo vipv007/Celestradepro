@@ -1,5 +1,5 @@
 # Backend Stage
-FROM node:14 as backend-build
+FROM node:16 as backend-build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY ./celestradepro/Backend .
 # RUN npm run build
 
 # Frontend Stage
-FROM node:14 as frontend-build
+FROM node:16 as frontend-build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -38,7 +38,7 @@ ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN npm run build -- --output-path=dist
 
 # Production Stage
-FROM node:14
+FROM node:16
 
 # Install a simple HTTP server to serve the Angular app
 RUN npm install -g http-server
