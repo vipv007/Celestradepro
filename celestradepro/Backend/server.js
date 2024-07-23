@@ -10,8 +10,7 @@ const com_newsRoutes = require('./com_newsRoutes');
 const comProfRouter = require('./comProfRouter');
 const { fetchData, fetchAvailableDates } = require('./peggerController');
 const optionnewsRoutes = require('./optionnewsRoutes');
-const commodityController = require('./comvolController');
-const movingAverageController = require('./movavgController');
+
 const { MongoClient } = require('mongodb');
 
 const app = express();
@@ -43,8 +42,7 @@ app.get('/api/data/dates', fetchAvailableDates);
 app.use('/api/com_news', com_newsRoutes);
 app.use('/com-prof', comProfRouter); // Ensure this route is correct
 app.use('/api/optionnews', optionnewsRoutes);
-app.get('/api/commodities', commodityController.getAllCommodities);
-app.get('/api/moving-averages/:commodity', movingAverageController.getMovingAverages);
+
 
 // Start Server
 const port = process.env.PORT || 3000;
