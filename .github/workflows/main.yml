@@ -20,11 +20,11 @@ jobs:
 
       - name: Install Backend Dependencies
         run: npm install --legacy-peer-deps
-        working-directory: ./Backend
+        working-directory: ./celestradepro/Backend
 
       - name: Install Frontend Dependencies
         run: npm install --legacy-peer-deps
-        working-directory: ./
+        working-directory: ./celestradepro
 
       - name: Modify TypeScript Files
         run: |
