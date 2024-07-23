@@ -1,5 +1,5 @@
 # Stage 1: Build the Angular app
-FROM node:16 as build
+FROM node:18 as build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -20,7 +20,7 @@ ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN npm run build -- --output-path=dist
 
 # Stage 2: Serve the Angular app
-FROM node:16
+FROM node:18
 
 # Install a simple HTTP server to serve the Angular app
 RUN npm install -g http-server
