@@ -49,12 +49,15 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
+
       - name: Log in to Docker Hub
         run: |
           docker login -u vipv -p 9092897730
+
       - name: Push Docker Image
         run: |
           docker push vipv/kuber:${{ github.run_number }}
+
       - name: Run Docker Container
         run: |
           docker run -d -p 3000:3000 -p 4200:4200 vipv/kuber:${{ github.run_number }}
