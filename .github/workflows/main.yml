@@ -19,12 +19,12 @@ jobs:
           node-version: 14
 
       - name: Install Backend Dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install
         working-directory: ./celestradepro/Backend
 
       - name: Install Frontend Dependencies
         run: |
-          npm install --legacy-peer-deps
+          npm install
           npm install highcharts
           npm uninstall igniteui-angular-charts igniteui-angular-core
           npm install igniteui-angular-charts igniteui-angular-core
@@ -48,7 +48,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t vipv/kuber:${{ github.run_number }} --build-arg MONGO_URI=${{ secrets.MONGO_URI }} -f ./Dockerfile .
+          docker build --build-arg MONGO_URI=mongodb://meddy.sam%5Edatabase_147ea:Kuppanur%402020@svc-3482219c-a389-4079-b18b-d50662524e8a-shared-mongo.aws-virginia-6.svc.singlestore.com:27017/?authMechanism=PLAIN&tls=true&loadBalanced=true&dbName=database_147ea -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
 
       - name: Log in to Docker Hub
         run: |
@@ -60,4 +60,4 @@ jobs:
 
       - name: Run Docker Container
         run: |
-          docker run -d -p 3000:3000 -p 4200:4200 -e MONGO_URI=${{ secrets.MONGO_URI }} vipv/kuber:${{ github.run_number }}
+          docker run -d -p 3000:3000 -p 4200:4200 vipv/kuber:${{ github.run_number }}
