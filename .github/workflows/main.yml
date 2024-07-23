@@ -24,6 +24,9 @@ jobs:
 
       - name: Install Frontend Dependencies
         run: npm install --legacy-peer-deps
+          npm install highcharts
+          npm uninstall igniteui-angular-charts igniteui-angular-core
+          npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
 
       - name: Modify TypeScript Files
