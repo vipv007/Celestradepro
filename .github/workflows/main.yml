@@ -1,9 +1,10 @@
-name: Build, Test, and Deploy Fullstack Application
+name: Build, Test, and Deploy Angular
 
 on:
   push:
     branches:
       - main
+
 
 jobs:
   build-test-and-deploy:
@@ -16,28 +17,34 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 18
+          node-version: 14
 
-      - name: Install Backend Dependencies
-        run: npm install --legacy-peer-deps
-        working-directory: ./celestradepro/Backend
-
-      - name: Install Frontend Dependencies
-        run: npm install --legacy-peer-deps
+      - name: Install Dependencies
+        run: |
+          npm install
           npm install highcharts
           npm uninstall igniteui-angular-charts igniteui-angular-core
           npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
 
+      # - name: Install Jest
+      #   run: |
+      #     npm install --save-dev jest @types/jest jest-preset-angular
+      #   working-directory: ./celestradepro
+
+      # - name: Run Jest Tests
+      #   run: npm test
+      #  # env:
+      #   # CI: true
+
       - name: Modify TypeScript Files
         run: |
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-        working-directory: ./
 
       - name: Build Angular App
         run: |
           export NODE_OPTIONS=--max_old_space_size=4096
-          npm run build -- --output-path=dist
+          npm run build
         working-directory: ./celestradepro
         env:
           NG_BUILD_OPTIMIZATION: false
@@ -48,7 +55,7 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
-
+      
       - name: Log in to Docker Hub
         run: |
           docker login -u vipv -p 9092897730
@@ -59,4 +66,4 @@ jobs:
 
       - name: Run Docker Container
         run: |
-          docker run -d -p 3000:3000 -p 4200:4200 vipv/kuber:${{ github.run_number }}
+          docker run -d -p 4200:4200 vipv/kuber:${{ github.run_number }}
