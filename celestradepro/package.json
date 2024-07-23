@@ -29,7 +29,7 @@
     "@google/generative-ai": "^0.6.0",
     "@grapecity/wijmo.angular2.chart": "^5.20221.857",
     "@ionic/angular": "^6.0.0",
-    "@ng-bootstrap/ng-bootstrap": "^14.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^12.1.2",
     "@paypal/paypal-js": "^8.1.0",
     "@supabase/supabase-js": "^2.41.1",
     "@swimlane/ngx-charts": "^20.5.0",
