@@ -246,3 +246,99 @@ services:
 
 this all my code now and i get the output for only frontend in the  docker image the backend related connection is not get the datas
 i need create a mongodb in the docker and connect with backend then run also the server.js file together
+
+
+#third running codes 
+
+name: Build, Test, and Deploy Fullstack Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install Backend Dependencies
+        run: npm install
+        working-directory: ./celestradepro/Backend
+
+      - name: Install Frontend Dependencies
+        run: |
+          npm install
+          npm install highcharts
+          npm uninstall igniteui-angular-charts igniteui-angular-core
+          npm install igniteui-angular-charts igniteui-angular-core
+        working-directory: ./celestradepro
+
+      - name: Modify TypeScript Files
+        run: |
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+        working-directory: ./celestradepro
+
+      - name: Build Frontend App
+        run: |
+          export NODE_OPTIONS=--max_old_space_size=4096
+          npm run build
+        working-directory: ./celestradepro
+        env:
+          NG_BUILD_OPTIMIZATION: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Docker Image
+        run: docker build --build-arg MONGO_URI='mongodb://meddy.sam%5Edatabase_147ea:Kuppanur%402020@svc-3482219c-a389-4079-b18b-d50662524e8a-shared-mongo.aws-virginia-6.svc.singlestore.com:27017/?authMechanism=PLAIN&tls=true&loadBalanced=true&dbName=database_147ea' -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
+
+      - name: Log in to Docker Hub
+        run: docker login -u vipv -p 9092897730
+
+      - name: Push Docker Image
+        run: docker push vipv/kuber:${{ github.run_number }}
+
+      - name: Run Docker Container
+        run: docker run -d -p 3000:3000 -p 4200:4200 vipv/kuber:${{ github.run_number }}
+
+
+# Stage 1: Build the Angular app
+FROM node:18 as build
+
+WORKDIR /app
+
+COPY ./celestradepro/package*.json ./
+RUN npm install --legacy-peer-deps
+
+COPY ./celestradepro .
+ENV NODE_OPTIONS=--max_old_space_size=4096
+RUN npm run build -- --output-path=dist
+
+# Stage 2: Serve the Angular app and run backend
+FROM node:18
+
+RUN npm install -g http-server
+
+WORKDIR /app
+
+COPY --from=build /app/dist ./dist
+COPY ./celestradepro/Backend ./Backend
+
+RUN npm install --legacy-peer-deps --prefix ./Backend
+
+EXPOSE 3000
+EXPOSE 4200
+
+ARG MONGO_URI
+ENV MONGO_URI=${MONGO_URI}
+
+CMD ["sh", "-c", "http-server -p 4200 dist & cd Backend && node server.js"]
