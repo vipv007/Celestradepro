@@ -41,5 +41,9 @@ RUN npm install --legacy-peer-deps --prefix ./Backend
 EXPOSE 3000
 EXPOSE 4200
 
+# Set the MongoDB URI as an environment variable
+ARG MONGO_URI
+ENV MONGO_URI=${MONGO_URI}
+
 # Start the HTTP server to serve your Angular app and run backend
 CMD ["sh", "-c", "http-server -p 4200 dist & cd Backend && node server.js"]
