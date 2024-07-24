@@ -50,8 +50,7 @@ jobs:
         run: docker build --build-arg MONGO_URI='mongodb://meddy.sam%5Edatabase_147ea:Kuppanur%402020@svc-3482219c-a389-4079-b18b-d50662524e8a-shared-mongo.aws-virginia-6.svc.singlestore.com:27017/?authMechanism=PLAIN&tls=true&loadBalanced=true&dbName=database_147ea' -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
 
       - name: Log in to Docker Hub
-        run: |
-          docker login -u vipv -p 9092897730
+        run: docker login -u vipv -p 9092897730
 
       - name: Push Docker Image
         run: docker push vipv/kuber:${{ github.run_number }}

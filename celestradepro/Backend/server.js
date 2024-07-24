@@ -19,12 +19,11 @@ const dbName = process.env.DB_NAME || 'FinanceDB';
 
 console.log(`Connecting to MongoDB at ${mongoUrl}`);
 
-// MongoDB Connection
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  authSource: 'admin', // Specify the auth source if different from the database
-  authMechanism: 'PLAIN', // Specify the auth mechanism
+  authSource: 'admin',
+  authMechanism: 'PLAIN',
   tls: true
 }).then(() => {
   console.log('Database connected');
@@ -35,17 +34,15 @@ mongoose.connect(mongoUrl, {
 app.use(bodyParser.json());
 app.use(cors());
 
-// Routes
 app.use('/api', router);
 app.use('/api/news', newsRoutes);
 app.use('/api/fnews', fnewsRoutes);
 app.get('/api/data', fetchData);
 app.get('/api/data/dates', fetchAvailableDates);
 app.use('/api/com_news', com_newsRoutes);
-app.use('/com-prof', comProfRouter); // Ensure this route is correct
+app.use('/com-prof', comProfRouter);
 app.use('/api/optionnews', optionnewsRoutes);
 
-// Start Server
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server listening on port ${port}`));
 
