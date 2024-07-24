@@ -10,12 +10,14 @@ const com_newsRoutes = require('./com_newsRoutes');
 const comProfRouter = require('./comProfRouter');
 const { fetchData, fetchAvailableDates } = require('./peggerController');
 const optionnewsRoutes = require('./optionnewsRoutes');
-
 const { MongoClient } = require('mongodb');
 
 const app = express();
-const mongoUrl = process.env.MONGO_URL || 'mongodb://meddy.sam%5Edatabase_147ea:Kuppanur%402020@svc-3482219c-a389-4079-b18b-d50662524e8a-shared-mongo.aws-virginia-6.svc.singlestore.com:27017/?authMechanism=PLAIN&tls=true&loadBalanced=true&dbName=database_147ea';
+
+const mongoUrl = process.env.MONGO_URI || 'mongodb://meddy.sam%5Edatabase_147ea:Kuppanur%402020@svc-3482219c-a389-4079-b18b-d50662524e8a-shared-mongo.aws-virginia-6.svc.singlestore.com:27017/?authMechanism=PLAIN&tls=true&loadBalanced=true&dbName=database_147ea';
 const dbName = process.env.DB_NAME || 'FinanceDB';
+
+console.log(`Connecting to MongoDB at ${mongoUrl}`);
 
 // MongoDB Connection
 mongoose.connect(mongoUrl, {
@@ -42,7 +44,6 @@ app.get('/api/data/dates', fetchAvailableDates);
 app.use('/api/com_news', com_newsRoutes);
 app.use('/com-prof', comProfRouter); // Ensure this route is correct
 app.use('/api/optionnews', optionnewsRoutes);
-
 
 // Start Server
 const port = process.env.PORT || 3000;
