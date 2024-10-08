@@ -5,39 +5,32 @@
 
 
 
-
-<table>
+<div  class=" card-body  card trend-forexs-card ">
+<table class="trend-forexs-table">
   <thead>
     <tr>
       
         <th>Company Name</th>
-        <th> dividend_Ex_Date</th>
-        <th>payment_Date</th>
-        <th> record_Date</th>
-        <th>dividend_Rate</th>
-        <th>indicated_Annual_Dividend</th>
-        <th>announcement_Date</th>
+        <th>ExDate</th>
+        <th>Payment_Date</th>
+        <!-- <th>record_Date</th> -->
+        <th>Dividend_Rate</th>
+        <th>Annual_Dividend</th>
+        <th>Announcement_Date</th>
       </tr>
     
   </thead>
   <tbody>
     <tr *ngFor="let nifty of nifty">
-      <td>{{ nifty.
-        companyName}}</td>
-      <td>{{ nifty.
-        dividend_Ex_Date }}</td>
+      <td>{{ nifty. companyName}}</td>
+      <td>{{ nifty.dividend_Ex_Date }}</td>
       <td>{{ nifty.payment_Date }}</td>
-      <td>{{ nifty.
-        record_Date }}</td>
-      <td>{{ nifty.
-        dividend_Rate }}</td>
-        <td>{{ nifty.
-         
-indicated_Annual_Dividend }}</td>
-          <td>{{ nifty.
-            
-announcement_Date }}</td>
+      <!-- <td>{{ nifty.record_Date }}</td> -->
+      <td>{{ nifty.dividend_Rate }}</td>
+        <td>{{ nifty.indicated_Annual_Dividend }}</td>
+          <td>{{ nifty.announcement_Date }}</td>
 
     </tr>
   </tbody>
 </table>
+</div>

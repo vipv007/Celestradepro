@@ -1,8 +1,10 @@
 
   <meta charset="utf-8">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js" defer></script>
-
+<ion-header>
 <app-charting></app-charting>
+</ion-header>
+
 <ion-content >
 
   <ion-segment [(ngModel)]="selectTabs">
@@ -122,7 +124,23 @@
     
 
 <div *ngIf="selectTabs === 'missed'">
-    <app-optionch></app-optionch>
+  <br>
+      <div class="tabs">
+        <button (click)="selectTab(1)" [class.active]="selectedTab === 1">CALL&PUTS</button>
+       <button (click)="selectTab(3)" [class.active]="selectedTab === 3">OPENINTEREST</button>
+        <button (click)="selectTab(4)" [class.active]="selectedTab === 4">VOLATILITY</button>
+
+      </div>
+      
+      <div class="tab-content" *ngIf="selectedTab === 1">
+        <app-optionch></app-optionch> 
+      </div>
+      <div class="tab-content" *ngIf="selectedTab === 3">
+        <app-option-io></app-option-io>
+      </div>
+       <div class="tab-content" *ngIf="selectedTab === 4">
+        <app-volatility></app-volatility>      </div>
+      
 </div>
 
 <div *ngIf="selectTabs === 'contact'" class="grid-container">
@@ -155,73 +173,84 @@
   </div>
 </div>
 <div *ngIf="selectTabs === 'matrix'">
-  <div *ngIf="options && options.length > 0">
-     
-    <h4>Options Data</h4>
-   
-    <div class="table-wrapper"> 
-
-    <table >
-      
-        <thead>
-          <tr>
-          </tr>
-          <tr>
-            <th>SYMBOL</th>
-            <th>EXPIRY</th>
-            <th>PRICE</th>
-            <th>LTP(CHG%)</th>
-            <th> OI</th>
-            <th>VOLUME</th>
-            <th> IV</th>
-            <th> DELTA</th>
-            <th>THETA</th>
-            <th>VEGA</th>
-            <th>GAMMA</th>
-            <th>STRIKE PRICE</th>
-
-            <th>PRICE</th>
-            <th>LTP(CHG%)</th>
-            <th> OI</th>
-            <th>VOLUME</th>
-            <th> IV</th>
-            <th> RATIO</th>
-            <th> DELTA</th>
-            <th>THETA</th>
-            <th>VEGA</th>
-            <th>GAMMA</th>
-          </tr>
-        </thead>
-      <tbody>
-        <tr *ngFor="let option of options">
-          <td>{{ option['Underlying Name'] }}</td>
-          <td>{{ option['Expiration Date'] }}</td>
-          <td>{{ option['Call-Price'] }}</td>
-          <td>{{ option['Call-Change in Price (%)'] }}</td>
-          <td>{{ option['Call-Open Interest'] }}</td>
-          <td>{{ option['Call-Volume'] }}</td>
-          <td>{{ option['Call-Implied Volatility'] }}</td>
-          <td>{{ option['Greeks: Call Delta'] }}</td>
-          <td>{{ option['Greeks: Call Theta'] }}</td>
-          <td>{{ option['Greeks: Call Vega'] }}</td>
-          <td>{{ option['Greeks: Call Gamma'] }}</td>
-          <td>{{ option['Strike Price'] }}</td>
-
-          <td>{{ option['Put-Price'] }}</td>
-          <td>{{ option['Put-Change in Price (%)'] }}</td>
-          <td>{{ option['Put-Open Interest'] }}</td>
-          <td>{{ option['Put-Volume'] }}</td>
-          <td>{{ option['Put-Implied Volatility'] }}</td>
-          <td>{{ option['Put-Call Ratio'] }}</td>
-          <td>{{ option['Greeks: Put Delta'] }}</td>
-          <td>{{ option['Greeks: Put Theta'] }}</td>
-          <td>{{ option['Greeks: Put Vega'] }}</td>
-          <td>{{ option['Greeks: Put Gamma'] }}</td>
+  <div>
+    <label for="stock-select">Select Stock:</label>
+    <select id="stock-select" (change)="onStockChange($event.target.value)">
+      <option value="AAPL">AAPL</option>
+      <option value="AMZN">AMZN</option>
+    </select>
+  </div>
+  
+  
+  <div class="table-wrapper" *ngIf="stocks.length > 0; else noStocks">
+    <table class="call-table">
+      <thead>
+        <tr>
+          <th>SYMBOL</th>
+          <th>EXPIRY</th>
+          <th>PRICE</th>
+          <th>LTP(CHG%)</th>
+          <th>OI</th>
+          <th>VOLUME</th>
+          <th>IV</th>
+          <th>DELTA</th>
+          <th>THETA</th>
+          <th>VEGA</th>
+          <th>GAMMA</th>
+          <th>STRIKE PRICE</th>
+          <th>PRICE</th>
+          <th>LTP(CHG%)</th>
+          <th>OI</th>
+          <th>VOLUME</th>
+          <th>IV</th>
+          <th>RATIO</th>
+          <th>DELTA</th>
+          <th>THETA</th>
+          <th>VEGA</th>
+          <th>GAMMA</th>
         </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let stock of stocks">
+          <tr>
+            <td colspan="22"><strong>Symbol:</strong> {{ stock.symbol }}</td>
+          </tr>
+          <ng-container *ngFor="let optionArray of stock.Options">
+            <ng-container *ngFor="let option of optionArray">
+              <tr>
+                <td>{{ stock.symbol }}</td>
+                <td>{{ option['Expiration Date'] }}</td>
+                <td>{{ option['Call-Price'] }}</td>
+                <td>{{ option['Call-Change in Price (%)'] }}</td>
+                <td>{{ option['Call-Open Interest'] }}</td>
+                <td>{{ option['Call-Volume'] }}</td>
+                <td>{{ option['Call-Implied Volatility'] }}</td>
+                <td>{{ option['Greeks: Call Delta'] }}</td>
+                <td>{{ option['Greeks: Call Theta'] }}</td>
+                <td>{{ option['Greeks: Call Vega'] }}</td>
+                <td>{{ option['Greeks: Call Gamma'] }}</td>
+                <td>{{ option['Strike Price'] }}</td>
+                <td>{{ option['Put-Price'] }}</td>
+                <td>{{ option['Put-Change in Price (%)'] }}</td>
+                <td>{{ option['Put-Open Interest'] }}</td>
+                <td>{{ option['Put-Volume'] }}</td>
+                <td>{{ option['Put-Implied Volatility'] }}</td>
+                <td>{{ option['Put-Call Ratio'] }}</td>
+                <td>{{ option['Greeks: Put Delta'] }}</td>
+                <td>{{ option['Greeks: Put Theta'] }}</td>
+                <td>{{ option['Greeks: Put Vega'] }}</td>
+                <td>{{ option['Greeks: Put Gamma'] }}</td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </ng-container>
       </tbody>
     </table>
   </div>
-  </div>
+  <ng-template #noStocks>
+    <p>No stocks available.</p>
+  </ng-template>
+  
 </div>
 
 <div *ngIf="selectTabs === 'strategy'">
@@ -231,46 +260,59 @@
 <!-- <p>Last Updated: <span id="last-updated"></span></p> -->
 
 <div *ngIf="selectTabs === 'contacts'">
-  
-  <details>
-    <summary>OPEN INTEREST</summary>
-    <app-option-io></app-option-io>
-  </details>
-  <details>
-    <summary>VOLATILITY</summary>
-   <app-volatility></app-volatility>
-   </details>
-   <details>
-    <summary>NEWS</summary>
-   <app-optionnews></app-optionnews>
-   </details>
+  <div class="container">
+    <!-- Sidebar with Details Menu -->
+    <div class="sidebar">
+      <details (toggle)="showContent('OPEN INTEREST', $event)">
+        <summary [class.active]="activeContent === 'OPEN INTEREST'">OPEN INTEREST</summary>
+      </details>
+      <details (toggle)="showContent('VOLATILITY', $event)">
+        <summary [class.active]="activeContent === 'VOLATILITY'">VOLATILITY</summary>
+      </details>
+      <details (toggle)="showContent('NEWS', $event)">
+        <summary [class.active]="activeContent === 'NEWS'">NEWS</summary>
+      </details>
+      <details (toggle)="showContent('MARKET HOURS', $event)">
+        <summary [class.active]="activeContent === 'MARKET HOURS'">MARKET HOURS</summary>
+      </details>
+      <details (toggle)="showContent('OPTION STRIKE PEGGER', $event)">
+        <summary [class.active]="activeContent === 'OPTION STRIKE PEGGER'"> STRIKE PEGGER</summary>
+      </details>
+      <details (toggle)="showContent('OPTION GAINERS & LOSERS', $event)">
+        <summary [class.active]="activeContent === 'OPTION GAINERS & LOSERS'"> GAINERS & LOSERS</summary>
+      </details>
+      <details (toggle)="showContent('MOST ACTIVE OPTIONS', $event)">
+        <summary [class.active]="activeContent === 'MOST ACTIVE OPTIONS'">MOST ACTIVE OPTIONS</summary>
+      </details>
+    </div>
 
-  <details>
-    <summary>MARKET HOURS</summary>
-    <app-nifty></app-nifty>
-  </details>
-  
-
-   <!-- <details>
-    <summary>STRIKE PEGGER </summary>
-    <app-strike-pegger></app-strike-pegger>
-   </details> -->
-
-   <details>
-    <summary>OPTION STRIKE PEGGER </summary>
-    <app-opstrike-pegger></app-opstrike-pegger>
-   </details>
-
-   <details>
-    <summary>MOST ACTIVE OPTIONS </summary>
-    <app-active-options></app-active-options>
-   </details>
-
-   
-   <!-- <app-option-io></app-option-io> -->
-
+    <!-- Content Display Area -->
+    <div class="content-area">
+      <div *ngIf="activeContent === 'OPEN INTEREST'">
+        <app-option-io></app-option-io>
+      </div>
+      <div *ngIf="activeContent === 'VOLATILITY'">
+        <app-volatility></app-volatility>
+      </div>
+      <div *ngIf="activeContent === 'NEWS'">
+        <app-optionnews></app-optionnews>
+      </div>
+      <div *ngIf="activeContent === 'MARKET HOURS'">
+        <app-nifty></app-nifty>
+      </div>
+      <div *ngIf="activeContent === 'OPTION STRIKE PEGGER'">
+        <app-opstrike-pegger></app-opstrike-pegger>
+      </div>
+      <div *ngIf="activeContent === 'OPTION GAINERS & LOSERS'">
+        <app-optiongainers></app-optiongainers>
+      </div>
+      <div *ngIf="activeContent === 'MOST ACTIVE OPTIONS'">
+        <app-active-options></app-active-options>
+      </div>
+    </div>
   </div>
-  
+</div>
+
 </ion-content>
 
 

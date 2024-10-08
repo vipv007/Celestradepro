@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="table-container">
+    <h3>Stock Pivot Point</h3>
+    <iframe src="https://trendlyne.com/web-widget/technical-widget/Poppins/RELIANCE/?posCol=00A25B&primaryCol=006AFF&negCol=EB3B00&neuCol=F7941E"
+    width="500" 
+    height="600" 
+    frameborder="0" 
+    allowfullscreen>
+    </iframe>
+  </div>
+  
+  <div class="table-container">
+    <h3>Stock Technical Indicator</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Value</th>
+          <th>Signal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let indicator of technicalIndicators">
+          <td>{{ indicator.Name }}</td>
+          <td>{{ indicator.Value }}</td>
+          <td>{{ indicator.Action }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-container">
+    <h3>Stock Moving Average</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Simple</th>
+          <th>Exponential</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let average of movingAverages">
+          <td>{{ average.Period }}</td>
+          <td>{{ average.Simple }}</td>
+          <td>{{ average.Exponential }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

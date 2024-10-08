@@ -1,15 +1,41 @@
-
+<div class="search-bar">
   <input type="text" [(ngModel)]="searchQuery" (keyup)="applySearchFilter()" class="form-control mb-3" placeholder="Search news...">
   
   <button (click)="togglePopup()" class="btn btn-primary mb-3">All sites</button>
-
-  <div *ngIf="showPopup" class="popup">
-    <div class="popup-content">
-      <ul>
-        <li *ngFor="let mainUrl of mainUrls" (click)="filterNewsByMainUrl(mainUrl)" style="cursor: pointer;">
-          {{ mainUrl }}
+</div>
+  <div *ngIf="showPopup" >
+    <div >
+      <ul class="horizontal-list">
+        <li *ngFor="let mainUrl of mainUrls" class="checkbox-item">
+        <input  type="checkbox" [(ngModel)]="mainUrl.selected" (change)="filterNewsByMainUrl()" style="cursor: pointer;">
+          {{ mainUrl.name }}
         </li>
+
+        <br>
+        <li class="url-input-section mb-4 d-flex align-items-center">
+          <div class="input-group">
+            <input
+              type="text"
+              id="manualUrlInput"
+              [(ngModel)]="manualUrl"
+              class="form-control"
+              placeholder="Enter the URL to summarize..."
+            />
+            <button (click)="fxSummarizeUrl()" class="btn btn-primary ms-2">Add</button>
+          </div>
+        </li>
+  
+        <li *ngIf="loading" class="alert alert-info mt-4 ms-3">Fetching the news article. Please wait...</li>
+  
+        <li *ngIf="errorMessage" class="alert alert-danger mt-4 ms-3">{{ errorMessage }}</li>
+  
+        <li *ngIf="contentUnavailable" class="alert alert-warning mt-4 ms-3">
+          Content behind a paywall or unavailable.
+        </li>
+  
+  
       </ul>
+      
     </div>
   </div>
 
@@ -33,9 +59,11 @@
               </th>
               <th>SUMMARIZE</th>
               <th (click)="sortActiveNews('fetchedTime')" class="sortable">
-                <span>UPDATED TIME</span> &nbsp;
-                <span [ngClass]="{'asc': currentSortProperty === 'fetchedTime' && currentSortOrder === 'asc', 'desc': currentSortProperty === 'fetchedTime' && currentSortOrder === 'desc'}">{{ defaultSortSymbol('fetchedTime') }}</span>
-              </th>
+                <span>POSTED ON</span> &nbsp;
+                <span
+                  [ngClass]="{'asc': currentSortProperty === 'fetchedTime' && currentSortOrder === 'asc', 'desc': currentSortProperty === 'fetchedTime' && currentSortOrder === 'desc'}">{{
+                  defaultSortSymbol('fetchedTime') }}</span>
+                </th>
               <th>ACTION</th>
             </tr>
           </thead>
@@ -46,11 +74,12 @@
               <td>
                 <div *ngIf="!article.showFullSummary">{{ article.summary.slice(0, 150) }}...</div>
                 <div *ngIf="article.showFullSummary">{{ article.summary }}</div>
+                <b><h1 class="small">({{ getSiteName(article.url) }})</h1></b>
                 <button (click)="toggleSummary(article)" class="btn btn-outline-primary mt-2">
                   {{ article.showFullSummary ? 'Read less' : 'Read more' }}
                 </button>
               </td>
-              <td>{{ article.fetchedTime }}</td>
+              <td>{{ article.articleDateTime }}</td>
               <td>
                 <button *ngIf="!article.archive" (click)="archiveArticle(article)" class="btn btn-outline-danger">Archive</button>
                 <button *ngIf="article.archive" disabled class="btn btn-outline-secondary">Archived</button>
@@ -96,7 +125,7 @@
               <th>TITLE</th>
               <th>SENTIMENT SCORE</th>
               <th>SUMMARIZE</th>
-              <th>UPDATED TIME</th>
+              <th>POSTED ON</th>
             </tr>
           </thead>
           <tbody>
@@ -110,7 +139,7 @@
                   {{ article.showFullSummary ? 'Read less' : 'Read more' }}
                 </button>
               </td>
-              <td>{{ article.fetchedTime }}</td>
+              <td>{{ article.articleDateTime }}</td>
             </tr>
           </tbody>
         </table>
@@ -141,3 +170,17 @@
     </nav>
   </div>
 
+ <!-- Add the pie chart below the table -->
+ <div class="chart-container">
+  <h2>Sentiment Distribution</h2>
+  <div style="display: block;">
+    <canvas
+      baseChart
+      [data]="pieChartData"
+      [labels]="pieChartLabels" 
+      [colors]="pieChartColors"
+      [chartType]="'pie'"
+      [options]="{ responsive: true }">
+  </canvas>
+  </div>
+</div>

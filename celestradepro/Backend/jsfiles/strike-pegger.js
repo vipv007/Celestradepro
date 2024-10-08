@@ -3,6 +3,9 @@ const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 
 // MongoDB connection URL and Database Name
+//const MONGODB_URI = "mongodb://celes-mon-db:Rzp7AmNbss2332G6A6UrumqPhABRvdaOAINjpd2L4kvQ2Ycj7RFxMxcspvB4qnPO1knuW2EkpMcbjspM3aI6sg%3D%3D@celes-mon-db.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celes-mon-db@";
+//const DB_NAME = "test";
+
 const MONGODB_URI = "mongodb://127.0.0.1/";
 const DB_NAME = "FinanceDB";
 const COLLECTION_NAME = "StrikePegger";

@@ -1,29 +1,96 @@
+/* Light and Dark Theme Styles */
 
-// .active-tab {
-//     background-color: rgb(184, 167, 167); /* Set background color for active tab */
-//     border-radius: 20px;
-//     width: 10px; /* Set border radius for active tab */
-//   }
-//   .custom-tab-button {
-//     width: 10px; /* Set the width of the tab button */
-//     height: 50px; /* Set the height of the tab button */
-//   }
+/* Dark Theme Colors */
+body.dark {
+  --ion-background-color: #121212; /* Dark background */
+  --ion-text-color: #ffffff; /* Light text */
+  --ion-color-primary: #428affb4; /* Primary color for dark theme */
+  --ion-color-secondary: #50c8ffbc; /* Secondary color for dark theme */
+  --ion-color-tertiary: #6964ff93; /* Tertiary color for dark theme */
+}
+
+/* Active Tab Styles */
 .active-tab {
-    background:rgb(196, 249, 247);/* Gradient background */
-    border-radius: 20px; /* Rounded corners */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
-    transition: background-color 0.3s ease; /* Smooth transition effect */
-    width: 20px; /* Adjust the width of the active tab */
-    display: flex; /* Ensure content aligns horizontally */
-    align-items: center; /* Center content vertically */
-    justify-content: center; /* Center content horizontally */
+  background: #D9D9D9; /* Primary color for active tab */
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
+  transition: background-color 0.3s ease; /* Smooth transition effect */
+  width: 20px; /* Adjust the width of the active tab */
+  display: flex; /* Ensure content aligns horizontally */
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+}
+
+/* Custom Tab Button Styles */
+.custom-tab-button {
+  width: 100px; /* Set the width of the tab button */
+  height: 50px; /* Set the height of the tab button */
+}
+
+/* Side Margin */
+.side {
+  margin-top: 2%;
+}
+
+/* Tab Bar Styles */
+ion-tab-bar {
+  --background: var(--ion-background-color); /* Background color from theme */
+  --color-selected: var(--ion-text-color); /* Color for selected tab */
+  --color: var(--ion-text-color); /* Color for unselected tabs */
+}
+
+/* General Styles for Tab Buttons */
+ion-tab-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Image Styles within Tab Buttons */
+ion-tab-button img {
+  height: 35px; /* Standardize image size for all screens */
+}
+
+/* General Label Styling */
+ion-label {
+  font-weight: bold;
+  text-align: center;
+  color: var(--ion-text-color); /* Use theme text color */
+}
+
+/* Desktop-specific Adjustments */
+@media (min-width: 768px) {
+  ion-tab-bar {
+    --background: var(--ion-background-color); /* Ensure background matches theme */
   }
-  
-  .custom-tab-button {
-    width: 100px; /* Set the width of the tab button */
-    height: 50px; /* Set the height of the tab button */
-    /* Add any additional custom styling here */
+
+  ion-tab-button {
+    padding: 0;
+    /* Remove any extra padding for consistency */
   }
-  .side{
-    margin-top: 2%;
+
+  ion-tab-button img {
+    height: 35px;
+    /* Keep the image size same as in mobile view */
   }
+
+  ion-label {
+    font-size: 12px;
+    /* Same font size as mobile view */
+  }
+}
+
+/* Mobile-specific Adjustments */
+@media (max-width: 767px) {
+  ion-tab-button img {
+    height: 35px;
+    /* Keep image height same for mobile and desktop */
+  }
+
+  ion-label {
+    font-size: 12px;
+    /* Keep font size consistent with desktop */
+  }
+}

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,10 @@ export class StockService {
  
   constructor(private http: HttpClient, private router: Router) { }
 
-  getAllStocks() {
-    return this.http.get(`${this.baseUrl}`);
+  getAllStocks(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}`);
   }
-
+  
   getStockBySymbol(symbol: string) {
     return this.http.get(`${this.baseUrl}/${symbol}`);
   }

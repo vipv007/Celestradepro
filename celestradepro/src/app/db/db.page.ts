@@ -1,41 +1,51 @@
-import { Component, OnInit } from '@angular/core';
-import { CommodityService } from '../services/commodity.service';
+import { Component } from '@angular/core';
+import { ChartData, ChartOptions, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-db',
   templateUrl: './db.page.html',
   styleUrls: ['./db.page.scss'],
 })
-export class DbPage implements OnInit {
-  Commodities: any[] = [];
-  CommoditiesData: { [key: string]: any[] } = {}; // Object to hold data for each commodity symbol
-  selectedSymbol: string | null = null; // Variable to hold the currently selected symbol
+export class DbPage {
+  showChart = false;
+  xPos = 0;
+  yPos = 0;
 
-  constructor(private commodityService: CommodityService) {}
+  // Chart.js options
+  public chartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
 
-  ngOnInit() {
-    this.fetchCommodities();
+  // Correct structure without generic
+  public chartData: ChartData = {
+    labels: ['January', 'February', 'March', 'April', 'May'],
+    datasets: [
+      {
+        label: 'Stock Price',
+        data: [65, 59, 80, 81, 56],
+        fill: false,
+        borderColor: 'blue',
+       // Optional for smoothing lines
+      },
+    ],
+  };
+
+  public chartType: ChartType = 'line';
+
+  // Mouse hover events
+  onMouseOver(event: MouseEvent) {
+    this.showChart = true;
+    this.xPos = event.clientX;
+    this.yPos = event.clientY;
   }
 
-  fetchCommodities() {
-    this.commodityService.getCommodities().subscribe((response: any) => {
-      this.Commodities = response;
-      console.log(this.Commodities);
-      this.Commodities.forEach(data => {
-        this.CommoditiesData[data.Commodity] = data.Data.map(dataPoint => ({
-          date: new Date(dataPoint.Date),
-          open: dataPoint.Open,
-          high: dataPoint.High,
-          low: dataPoint.Low,
-          close: dataPoint.Close,
-          volume: dataPoint.Volume
-        }));
-      });
-      console.log('Processed commodity data:', this.CommoditiesData);
-    });
+  onMouseLeave() {
+    this.showChart = false;
   }
 
-  onSymbolChange(event: any) {
-    this.selectedSymbol = event.target.value; // Update the selected symbol based on radio button change
+  onMouseMove(event: MouseEvent) {
+    this.xPos = event.clientX + 10;
+    this.yPos = event.clientY + 10;
   }
 }

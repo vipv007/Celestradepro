@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ChartOptions, ChartType } from 'chart.js';
+import { Label, Color } from 'ng2-charts';
+import { FrxindexService } from '../services/frxindex.service';
 
 @Component({
   selector: 'app-ge',
@@ -6,53 +9,114 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ge.page.scss'],
 })
 export class GEPage implements OnInit {
-  data = [
-    { company: "Apple Inc.", symbol: "AAPL", change: 2.5, latest_price: 150, volume: 5000000, oi: 100000 },
-    { company: "Microsoft Corp.", symbol: "MSFT", change: 1.2, latest_price: 250, volume: 3000000, oi: 80000 },
-    { company: "Amazon.com Inc.", symbol: "AMZN", change: -1.8, latest_price: 3200, volume: 7000000, oi: 200000 },
-    { company: "Alphabet Inc.", symbol: "GOOGL", change: 0.3, latest_price: 2800, volume: 2000000, oi: 150000 },
-    { company: "Facebook Inc.", symbol: "META", change: -0.5, latest_price: 330, volume: 4000000, oi: 50000 },
-    { company: "Tesla Inc.", symbol: "TSLA", change: 3.4, latest_price: 700, volume: 6000000, oi: 120000 },
-    { company: "Berkshire Hathaway", symbol: "BRK.B", change: -2.1, latest_price: 290, volume: 1000000, oi: 40000 },
-    { company: "Johnson & Johnson", symbol: "JNJ", change: 0.0, latest_price: 160, volume: 3000000, oi: 60000 },
-    { company: "Visa Inc.", symbol: "V", change: 1.7, latest_price: 230, volume: 2500000, oi: 90000 },
-    { company: "Walmart Inc.", symbol: "WMT", change: -0.9, latest_price: 140, volume: 3500000, oi: 110000 },
-    // Additional Nifty 50 companies
-    { company: "Reliance Industries", symbol: "RELIANCE", change: 2.0, latest_price: 2100, volume: 5000000, oi: 150000 },
-    { company: "HDFC Bank", symbol: "HDFCBANK", change: -0.3, latest_price: 1450, volume: 3500000, oi: 95000 },
-    { company: "Infosys Ltd.", symbol: "INFY", change: 1.5, latest_price: 1600, volume: 4000000, oi: 120000 },
-    { company: "Tata Consultancy Services", symbol: "TCS", change: 0.8, latest_price: 3200, volume: 2500000, oi: 80000 },
-    { company: "Kotak Mahindra Bank", symbol: "KOTAKBANK", change: -1.2, latest_price: 1900, volume: 3000000, oi: 70000 },
-    { company: "ICICI Bank", symbol: "ICICIBANK", change: 0.4, latest_price: 700, volume: 5000000, oi: 110000 },
-    { company: "Hindustan Unilever", symbol: "HINDUNILVR", change: 0.7, latest_price: 2200, volume: 2000000, oi: 65000 },
-    { company: "State Bank of India", symbol: "SBIN", change: -1.5, latest_price: 400, volume: 4500000, oi: 90000 },
-    { company: "Bajaj Finance", symbol: "BAJFINANCE", change: 3.1, latest_price: 6200, volume: 500000, oi: 20000 },
-    { company: "Axis Bank", symbol: "AXISBANK", change: 1.9, latest_price: 750, volume: 3000000, oi: 85000 }
+  public barChartOptions: ChartOptions = {
+    responsive: true,
+    scales: {
+      xAxes: [{
+        gridLines: {
+          display: false,
+        },
+        ticks: {
+          fontColor: '#FFFFFF',
+          fontSize: 14,
+        }
+      }],
+      yAxes: [{
+        gridLines: {
+          display: false,
+        },
+        ticks: {
+          fontColor: '#FFFFFF',
+          fontSize: 14,
+        }
+      }]
+    },
+    legend: {
+      labels: {
+        fontColor: '#FFFFFF',
+        fontSize: 14
+      }
+    }
+  };
+
+  public barChartLabels: Label[] = [];
+  public barChartType: ChartType = 'horizontalBar';
+  public barChartLegend = false;
+  public barChartData = [
+    { data: [], label: '' }
   ];
 
-  activeTab: string = 'price';
-
-  constructor() { }
-
-  ngOnInit(): void { }
-
-  setActiveTab(tab: string): void {
-    this.activeTab = tab;
-  }
-
-  getColor(change: number): string {
-    if (change > 0) {
-      let intensity = Math.min(change / 5, 1);  // Cap intensity at 1 for 5% change
-      return `rgba(0, 255, 0, ${intensity})`;  // Green for positive
-    } else if (change < 0) {
-      let intensity = Math.min(-change / 5, 1);  // Cap intensity at 1 for -5% change
-      return `rgba(255, 0, 0, ${intensity})`;  // Red for negative
-    } else {
-      return 'rgba(200, 200, 200, 0.5)';  // Grey for zero
+  public barChartColors: Color[] = [
+    {
+      backgroundColor: []
     }
+  ];
+
+  public selectedTimeframe = '1 Day';
+  private technicals: any = {};
+
+  constructor(private frxindexService: FrxindexService) {}
+
+  ngOnInit(): void {
+    this.fetchTechnical(); // Fetch data when the component initializes
   }
 
-  getTextColor(change: number): string {
-    return change > 0 ? '#333' : '#444';
+  fetchTechnical(): void {
+    this.frxindexService.getFrxindexs().subscribe((response: any) => {
+      console.log('API Response:', response); // Log the response to check the structure
+
+      if (response && response.length > 0) {
+        // Access the first object in the array
+        const data = response[0];
+
+        this.technicals = data;
+
+        // Extract sectors from one of the time periods, e.g., `1_week`
+        this.barChartLabels = Object.keys(data['1_week']); // Assuming all periods have the same sectors
+
+        // Initialize the chart data
+        this.updateChartData(data);
+      } else {
+        console.error('Data not found in the response.');
+      }
+    });
+  }
+
+  updateChart(timeframe: string): void {
+    this.selectedTimeframe = timeframe;
+    this.updateChartData(this.technicals); // Pass the fetched technical data
+  }
+
+  updateChartData(performanceData: any): void {
+    // Mapping MongoDB fields to the corresponding timeframes
+    const timeframeMapping: any = {
+      '1 Day': 'days',
+      '1 Week': '1_week',
+      '1 Month': '1_month',
+      '3 Months': '3_months'
+    };
+
+    const timeframeKey = timeframeMapping[this.selectedTimeframe];
+    const timeframeData = performanceData[timeframeKey];
+
+    if (timeframeData) {
+      const sectorValues = Object.values(timeframeData); // Extract the performance values
+
+      this.barChartData = [
+        { data: sectorValues, label: this.selectedTimeframe + ' Performance' }
+      ];
+
+      // Update colors based on positive/negative values
+      this.barChartColors = [
+        {
+          backgroundColor: sectorValues.map((value: number) => 
+            value >= 0 ? '#4CAF50' : '#F44336'
+          )
+        }
+      ];
+    } else {
+      console.error(`No data available for the selected timeframe: ${this.selectedTimeframe}`);
+      // Handle the case where data is missing or incorrect
+    }
   }
 }

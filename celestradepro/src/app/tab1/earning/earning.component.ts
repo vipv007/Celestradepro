@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EarningService } from '../../services/earning.service';
 import { StockService } from '../../services/stock.service';
+import { UserService } from '../../services/user.service';  // Import UserService to fetch user's watchlist
 import { Chart } from 'chart.js';
 
 @Component({
@@ -15,33 +16,69 @@ export class EarningComponent implements OnInit {
   uniqueYears: string[] = [];
   selectedYears: { [key: string]: boolean } = {};
 
-  constructor(private earningService: EarningService, private stockService: StockService) {}
+  constructor(
+    private earningService: EarningService, 
+    private stockService: StockService, 
+    private userService: UserService  // Inject UserService
+  ) {}
 
   ngOnInit() {
-    this.fetchDataAndGenerateChart();
+    this.checkLoginStatus();  // Check login status on init
   }
 
-  fetchDataAndGenerateChart(): void {
-    this.stockService.getSelectedStocks().subscribe((selectedStocks: any[]) => {
-      this.selectedSymbols = selectedStocks
-        .filter((stock: any) => stock.selected)
-        .map((stock: any) => stock.symbol);
+  checkLoginStatus(): void {
+    const email = this.userService.getEmail();  // Get the user's email from the service
+    
+    if (email) {
+      this.fetchUserSymbols();  // Fetch user's symbols
+    } else {
+      this.fetchEarningsForDefault(); // Fetch data for the first symbol in the default collection
+    }
+  }
 
-      if (this.selectedSymbols.length > 0) {
-        this.fetchEarningsForSelectedStocks();
-      } else {
-        console.log('No symbols selected.');
-        // Handle the case where no symbols are selected
+  fetchUserSymbols(): void {
+    const email = this.userService.getEmail();  // Get the user's email from the service
+    this.userService.getWatchlist(email).subscribe(
+      (response: any) => {
+        this.selectedSymbols = response.watchlist.map((item: any) => item.symbol);
+        if (this.selectedSymbols.length > 0) {
+          this.fetchEarningsForSelectedStocks();  // Fetch earnings data for the user's symbols
+        } else {
+          console.log('No symbols selected.');
+          // Handle the case where no symbols are selected
+        }
+      },
+      error => {
+        console.error('Error fetching user symbols:', error);
       }
-    });
+    );
   }
 
   fetchEarningsForSelectedStocks(): void {
     this.earningService.getAllEarnings().subscribe((response: any[]) => {
+      // Filter earnings data to include only the symbols in the user's watchlist
       this.earningsData = response.filter(item => this.selectedSymbols.includes(item.symbol));
       this.updateUniqueYears();
       this.initializeSelectedYears();
       this.generateChart();
+      this.updateChart('2024');  // Default year
+    });
+  }
+
+  fetchEarningsForDefault(): void {
+    this.earningService.getAllEarnings().subscribe((response: any[]) => {
+      // Check if there are any symbols in the response and use the first one
+      if (response.length > 0) {
+        const firstSymbol = response[0].symbol; // Get the first symbol from the response
+        this.earningsData = response.filter(item => item.symbol === firstSymbol);
+        this.updateUniqueYears();
+        this.initializeSelectedYears();
+        this.generateChart();
+        this.updateChart('2024');  // Default year
+      } else {
+        console.log('No earnings data available.');
+        // Handle the case where no earnings data is available
+      }
     });
   }
 
@@ -58,7 +95,7 @@ export class EarningComponent implements OnInit {
 
   initializeSelectedYears(): void {
     this.uniqueYears.forEach(year => {
-      this.selectedYears[year] = false;
+      this.selectedYears[year] = (year === '2024'); // Default selection for 2024
     });
   }
 
@@ -68,7 +105,7 @@ export class EarningComponent implements OnInit {
         this.selectedYears[year] = false; // Deselect other years
       }
     });
-  
+
     const { symbols, years, revenueData, forecastData, epsData } = this.prepareChartData();
     this.chart.data.labels = symbols; // Update x-axis labels with selected stock symbols
     this.chart.data.datasets[0].data = revenueData;
@@ -76,7 +113,6 @@ export class EarningComponent implements OnInit {
     this.chart.data.datasets[2].data = epsData;
     this.chart.update();
   }
-  
 
   generateChart(): void {
     const { years, revenueData, forecastData, epsData } = this.prepareChartData();
@@ -128,25 +164,25 @@ export class EarningComponent implements OnInit {
     const revenueData: number[] = [];
     const forecastData: number[] = [];
     const epsData: number[] = [];
-  
+
     selectedYears.forEach(selectedYear => {
       const filteredEarningsData = this.earningsData.filter(company =>
         company.earning.some(earning => earning.year.toString() === selectedYear)
       );
-  
+
       filteredEarningsData.forEach(company => {
         if (!symbols.includes(company.symbol)) {
           symbols.push(company.symbol);
         }
         years.push(selectedYear);
-  
+
         const yearEarnings = company.earning.find(earning => earning.year.toString() === selectedYear);
         revenueData.push(yearEarnings ? yearEarnings.revenue : 0);
         forecastData.push(yearEarnings ? yearEarnings.forecast : 0);
         epsData.push(yearEarnings ? yearEarnings.eps : 0);
       });
     });
-  
+
     return { symbols, years, revenueData, forecastData, epsData };
   }
-}  
+}

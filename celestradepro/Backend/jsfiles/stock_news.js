@@ -38,7 +38,7 @@ async function fetchSubUrlsFromMainUrl(url) {
         const subUrls = [];
         $("a").each((index, element) => {
             const subUrl = $(element).attr("href");
-            if (subUrl && !subUrl.startsWith("#") && !subUrl.startsWith("javascript") && (subUrl.includes() || subUrl.includes("stock") || subUrl.includes("finance") || subUrl.includes("market"))) {
+            if (subUrl && !subUrl.startsWith("#") && !subUrl.startsWith("javascript") && (subUrl.includes("stock") || subUrl.includes("finance") || subUrl.includes("market"))) {
                 const fullUrl = new URL(subUrl, url).href; // Ensure it's a full URL
                 subUrls.push(fullUrl);
             }
@@ -53,7 +53,7 @@ async function fetchSubUrlsFromMainUrl(url) {
     }
 }
 
-// Function to fetch, summarize, and store data from a sub-URL
+// Function to process sub-URLs and store data
 async function processSubUrl(subUrl) {
     try {
         console.log("Processing sub-URL:", subUrl);
@@ -75,6 +75,10 @@ async function processSubUrl(subUrl) {
         });
 
         console.log("Main points of the news article:", mainPoints);
+
+        // Fetch the main image URL
+        const imageUrl = fetchNewsImage($);
+        console.log("News image URL:", imageUrl);
 
         const genAI = new GoogleGenerativeAI(API_KEY);
         const model = await genAI.getGenerativeModel({ model: "models/gemini-1.0-pro" });
@@ -125,6 +129,25 @@ async function processSubUrl(subUrl) {
         console.log("Sentiment analysis score:", sentimentScoreNormalized.toFixed(2), "/ 10");
         console.log("Sentiment:", sentimentLabel);
 
+        // Extract article date and time
+        const articleDateTime = $("time").attr("datetime") || $("meta[property='article:published_time']").attr("content");
+
+        if (!articleDateTime) {
+            console.log("No article date and time found.");
+            return; // Skip storing if no date and time found
+        }
+
+        // Convert to IST (Indian Standard Time)
+        const articleDate = new Date(articleDateTime);
+        const istOffset = 5 * 60 + 30; // IST is UTC+5:30
+        const istDate = new Date(articleDate.getTime() + istOffset * 60000); // Convert to IST
+
+        // Format the IST date and time with AM/PM
+        const options = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true, timeZone: 'Asia/Kolkata' };
+        const istTimeFormatted = istDate.toLocaleDateString('en-IN', options);
+
+        console.log("Article Date and Time (IST):", istTimeFormatted);
+
         // Store only if meaningful content is available
         await storeFetchedDetailsInDb({
             url: subUrl,
@@ -134,13 +157,25 @@ async function processSubUrl(subUrl) {
             summary: result.response.text(),
             sentimentScore: sentimentScoreNormalized.toFixed(2),
             sentiment: sentimentLabel,
-            fetchedTime: new Date()
+            articleDateTime: istTimeFormatted,
+            imageUrl: imageUrl, // Store the news image URL
         });
 
     } catch (error) {
         console.error("Error processing sub-URL:", error.message);
         // Do not store error messages for sub-URLs
     }
+}
+
+// Function to fetch the news image URL
+function fetchNewsImage($) {
+    // Attempt to find the image using common tags and meta properties
+    const ogImage = $("meta[property='og:image']").attr("content");
+    const twitterImage = $("meta[name='twitter:image']").attr("content");
+    const imgTagImage = $("img").first().attr("src");
+
+    // Use og:image first, then twitter:image, then fallback to the first <img> tag
+    return ogImage || twitterImage || imgTagImage || "No image found";
 }
 
 // Function to store an error message for a main URL in the database
@@ -160,7 +195,8 @@ async function storeMainUrlErrorInDb(url, message) {
             summary: message,
             sentimentScore: "N/A",
             sentiment: "N/A",
-            fetchedTime: new Date()
+            articleDateTime: "N/A",
+            imageUrl: "N/A"
         });
 
         console.log("Stored main URL error message in MongoDB.");

@@ -4,14 +4,12 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const Sentiment = require("sentiment");
 
-// MongoDB connection URL and Database Name
+// Configuration Constants
 const MONGODB_URI = "mongodb://127.0.0.1/";
 const DB_NAME = "FinanceDB";
-
-// Google API Key
 const API_KEY = "AIzaSyBzfYWVF3kbttQfwzzWKBhPQtZe6teGSZU"; // Replace with your actual Google API Key
 
-// Main URLs to fetch news from
+// Main URLs and Keywords
 const MAIN_URLS = [
     "https://www.cnbc.com/options-action/",
     "https://www.investors.com/category/research/options/",
@@ -20,22 +18,35 @@ const MAIN_URLS = [
     "https://theoptionsinsider.com/options-news/",
     "https://www.schwab.com/learn/story/todays-options-market-update"
 ];
-
-// Keywords for options trading-related news
 const optionsTradingKeywords = [
     "options trading", "options market", "call option", "put option", "options strategy",
     "options volatility", "options premium", "derivatives", "options contracts",
     "options pricing", "options analysis", "options forecast"
 ];
 
-// Function to connect to MongoDB
+// Connect to MongoDB
 async function connectToDb() {
     const client = new MongoClient(MONGODB_URI);
     await client.connect();
     return client;
 }
 
-// Function to fetch sub-URLs from a main URL
+// Convert to IST
+function convertToIST(dateTime) {
+    const options = {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+    };
+    return new Date(dateTime).toLocaleString("en-IN", options);
+}
+
+// Fetch Sub-URLs
 async function fetchSubUrlsFromMainUrl(url) {
     try {
         console.log("Fetching sub-URLs from:", url);
@@ -60,15 +71,13 @@ async function fetchSubUrlsFromMainUrl(url) {
     }
 }
 
-// Function to check if the content of a URL is relevant to the keywords
+// Check Content Relevance
 async function isRelevantContent(url) {
     try {
         const response = await axios.get(url);
         const html = response.data;
         const $ = cheerio.load(html);
         const articleText = $("article").text().toLowerCase();
-
-        // Check for relevance based on keywords
         return optionsTradingKeywords.some(keyword => articleText.includes(keyword));
     } catch (error) {
         console.error("Error checking relevance for URL:", url, "-", error.message);
@@ -76,7 +85,16 @@ async function isRelevantContent(url) {
     }
 }
 
-// Function to fetch, summarize, and store data from a sub-URL
+// Fetch Image URL from Article
+function fetchImageUrl($) {
+    const ogImage = $("meta[property='og:image']").attr("content");
+    const twitterImage = $("meta[name='twitter:image']").attr("content");
+    const imgTag = $("article img").first().attr("src");
+
+    return ogImage || twitterImage || imgTag || "";
+}
+
+// Process Each Sub-URL
 async function processSubUrl(subUrl) {
     try {
         console.log("Processing sub-URL:", subUrl);
@@ -86,10 +104,9 @@ async function processSubUrl(subUrl) {
 
         const articleText = $("article").text();
         const isPremium = articleText.includes("subscribe") || articleText.includes("premium");
-
         if (!articleText || isPremium) {
             console.log("Content is behind a paywall or not available. Skipping storage.");
-            return; // Skip storing this URL
+            return;
         }
 
         const mainPoints = [];
@@ -97,7 +114,10 @@ async function processSubUrl(subUrl) {
             mainPoints.push($(element).text());
         });
 
-        console.log("Main points of the news article:", mainPoints);
+        const postedTime = $("time").attr("datetime") || $("meta[property='article:published_time']").attr("content");
+        const articleDateTime = postedTime ? convertToIST(postedTime) : convertToIST(new Date());
+
+        const imageUrl = fetchImageUrl($);
 
         const genAI = new GoogleGenerativeAI(API_KEY);
         const model = await genAI.getGenerativeModel({ model: "models/gemini-1.0-pro" });
@@ -136,19 +156,12 @@ async function processSubUrl(subUrl) {
 
         const sentiment = new Sentiment();
         const analysis = sentiment.analyze(result.response.text());
-        let sentimentScore = analysis.score;
+        const sentimentScore = analysis.score;
 
         const normalizedScore = (sentimentScore + 5) / 2;
         const sentimentScoreNormalized = Math.max(1, Math.min(normalizedScore, 10));
-
         const sentimentLabel = sentimentScoreNormalized >= 5 ? "Positive" : "Negative";
 
-        console.log("Summary of the main points and article text:");
-        console.log(result.response.text());
-        console.log("Sentiment analysis score:", sentimentScoreNormalized.toFixed(2), "/ 10");
-        console.log("Sentiment:", sentimentLabel);
-
-        // Store fetched details in the database
         await storeFetchedDetailsInDb({
             url: subUrl,
             headline: $("title").text(),
@@ -157,7 +170,8 @@ async function processSubUrl(subUrl) {
             summary: result.response.text(),
             sentimentScore: sentimentScoreNormalized.toFixed(2),
             sentiment: sentimentLabel,
-            fetchedTime: new Date()
+            articleDateTime: articleDateTime,
+            imageUrl: imageUrl
         });
 
     } catch (error) {
@@ -165,34 +179,7 @@ async function processSubUrl(subUrl) {
     }
 }
 
-// Function to store a main URL record with a "see the site" message
-async function storeMainUrlWithMessage(url, message) {
-    const client = await connectToDb();
-    const db = client.db(DB_NAME);
-    const collection = db.collection("op_news");
-
-    await collection.updateOne(
-        { url: url },
-        {
-            $set: {
-                url: url,
-                headline: url,
-                mainPoints: ["N/A"],
-                articleText: "N/A",
-                summary: message,
-                sentimentScore: "N/A",
-                sentiment: "N/A",
-                fetchedTime: new Date()
-            }
-        },
-        { upsert: true }
-    );
-
-    console.log("Stored main URL with message in MongoDB.");
-    await client.close();
-}
-
-// Function to store fetched details in the database
+// Store Details in MongoDB
 async function storeFetchedDetailsInDb(details) {
     const client = await connectToDb();
     const db = client.db(DB_NAME);
@@ -210,12 +197,39 @@ async function storeFetchedDetailsInDb(details) {
     await client.close();
 }
 
-// Function to summarize and process multiple main URLs
+// Store Message for Main URL
+async function storeMainUrlWithMessage(url, message) {
+    const client = await connectToDb();
+    const db = client.db(DB_NAME);
+    const collection = db.collection("op_news");
+
+    await collection.updateOne(
+        { url: url },
+        {
+            $set: {
+                url: url,
+                headline: url,
+                mainPoints: ["N/A"],
+                articleText: "N/A",
+                summary: message,
+                sentimentScore: "N/A",
+                sentiment: "N/A",
+                articleDateTime: convertToIST(new Date()),
+                imageUrl: ""
+            }
+        },
+        { upsert: true }
+    );
+
+    console.log("Stored main URL with message in MongoDB.");
+    await client.close();
+}
+
+// Summarize and Process Multiple URLs
 async function summarizeMultipleMainUrls() {
     for (const url of MAIN_URLS) {
         const subUrls = await fetchSubUrlsFromMainUrl(url);
 
-        // Filter sub-URLs to include only those relevant
         const relevantSubUrls = [];
         for (const subUrl of subUrls) {
             if (await isRelevantContent(subUrl)) {
@@ -232,13 +246,13 @@ async function summarizeMultipleMainUrls() {
     }
 }
 
-// Start the summarization process
+// Start Process
 summarizeMultipleMainUrls()
     .then(() => {
         console.log("Summarization process complete.");
-        process.exit(0); // Stop the terminal after completing the fetching and summarization
+        process.exit(0);
     })
     .catch(error => {
         console.error("Error during summarization process:", error.message);
-        process.exit(1); // Exit with error status
+        process.exit(1);
     });

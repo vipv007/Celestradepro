@@ -3,15 +3,7 @@ const Schema = mongoose.Schema;
 
 let Com_news = new Schema({
 
-//  url:{
-//   type: String
-//  },
-//  name:{
-//   type: String
-//  },
-//  imgurl:{
-//   type: String
-//  }, 
+
 url: {
   type: String
 },
@@ -27,8 +19,8 @@ sentimentScore: {
 sentiment: {
   type: String
 },
-fetchedTime: {
-  type: Date
+articleDateTime: {
+  type: String
 },
 archive: {
   type: Boolean,

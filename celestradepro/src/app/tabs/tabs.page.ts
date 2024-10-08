@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss']
 })
 export class TabsPage {
-  currentTab: string = 'tab1'; // Default tab
+  currentTab: string = 'crt'; // Default tab
 
   constructor() {}
 

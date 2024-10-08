@@ -9,6 +9,19 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
+ body {
+    background-color: var(--ion-background-color);
+    color: var(--ion-text-color);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  ion-toolbar {
+    background-color: var(--ion-toolbar-background);
+    color: var(--ion-toolbar-text-color);
+  }
+  
+  
+
 /* Core CSS required for Ionic components to work properly */
 @import "~@ionic/angular/css/core.css";
 @import '~bootstrap/dist/css/bootstrap.css';
@@ -25,3 +38,812 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+ 
+.checkbox-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 70%;
+  height: 10%;
+ // background-color: aliceblue;
+  margin-left: 20%;
+  margin-top: 10%;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(179, 200, 218, 0.1);
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.sidebar {
+  // flex: 1;
+  max-width: 500px;
+  /* Sidebar width */
+  background-color: #c4f3e9;
+  padding: 10px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.content-area {
+  flex: 3;
+  padding: 20px;
+  background-color: #ffffff;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+summary {
+  margin-left: 30px;
+  margin-top: 10px;
+  color: rgb(94, 10, 190);
+  font-weight: bold;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/* Active style for the summary */
+summary.active {
+  color: #FF5733;
+  /* Change this to the desired color when active */
+}
+
+ion-header {
+  height: 13%;
+}
+
+// .forex-table {
+//   width: 100%;
+//   border-collapse: collapse;
+// }
+
+// .forex-table th,
+// .forex-table td {
+//   padding: 8px;
+//   text-align: left;
+
+// }
+
+// .forex-table th {
+//   background-color: #5680f2;
+//   color: white;
+// }
+
+// .forex-table tbody tr:nth-child(even) {
+//   background-color: #f9f9f9;
+// }
+
+
+// summary{
+//   margin-left: 40px;
+//   margin-top: 20px;
+//   color: rgb(94, 10, 190);
+//   font-weight: bold;
+//   font-family: Georgia, 'Times New Roman', Times, serif;
+//  }
+#news {
+  text-decoration: none;
+  margin-left: 60px;
+  color: #000;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+}
+
+.tool {
+  --background: dodgerblue;
+  text-align: center;
+}
+
+ion-title {
+  --background: dodgerblue;
+}
+
+.cl1 {
+  background-color: aquamarine;
+}
+
+.c1 {
+  --background: crimson;
+  margin-left: 90px;
+}
+
+.c3 {
+  --background: crimson;
+  margin-left: 230px;
+  margin-top: -65px;
+}
+
+.class1 {
+  position: absolute;
+  margin-left: 20px;
+  margin-top: 50px;
+  font-family: Times New Roman !important;
+  font-size: 1.1em;
+
+}
+
+h1 {
+  margin-left: 25px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: rgb(14, 134, 233);
+}
+
+h2 {
+  margin-left: 25px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: rgb(41, 151, 133);
+}
+
+.card1 {
+  --background: rgb(144, 140, 148);
+  height: 40%;
+  width: 55%;
+  margin-left: 25%;
+}
+
+#head {
+  font-size: larger;
+  font-weight: bold;
+}
+
+ion-label {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  //font-weight: bolder;
+  font-size: large;
+}
+
+#h1 {
+  text-align: center;
+  color: rgb(16, 117, 248);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+ion-segment {
+  ion-label {
+    color: #FF5733;
+     
+  }
+}
+
+ion-button {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: medium;
+  font-weight: 100;
+  margin-left: 80px;
+}
+
+ion-card-content {
+  padding: 20px;
+  padding-left: 25%;
+
+  p {
+    color: #000;
+    font-size: large;
+    margin-left: 5%;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+
+  b {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: xx-large;
+    color: rgb(224, 172, 75);
+  }
+}
+
+ion-card-title {
+  text-align: center;
+  padding-top: 20px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: rgba(153, 5, 121, 0.959);
+  font-weight: bold;
+}
+
+// .grid-container {
+//   display: grid;
+//   grid-template-columns: auto auto auto;
+//   padding: 40px;
+
+//   #card {
+//     --background: rgb(216, 216, 221);
+//   }
+// }
+
+// .grid-item {
+
+//   border: 1px rgba(0, 0, 0, 0.8);
+//   padding: 20px;
+//   font-size: 20px;
+//   text-align: center;
+// }
+
+.positive-value {
+  color: green;
+}
+
+.negative-value {
+  color: red;
+}
+
+.header-row {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bolder;
+  font-size: large;
+
+}
+
+.footer-row {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: medium;
+  background-color: rgb(216, 223, 223);
+}
+
+h4 {
+  margin-left: 30px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  margin-top: 20px;
+  // color: #E62C1E;
+}
+
+.ch {
+  color: #E62C1E;
+}
+
+.col {
+  padding-left: 20px;
+  /* Adjust as needed */
+  padding-right: 20px;
+  /* Adjust as needed */
+}
+
+ion-searchbar {
+  padding-left: 25px;
+  padding-right: 50px;
+  border-radius: 3px;
+}
+
+#c5 {
+  background-color: rgb(204, 212, 212);
+}
+
+.red {
+  margin-left: 70px;
+}
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.tabs {
+  display: flex;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.tabs button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  margin-left: 220px;
+  color: rgb(235, 56, 7);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bolder;
+  font-size: large;
+}
+
+.tabs button.active {
+  background-color: #aaf36a;
+  color: white;
+  border-radius: 10px;
+}
+
+.tabs button:not(.active):hover {
+  background-color: #f1f1f1;
+}
+
+.tab-content {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+// table {
+//   width: 100%;
+//   border-collapse: collapse;
+//   background-color: #f4f4f4;
+
+// }
+
+// th,
+// td {
+//   border: 1px solid #ddd;
+//   padding: 8px;
+//   font-family: Georgia, 'Times New Roman', Times, serif;
+
+// }
+
+// th {
+//   border: 1px solid #ddd;
+//   text-align: left;
+// }
+
+p {
+  text-align: center;
+  color: red;
+  font-weight: bolder;
+}
+
+select {
+  background-color: rgb(219, 243, 243);
+  text-align: justify;
+  height: 20px;
+  border-radius: 0px;
+}
+
+.header-row {
+  font-weight: bold;
+  background-color: #f8f8f8;
+  border-bottom: 2px solid #ccc;
+  text-align: center;
+}
+
+small {
+  font-weight: bolder;
+  text-align: center;
+}
+
+
+
+/* Global Styles */
+body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background-color: #f4f6f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+
+.container-watchlist {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.sidebar {
+  max-width: 300px;
+  background-color: #c4f3e9;
+  padding: 10px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.content-area {
+  flex: 1;
+  padding: 20px;
+  background-color: #ffffff;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+/* Header */
+ion-header {
+  height: auto;
+}
+
+/* Styling for Forms */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+}
+
+/* Button Styles */
+.btn {
+  border-radius: 4px;
+  font-size: 16px;
+  padding: 10px 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+/* Table Styles */
+.table-container {
+  max-height: 580px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  //background-color: #f4f4f4;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+
+
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f9f9f9;
+}
+
+/* Summary and Segment Styles */
+summary {
+  margin: 10px 0 10px 30px;
+  color: rgb(94, 10, 190);
+  font-weight: bold;
+}
+
+summary.active {
+  color: #FF5733;
+}
+
+ion-segment-button {
+  --color: #FF5733;
+}
+
+/* Tab Content Styles */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+  background-color: #ccc;
+}
+
+.tabcontent {
+  display: none;
+  padding: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.tabcontent.active {
+  display: block;
+}
+
+/* Additional Styles */
+// h2,
+// h3,
+// h4 {
+//   color: #444;
+//   font-weight: 600;
+//   margin-bottom: 15px;
+//   text-align: center;
+// }
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  background-color: #fff;
+}
+
+.card-header {
+  background-color: #c9def5;
+  color: #fff;
+  border-radius: 8px 8px 0 0;
+  padding: 5px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.card-body {
+  padding: 30px;
+
+  // th {
+  //     background-color: #343a40;
+  //     color: white;
+  //   }
+  
+}
+
+.p,
+b {
+  text-align: center;
+  color: red;
+  font-weight: bolder;
+}
+
+.card-content {
+  color: rgb(236, 181, 30);
+  margin-left: 20%;
+}
+
+.card-title {
+  margin-top: 5%;
+  color: rgba(153, 5, 121, 0.959);
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+}
+
+select {
+  background-color: rgb(219, 243, 243);
+  text-align: justify;
+  height: 20px;
+  border-radius: 0px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 40px;
+}
+
+.grid-item {
+  border: 1px rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.tabs-content {
+
+  padding: 10px;
+  background-color: #f8f9fa;
+  /* Light background for better contrast */
+}
+
+.tab-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+  /* Handle overflow */
+}
+
+.watchlist-table {
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 14px;
+}
+
+.watchlist-table th,
+.watchlist-table td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.watchlist-table th {
+  background-color: #343a40;
+  color: white;
+}
+
+.watchlist-table td {
+  background-color: #ffffff;
+}
+
+.watchlist-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.watchlist-tab {
+  padding: 20px;
+  /* Add padding around the table */
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.watchlist-container {
+  width: 100%;
+  padding: 20px;
+}
+
+:host {
+  display: block;
+  background-color: #f1f4f5;
+  padding: 20px;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+/* Button styling */
+.button-group {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: rgb(22, 22, 22);
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Canvas background */
+// canvas {
+//   background-color: #2E2E2E;
+//   width: 100% !important;
+//   /* Ensure canvas resizes with container */
+//   height: auto !important;
+//   /* Maintain aspect ratio */
+//   padding: 120px;
+// }
+
+
+.gtable{
+    width: 800px;
+    height: 400px;
+    background-color: black;
+    margin-left: 25%;
+    color: white;
+}
+
+/* Desktop view */
+@media (min-width: 1025px) {
+  .button-group {
+    width: 80%;
+    margin: 0 auto 20px auto;
+  }
+
+  button {
+    padding: 10px 30px;
+    font-size: 16px;
+  }
+
+  // canvas {
+  //   max-width: 800px;
+  //   margin: 0 auto;
+  // }
+}
+
+/* Tablet view */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .button-group {
+    width: 90%;
+    margin: 0 auto 20px auto;
+    flex-wrap: wrap;
+    /* Buttons wrap if they don't fit in one line */
+  }
+
+  button {
+    padding: 8px 15px;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  // canvas {
+  //   max-width: 600px;
+  //   margin: 0 auto;
+  // }
+}
+
+/* Mobile view */
+@media (max-width: 767px) {
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  button {
+    width: 80%;
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  // canvas {
+  //   max-width: 100%;
+  //   margin: 0 auto;
+  // }
+}

@@ -1,8 +1,8 @@
-<div>
+<div class="card-body  card trend-forexs-card container-watchlist">
   <p>{{ title }}</p>
-  <table>
+  <table class="responsive-table">
     <thead>
-      <tr>
+      <tr  class="header-row">
         <th>Trading Session</th>
         <th>Start Time</th>
         <th>End Time</th>
@@ -10,9 +10,10 @@
     </thead>
     <tbody>
       <tr *ngFor="let technical of technicals">
-        <td>{{ technical.pivot_levels.pivot }}</td>
-        <td>{{ hour.Start }}</td>
-        <td>{{ hour.End }}</td>
+        <td>{{ technical.Product}}</td>
+        <td>{{ technical.Start}}</td>
+        <td>{{ technical.End}}</td>
+       
       </tr>
     </tbody>
   </table>

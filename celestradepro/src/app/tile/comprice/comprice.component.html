@@ -1,0 +1,15 @@
+<div class="s1"> 
+  <h3>Technical Moving Averages</h3>
+  <ion-item>
+    <ion-label>Select Commodity</ion-label>
+    <ion-select [(ngModel)]="selectedCommodity" (ionChange)="fetchData()">
+      <ion-select-option *ngFor="let symbol of watchlistSymbols" [value]="symbol">
+        {{ symbolToCommodityName[symbol] || symbol }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <div style="display: block;" class="chart">
+    <canvas id="lineChart"></canvas>
+  </div>
+</div>

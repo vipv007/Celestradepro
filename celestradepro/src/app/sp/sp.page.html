@@ -1,132 +1,115 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-back-button defaultHref="/tabs/tab1" color="danger"></ion-back-button>
-    <ion-title>SP&50 Options</ion-title>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/components/login/login.component.html -->
+<div class="container mt-5">
+  <!-- Login Section -->
+  <div *ngIf="!isLoggedIn" class="card mb-4">
+    <div class="card-header">
+      <h2 class="text-center">Login</h2>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="onLogin()">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            id="email"
+            type="email"
+            class="form-control"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mt-3">
+          Login
+        </button>
+      </form>
+    </div>
+  </div>
 
+  <!-- Watchlist Section -->
+  <div *ngIf="isLoggedIn && watchlist.length > 0" class="card mb-4">
+    <div class="card-header">
+      <h3 class="text-center">Your Watchlist</h3>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+        <table class="table table-striped table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>Symbol</th>
+              <th>Name</th>
+              <th>Open</th>
+              <th>High</th>
+              <th>Low</th>
+              <th>Close</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stock of watchlist">
+              <td>{{ stock.symbol }}</td>
+              <td>{{ stock.name }}</td>
+              <td>{{ stock.open }}</td>
+              <td>{{ stock.high }}</td>
+              <td>{{ stock.low }}</td>
+              <td>{{ stock.close }}</td>
+              <td>
+                <button class="btn btn-danger btn-sm" (click)="onDeleteStock(stock)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-  <ion-content class="content">
-    <img src="../../assets/ch3.jpg" />
-        <h1><b>S&P 500 INDEX (^SPX)</b></h1>
-    <p>Chicago Options - Chicago Options Delayed Price. Currency in USD</p>
-    <h1><b>4,008.01-15.88</b> <ion-text color="danger"><b> (-0.39%)</b></ion-text></h1>
-  
-
-  <ion-grid>
-    <center>
-      <p><b>calls</b><br>for may 17.22</p>
-    <ion-button color="success">Call</ion-button>
-    
-  </center>
-  </ion-grid>
-  
-  
-  <ion-grid class="redss" >
-    <ion-row style="border-top:groove">
-      <ion-col col-4>
-        <ion-label>contract
-          <br>name</ion-label>
-      </ion-col>
-      <ion-col >
-        <ion-label >lasttrade<br>date	</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >bid</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >lastprice	</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >strike</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label>ask</ion-label>
-      </ion-col>
-      </ion-row>
-  </ion-grid>
-  <ion-grid *ngFor="let sp of sps" class="red">
-    <ion-row style="border-top:groove">
-      <ion-col col-4>
-        <ion-label>{{sp.contractname}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >{{sp.lastradedate}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >{{sp.bid}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >{{sp.lastprice}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label><ion-text color="primary">{{sp.strike}}</ion-text></ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label>{{sp.ask}}</ion-label>
-      </ion-col>
-      </ion-row>
-  </ion-grid>
-  <ion-grid>
-     <center>
-      <p><b>put</b><br>for may 17.22</p>
-  
-    
-  </center>
-  </ion-grid><br>
-  
-  
-  <ion-grid class="redss" >
-    <ion-row style="border-top:groove">
-      <ion-col col-4>
-        <ion-label>Contract Name</ion-label>
-      </ion-col>
-      <ion-col >
-        <ion-label >Last Trade Date	</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >bid</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >Last Price	</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >strike</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label>Ask</ion-label>
-      </ion-col>
-      </ion-row>
-  </ion-grid>
-  <ion-grid *ngFor="let spp of spps" class="red">
-    <ion-row style="border-top:groove">
-      <ion-col col-4>
-        <ion-label>{{spp.contractname}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >{{spp.lastradedate}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >{{spp.bid}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label >{{spp.lastprice}}</ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label><ion-text color="primary">{{spp.strike}}</ion-text></ion-label>
-      </ion-col>
-      <ion-col col-4>
-        <ion-label>{{spp.ask}}</ion-label>
-      </ion-col>
-      </ion-row>
-  </ion-grid>
-  
-     <ion-grid>
-    <center>
-    <ion-button color="success">Put</ion-button>
-    
-  </center>
-  </ion-grid><br>
-</ion-content>
+  <!-- Trend Stocks Section -->
+  <div *ngIf="isLoggedIn && unstoredStocks.length > 0" class="card mb-4">
+    <div class="card-header">
+      <h3 class="text-center">Trend Stocks</h3>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Filter by Symbol" 
+          [(ngModel)]="filterText" 
+          (input)="filterUnstoredStocks()"
+        />
+      </div>
+      <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+        <table class="table table-striped table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>Symbol</th>
+              <th>Open</th>
+              <th>High</th>
+              <th>Low</th>
+              <th>Close</th>
+              <th>Volume</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stock of filteredUnstoredStocks">
+              <td>{{ stock.symbol }}</td>
+              <td>{{ stock.stock[0].Open.toFixed(2) }}</td>
+              <td>{{ stock.stock[0].High.toFixed(2) }}</td>
+              <td>{{ stock.stock[0].Low.toFixed(2) }}</td>
+              <td>{{ stock.stock[0].Close.toFixed(2) }}</td>
+              <td>{{ stock.stock[0].Volume.toFixed(2) }}</td>
+              <td>
+                <button class="btn btn-success btn-sm" (click)="onAddStock(stock)">
+                  Add
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

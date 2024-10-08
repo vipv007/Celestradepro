@@ -32,250 +32,269 @@
       <button class="tablinks" (click)="openTab($event, 'index')">Indices</button>
     </div>
 
-  <div id="watchlist" class="tabcontent">
-    <h4>Forex Name</h4>
-    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="getDataBySymbol(searchTerm)"></ion-searchbar>
-    <ion-grid class="col" >
-      <ion-row *ngFor="let forex of  searchedForexs | filter: searchTerm" >
-        <ion-col col-4>
-          <ion-label class="ch">{{ forex.symbol }}</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>{{ forex.values[0].Open.toFixed(4) }}</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>{{ forex.values[0].Close.toFixed(4) }}</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>{{ forex.values[0].High.toFixed(4) }}</ion-label>
-        </ion-col>
-        <ion-col col-4 >
-          <ion-label>{{ forex.values[0].Low.toFixed(4) }}</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>{{ forex.values[1].Change.toFixed(4) }}</ion-label>
-        </ion-col>
-        <ion-col col-4 >
-          <ion-label>{{ forex.values[1].PercentChange.toFixed(4) }}%</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>{{ forex.values[0]['Adj Close'].toFixed(4) }}</ion-label>
-        </ion-col>
-        
-        <ion-col col-4>
-          <ion-button (click)=" addSelectedForex(forex)">Add</ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <ion-grid class="col">
-      <ion-row style="border-top:groove">
-        <ion-col col-4>
-          <ion-label (click)="sortSymbols()" class="sort-label"> Symbol
-            <ion-icon name="arrow-down-outline" *ngIf="sortOrder === 'asc'"></ion-icon>
-            <ion-icon name="arrow-up-outline" *ngIf="sortOrder === 'desc'"></ion-icon>
-            <ion-icon name="swap-vertical" *ngIf="sortOrder === ''"></ion-icon>
-          </ion-label>
-        </ion-col>
-        <ion-col col-2>
-          <ion-label>Open</ion-label>
-        </ion-col>
-        <ion-col col-2>
-          <ion-label>High</ion-label>
-        </ion-col>
-        <ion-col col-2>
-          <ion-label>Low</ion-label>
-        </ion-col>
-        <ion-col col-2>
-          <ion-label>Close</ion-label>
-        </ion-col>
-        <ion-col col-2>
-          <ion-label>Change</ion-label>
-        </ion-col>
-        <ion-col col-2>
-          <ion-label>Chg%</ion-label>
-        </ion-col>
-        <ion-col col-2>
-          <ion-label>Adj Close</ion-label>
-        </ion-col>
-        <ion-col col-4></ion-col>
-      </ion-row>
-    </ion-grid>
-
-      <ion-grid *ngIf="selectedForexs && selectedForexs.length > 0" class="col">
-          <ion-row *ngFor="let forex of selectedForexs" style="border-top:groove">
-              <ng-container *ngIf="forex.currentDataIndex !== undefined">
-        <ion-col col-4 id="c5">
-            <ion-label class="ch" (click)="setClickedForex(forex.symbol)">{{ forex.symbol }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ forex.values[forex.currentDataIndex].Open.toFixed(2) }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5"style="color: green;" >
-            <ion-label>{{ forex.values[0].High.toFixed(4) }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5" style="color: red;">
-            <ion-label>{{ forex.values[0].Low.toFixed(4) }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ forex.values[forex.currentDataIndex].Close.toFixed(2) }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5" [style.color]="getChangeColor(forex.values[1].Change)" >
-            <ion-label>{{ forex.values[forex.currentDataIndex].Change.toFixed(2) }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5"[style.color]="getChangeColor(forex.values[1].PercentChange)">
-            <ion-label>{{ forex.values[forex.currentDataIndex].PercentChange.toFixed(2) }}%</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ forex.values[forex.currentDataIndex]['Adj Close'].toFixed(2) }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-button (click)="removeSelectedForex(forex )">Remove</ion-button>
-          </ion-col>
-          </ng-container>
-        </ion-row>
-      </ion-grid>
-    </div>
-
-    <div id="gainer" class="tabcontent">
-      <h4>Top Gainer</h4>
-      <ion-grid class="col">
-        <ion-row style="border-top:groove">
-          <ion-col col-4>
-            <ion-label>Name</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Company</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Change (%)</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Change</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Live Prices</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Last Prices</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+    <div id="watchlist" class="tabcontent" style="display: block;">
+      <div class="container-watchlist">
+        <!-- Watchlist Section -->
+        <div *ngIf="watchlist.length > 0" class="watchlist-container">
+          <div class="card watchlist-card">
+            <div class="card-header">
+              <h3 class="text-center">Watchlist</h3>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="watchlist-table">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Open</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Close</th>
+                      <th>Bid</th>
+                      <th>Ask</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let forex of watchlist">
+                      <td (click)="setClickedForex(forex.symbol)">{{ forex.symbol }}</td>
+                      <td>{{ forex.open.toFixed(4) }}</td>
+                      <td>{{ forex.high.toFixed(4) }}</td>
+                      <td>{{ forex.low.toFixed(4) }}</td>
+                      <td>{{ forex.close.toFixed(4) }}</td>
+                      <td>{{ forex.bid.toFixed(4) }}</td>
+                      <td>{{ forex.ask.toFixed(4) }}</td>
+                      <td>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteforex(forex)">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
     
-      <ion-grid class="col">
-        <ion-row *ngFor="let loser of topGainers">
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Name }}</ion-label><br>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Instrument }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Changeper }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Change }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Liveprices }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Lastprice }}</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
+        <!-- Trend Forex Section -->
+        <div *ngIf="email && availableforexs.length > 0" class="trend-forexs-container">
+          <div class="card trend-forexs-card">
+            <div class="card-header">
+              <h3 class="text-center">Trend Forex</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Filter by Symbol" 
+                  [(ngModel)]="filterText"
+                  (input)="filterUnstoredforexs()"
+                />
+              </div>
+              <div class="table-responsive">
+                <table class="trend-forexs-table">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Open</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Close</th>
+                      <th>Bid</th>
+                      <th>Ask</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let forex of filteredUnstoredforexs">
+                       <!-- Clicking the symbol will navigate to the chart view -->
+                    <td (click)="setClickedForex(forex.symbol)" style="cursor: pointer; color: blue;">
+                      {{ forex.symbol }}
+                    </td>
+                      <td>{{ forex.values[0].Open.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].High.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].Low.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].Close.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].Bid.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].Ask.toFixed(4) }}</td>
+                      <td>
+                        <button class="btn btn-success btn-sm" (click)="onAddforex(forex)">
+                          Add
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div id="loser" class="tabcontent">
-      <h4>Top Loser</h4>
-      <ion-grid class="col">
-        <ion-row style="border-top:groove">
-          <ion-col col-4>
-            <ion-label>Name</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Company</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Change (%)</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Change</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Live Prices</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Last Prices</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    
-      <ion-grid class="col">
-        <ion-row *ngFor="let loser of topLosers">
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Name }}</ion-label><br>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Instrument }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Changeper }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Change }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Liveprices }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Lastprice }}</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+        <div *ngIf="!email && availableforexs.length > 0" class="trend-forexs-container">
+          <div class="card trend-forexs-card">
+            <div class="card-header">
+              <h3 class="text-center">Most Active Stocks</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Filter by Symbol" [(ngModel)]="filterText"
+                  (input)="filterUnstoredforexs()" />
+              </div>
+              <div class="table-responsive">
+                <table class="trend-forexs-table">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Open</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Close</th>
+                      <th>Bid</th>
+                      <th>Ask</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let forex of filteredUnstoredforexs.slice(0,3)">
+                      <!-- Clicking the symbol will navigate to the chart view -->
+                      <td (click)="setClickedForex(forex.symbol)" style="cursor: pointer; color: blue;">
+                        {{ forex.symbol }}
+                      </td>
+                      <td>{{ forex.values[0].Open.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].High.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].Low.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].Close.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].Bid.toFixed(4) }}</td>
+                      <td>{{ forex.values[0].Ask.toFixed(4) }}</td>
+                      
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    
+    <!-- Gainers Section -->
+  <div id="gainer" class="tabcontent">
+    <!-- Radio buttons to toggle between chart and table -->
+    <div>
+      <label>
+        <input type="radio" name="toggleGainer" [(ngModel)]="viewGainer" value="chart"> Chart
+      </label>
+      <label>
+        <input type="radio" name="toggleGainer" [(ngModel)]="viewGainer" value="table"> Table
+      </label>
+    </div>
+  
+    <!-- Chart for Gainers -->
+    <div *ngIf="viewGainer === 'chart'" class="gtable">
+      
+      <canvas baseChart [datasets]="gainerChartData" [labels]="gainerChartLabels" [chartType]="'horizontalBar'"
+        [options]="barChartOptions">
+      </canvas>
+    </div>
+  
+    <!-- Table for Gainers -->
+    <div *ngIf="viewGainer === 'table'" class=" card-body  card trend-forexs-card container-watchlist ">
+      <h4 class="text-center">Gainer Table</h4>
+      <table class="trend-forexs-table">
+        <thead>
+          <tr class="header-row">
+            <th>Name</th>
+            <th>Change %</th>
+            <th>Change</th>
+            <th>Live Prices</th>
+            <th>Last Prices</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let gainer of topGainers">
+            <td>{{ gainer.Name }}</td>
+            <td>{{ gainer.Changeper }}</td>
+            <td>{{ gainer.Change }}</td>
+            <td>{{ gainer.Liveprices }}</td>
+            <td>{{ gainer.Lastprice }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- Losers Section -->
+  <div id="loser" class="tabcontent">
+    <!-- Radio buttons to toggle between chart and table -->
+    <div>
+      <label>
+        <input type="radio" name="toggleLoser" [(ngModel)]="viewLoser" value="chart"> Chart
+      </label>
+      <label>
+        <input type="radio" name="toggleLoser" [(ngModel)]="viewLoser" value="table"> Table
+      </label>
+    </div>
+  
+    <!-- Chart for Losers -->
+    <div *ngIf="viewLoser === 'chart'" class="gtable">
+     
+      <canvas baseChart [datasets]="loserChartData" [labels]="loserChartLabels" [chartType]="'horizontalBar'"
+        [options]="barChartOptions">
+      </canvas>
+    </div>
+  
+    <!-- Table for Losers -->
+    <div *ngIf="viewLoser === 'table'" class=" card-body  card trend-forexs-card container-watchlist ">
+      <h4 class="text-center">Loser Table</h4>
+      <table class="trend-forexs-table">
+        <thead>
+          <tr class="header-row">
+            <th>Name</th>
+            <th>Change %</th>
+            <th>Change</th>
+            <th>Live Prices</th>
+            <th>Last Prices</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let loser of topLosers">
+            <td>{{ loser.Name }}</td>
+            <td>{{ loser.Changeper }}</td>
+            <td>{{ loser.Change }}</td>
+            <td>{{ loser.Liveprices }}</td>
+            <td>{{ loser.Lastprice }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+    
+    
+
     <div id="index" class="tabcontent">
-      <h4>Indices</h4>
-      <ion-grid class="col">
-        <ion-row style="border-top:groove">
-          <ion-col col-4>
-            <ion-label>Symbol</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>High</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Low</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Close</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Chg%</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    
-      <ion-grid class="col" style="font-size: small;">
-        <ion-row *ngFor="let frindex of frxindexData" style="border-top:groove">
-          <ion-col col-4 id="c5">
-            <ion-label>{{ frindex.Name }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ frindex.High }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ frindex.Low }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ frindex.Last }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ frindex.Chg }}</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
+      <h4>Indices Performance</h4>
+      <div style="display: block;">
+        <div class="button-group">
+          <button (click)="updateChart('1 Day')">1 D</button>
+          <button (click)="updateChart('1 Week')">1 W</button>
+          <button (click)="updateChart('1 Month')">1 M</button>
+          <button (click)="updateChart('3 Months')">3 M</button>
+        </div>
+      
+        <canvas baseChart
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [colors]="barChartColors"
+                [legend]="barChartLegend"
+                [chartType]="barChartType">
+        </canvas>
+      </div>
+      
+</div>
 
   </div>
 
@@ -284,51 +303,92 @@
     </div>
     
   
-  <div *ngIf="selectTabs === 'research' ">
-   <details>
-      <summary>INTEREST AND RATES</summary>
-      <app-interest></app-interest>
+<!-- Research Tab Content -->
+<div *ngIf="selectTabs === 'research'" class="container">
+
+  <div class="sidebar">
+    <details (toggle)="showContent('INTEREST AND RATES', $event)">
+      <summary [class.active]="activeContent === 'INTEREST AND RATES'">RATES</summary>
     </details>
-    <details>
-      <!--summary>FUNDAMENTAL VIEW</summary-->
-      <summary>FOREX HEAT MAP</summary>
-      <app-fundamentalview></app-fundamentalview>
+    <details (toggle)="showContent('FOREX HEAT MAP', $event)">
+      <summary [class.active]="activeContent === 'FOREX HEAT MAP'">HEAT MAP</summary>
     </details>
-    <details>
-      <summary>NEWS</summary>
-      <app-news></app-news>
+    <details (toggle)="showContent('NEWS', $event)">
+      <summary [class.active]="activeContent === 'NEWS'">NEWS</summary>
     </details>
-    <details>
-      <summary>FOREX CROSS RATES</summary>
-      <app-forexcross></app-forexcross>
+    <details (toggle)="showContent('FOREX CROSS RATES', $event)">
+      <summary [class.active]="activeContent === 'FOREX CROSS RATES'">FX CROSS RATES</summary>
     </details>
-    
-    <details>
-      <summary>SCREENER CROSS RATES</summary>
-      <app-screener></app-screener>
+    <details (toggle)="showContent('SCREENER CROSS RATES', $event)">
+      <summary [class.active]="activeContent === 'SCREENER CROSS RATES'">SCREENER CROSS RATES</summary>
     </details>
-    <details>
-      <summary>ECONOMIC CALENDAR</summary>
-      <div class="red">
-        <app-event-modal></app-event-modal>
-      </div>
+    <details (toggle)="showContent('ECONOMIC CALENDAR', $event)">
+      <summary [class.active]="activeContent === 'ECONOMIC CALENDAR'">CALENDAR</summary>
     </details>
-    <details>
-      <summary>TECHNICAL ANALYSIS</summary>
-      <div class="red">
-        <app-earnings></app-earnings>
-      </div>
+    <details (toggle)="showContent('TECHNICAL ANALYSIS', $event)">
+      <summary [class.active]="activeContent === 'TECHNICAL ANALYSIS'">ANALYSIS</summary>
     </details>
-    <details>
-      <summary>GAINERS</summary>
-      <div class="red">
-        <app-gainer></app-gainer>
-      </div>
+    <details (toggle)="showContent('INTEREST RATE CALENDAR', $event)">
+      <summary [class.active]="activeContent === 'INTEREST RATE CALENDAR'">INTEREST RATE CALENDAR</summary>
     </details>
-    <details>
-      <summary>FOREX MARKET HOURS</summary>
-      <app-markethour></app-markethour>
+    <details (toggle)="showContent('FOREX MARKET HOURS', $event)">
+      <summary [class.active]="activeContent === 'FOREX MARKET HOURS'">FX MARKET HOURS</summary>
+    </details>
+    <details (toggle)="showContent('FOREX MARKET SENTIMENT', $event)">
+      <summary [class.active]="activeContent === 'FOREX MARKET SENTIMENT'">FX MARKET SENTIMENT</summary>
     </details>
   </div>
-</ion-content>
 
+  <!-- Content Display Area -->
+  <div class="content-area">
+    <div *ngIf="activeContent === 'INTEREST AND RATES'">
+      <app-interest></app-interest>
+    </div>
+    <div *ngIf="activeContent === 'FOREX HEAT MAP'">
+      <app-fundamentalview></app-fundamentalview>
+    </div>
+    <div *ngIf="activeContent === 'NEWS'">
+      <app-news></app-news>
+    </div>
+    <div *ngIf="activeContent === 'FOREX CROSS RATES'">
+      <app-forexcross></app-forexcross>
+    </div>
+    <div *ngIf="activeContent === 'SCREENER CROSS RATES'">
+      <app-screener></app-screener>
+    </div>
+    <div *ngIf="activeContent === 'ECONOMIC CALENDAR'">
+      <app-event-modal></app-event-modal>
+    </div>
+    <div *ngIf="activeContent === 'TECHNICAL ANALYSIS'">
+      <div class="tabs">
+        <button (click)="selectTab(1)" [class.active]="selectedTab === 1">EURUSD</button>
+        <button (click)="selectTab(4)" [class.active]="selectedTab === 2">GBPUSD</button>
+        <button (click)="selectTab(3)" [class.active]="selectedTab === 3">USDJPY</button>
+        <button (click)="selectTab(4)" [class.active]="selectedTab === 4">AUDUSD</button>
+      </div>
+      <div class="tab-content" *ngIf="selectedTab === 1">
+        <app-eurusd></app-eurusd>
+      </div>
+      <div class="tab-content" *ngIf="selectedTab === 2">
+        <app-gbpusd></app-gbpusd>
+      </div>
+      <div class="tab-content" *ngIf="selectedTab === 3">
+        <app-usdgpy></app-usdgpy>
+      </div>
+      <div class="tab-content" *ngIf="selectedTab === 4">
+        <app-audusd></app-audusd>
+      </div>
+    </div>
+    <div *ngIf="activeContent === 'INTEREST RATE CALENDAR'">
+      <app-gainer></app-gainer>
+    </div>
+    <div *ngIf="activeContent === 'FOREX MARKET HOURS'">
+      <app-markethour></app-markethour>
+    </div>
+    <div *ngIf="activeContent === 'FOREX MARKET SENTIMENT'">
+      <app-fx-sentiment></app-fx-sentiment>
+    </div>
+  </div>
+</div>
+
+</ion-content>

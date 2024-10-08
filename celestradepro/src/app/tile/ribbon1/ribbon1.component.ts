@@ -7,7 +7,7 @@ import { Component, AfterViewInit, ElementRef, Renderer2, ViewChild, ChangeDetec
 })
 export class Ribbon1Component implements AfterViewInit {
   @ViewChild('tradingview') tradingview?: ElementRef;
-  showWidget: boolean = true;
+  showWidget: boolean = false;  // Set to false initially to hide the ticker
   scriptElement: HTMLScriptElement | undefined;
 
   constructor(private _renderer2: Renderer2, private _cdRef: ChangeDetectorRef) { }

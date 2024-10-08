@@ -91,9 +91,10 @@ export class HeatmapComponent implements OnInit {
   }
 
   getAllTrends(): void {
-    this.trendsService.getAllTrends().subscribe(
+    this.trendsService.getAllTrends().subscribe( 
       (response: any[]) => {  // Expect response to be an array
-        this.data = response;
+        // Filter only commodities of type "Commodity"
+        this.data = response.filter(item => item.Type === 'Stock');
         console.log(this.data);
       },
       (error) => {

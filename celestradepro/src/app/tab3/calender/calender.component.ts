@@ -17,10 +17,11 @@ Calendars: any;
   constructor(private calendarService: CalendarService) {}
 
   ngOnInit() {
-    this.calendarService.getAllCalendar().subscribe((response: any) => {
+    this.calendarService.getAllCalendardata().subscribe((response: any) => {
       this.Calendar = response;
       console.log(this.Calendar);
 
     });
   }
 }
+ 

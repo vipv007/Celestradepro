@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfileService } from '../../services/profile.service';
 import { StockService } from '../../services/stock.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,46 +11,68 @@ import { StockService } from '../../services/stock.service';
 export class ProfileComponent implements OnInit {
   earns: any[] = [];
   chunkedEarns: any[][] = [];
-  selectedSymbols: string[] = [];
+  watchlistSymbols: string[] = [];
+  selectedStockSymbol: string;
 
-  constructor(private profileService: ProfileService, private stockService: StockService) {}
+  constructor(
+    private profileService: ProfileService,
+    private stockService: StockService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
-    this.fetchSelectedStocks();
+    this.checkLoginStatus();
   }
 
-  fetchSelectedStocks() {
-    this.stockService.getSelectedStocks().subscribe((selectedStocks: any[]) => {
-      this.selectedSymbols = selectedStocks
-        .filter(stock => stock.selected)
-        .map(stock => stock.symbol);
+  checkLoginStatus() {
+    const email = this.userService.getEmail();
+    if (email) {
+      this.fetchWatchlistSymbols(); // Fetch watchlist symbols if logged in
+    } else {
+      this.fetchDefaultProfile(); // Fetch default profile if not logged in
+    }
+  }
 
-      if (this.selectedSymbols.length > 0) {
-        console.log('sample', this.selectedSymbols);
-        this.fetchProfileForSelectedSymbols();
+  fetchWatchlistSymbols() {
+    const email = this.userService.getEmail(); // Get the user's email from the service
+    this.userService.getWatchlist(email).subscribe((response: any) => {
+      this.watchlistSymbols = response.watchlist.map((item: any) => item.symbol);
+      if (this.watchlistSymbols.length > 0) {
+        this.fetchProfileForWatchlistSymbols();
       } else {
-        console.log('No symbols selected.');
-        // Handle the case where no symbols are selected
+        console.log('No symbols in watchlist.');
+        // Handle the case where no symbols are in the watchlist
       }
     });
   }
 
-  fetchProfileForSelectedSymbols() {
+  fetchProfileForWatchlistSymbols() {
     this.profileService.getAllProfiles().subscribe((response: any[]) => {
-      this.selectedSymbols.forEach(symbol => {
-        const selectedProfiles = response.filter(profile => profile.ticker === symbol);
-        console.log('Selected Profiles for', symbol + ':', selectedProfiles);
-        this.earns.push(...selectedProfiles);
-      });
-      // Divide 'earns' array into chunks of 4 elements each
+      this.earns = response.filter(profile => this.watchlistSymbols.includes(profile.ticker));
       this.chunkedEarns = this.chunkArray(this.earns, 4);
     });
   }
 
-  // Function to chunk an array into smaller arrays
+  fetchDefaultProfile() {
+    this.profileService.getAllProfiles().subscribe((response: any[]) => {
+      if (response.length > 0) {
+        const firstSymbol = response[0].ticker; // Get the first symbol from the response
+        this.earns = response.filter(profile => profile.ticker === firstSymbol);
+        this.chunkedEarns = this.chunkArray(this.earns, 4);
+      } else {
+        console.log('No profile data available.');
+        // Handle the case where no profile data is available
+      }
+    });
+  }
+
   chunkArray(array: any[], size: number): any[][] {
     return Array.from({ length: Math.ceil(array.length / size) }, (_, index) =>
       array.slice(index * size, index * size + size)
     );
+  }
+
+  isHighlighted(ticker: string): boolean {
+    return this.watchlistSymbols.includes(ticker);
   }
 }

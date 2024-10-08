@@ -1,13 +1,26 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-back-button defaultHref="/tabs/tab3"></ion-back-button>
-      <ion-title >GBPUSD</ion-title>
-  </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<div class="widgets-container">
+  <div class="widget">
+    <h3>Stock Returns Comparison</h3>
+    <div class="sta-stocks-return-comparison-display">
+      <div id="stockComparisonWidget" class="stocks-return-comparison"
+        data-symbol="your_symbol_here"
+        data-width="600"
+        data-height="500"
+        data-theme="wt_bg_light"
+        data-uid="103363042966961595bf30b66961595bf30c"
+        data-stocks="AMZN,GOOGL,META,MSFT,NVDA,AAPL"></div>
+    </div>
+  </div>
 
-<ion-content>
-  <div #chart class="chart"></div>
-</ion-content>
-
+  <div class="widget">
+    <h3>Stock Rating Comparison</h3>
+    <div class="sta-stocks-analyst-rating-comparison-display">
+      <div id="analystRatingWidget" class="stocks-analyst-rating-comparison"
+        data-theme="wt_bg_light"
+        data-uid="19716959096698f514ec20c6698f514ec20e"
+        data-width="600"
+        data-height="500"
+        data-stocks="AAPL,AMZN,GOOGL,INTC,META,MSFT,NVDA"></div>
+    </div>
+  </div>
+</div>

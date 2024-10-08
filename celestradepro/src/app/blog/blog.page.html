@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Blog</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+ 
+  
+  <body>
+      <!-- Header section with a blog title -->
+      <header>
+          <h1>Blog Homepage</h1>
+      </header>
+  
+      <!-- Main content section -->
+      <main>
+          <!-- Form for adding a new blog post -->
+          <form (ngSubmit)="onSubmit()" #postForm="ngForm">
+              <label for="name">Name</label>
+              <input type="text" name="name" [(ngModel)]="postData.name" required>
+              <br>
+              <label for="post">Post</label>
+              <textarea name="post" [(ngModel)]="postData.post" rows="4" placeholder="What do you want to say?" required></textarea>
+              <br>
+              <input type="submit" value="Add Post" [disabled]="!postForm.valid">
+          </form>
+  
+          <!-- Section for displaying all blog posts -->
+          <h4>All Posts:</h4>
+          <ul>
+              <li *ngFor="let item of items">
+                  <h3>Post by - {{ item.name }}</h3>
+                  <p>{{ item.post }}</p>
+              </li>
+          </ul>
+      </main>
+  </body>
+  
+  
+</ion-content>

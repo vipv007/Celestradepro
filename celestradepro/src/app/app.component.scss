@@ -1,4 +1,22 @@
+.theme-toggle {
+    --handle-background: var(--ion-color-primary);
+    --background: var(--ion-color-light);
+    --background-checked: var(--ion-color-primary);
+  }
+  
+  /* Example dark mode styles */
+.dark {
+    --background-color: #37474F;
+    --text-color: #fff;
+  }
+  
+  body {
+    --ion-background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
 
+  
 *{
     font-family:lato;
 }

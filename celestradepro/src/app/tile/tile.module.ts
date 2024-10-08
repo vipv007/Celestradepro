@@ -19,13 +19,19 @@ import { ScreenerComponent } from './screener/screener.component';
 import { ComprofComponent } from './comprof/comprof.component';
 import { CommarketComponent } from './commarket/commarket.component';
 import { IgxFinancialChartModule, IgxLegendModule } from "igniteui-angular-charts";
+import { ComtechnicalComponent } from './comtechnical/comtechnical.component';
+//import { BillPage } from '../bill/bill.page';
+import { CompriPage } from '../compri/compri.page';
+import { CompriceComponent } from './comprice/comprice.component';
+import { ChartsModule } from 'ng2-charts';
 
 
 @NgModule({
   declarations: [TilePage,
     ComNewsComponent,
     Ribbon1Component, ProfileComponent, CommodityComponent, ComcalenderComponent,CommodityGainerComponent,
-    ComChartComponent, MarketheatComponent, CommarketComponent, ScreenerComponent, ComprofComponent],
+    ComChartComponent, MarketheatComponent, CommarketComponent, ScreenerComponent, ComprofComponent,ComtechnicalComponent,
+    CompriPage,CompriceComponent ],
 
 
 
@@ -38,8 +44,8 @@ import { IgxFinancialChartModule, IgxLegendModule } from "igniteui-angular-chart
       TilePageRoutingModule,
       Ng2SearchPipeModule,
       IgxFinancialChartModule,
-      IgxLegendModule
-
+      IgxLegendModule,
+      ChartsModule
 
   ],
 

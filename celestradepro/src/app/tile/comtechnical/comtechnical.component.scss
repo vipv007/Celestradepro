@@ -1,0 +1,102 @@
+// :host {
+//     display: block;
+//     padding: 30px;
+//   }
+  
+//   .table-container {
+//     max-height: 400px; /* Adjust as needed */
+//     overflow-y: auto;
+//   }
+  
+//   table {
+//     width: calc(100% - 60px); /* Adjust width to account for 30px padding on each side */
+//     margin: 0 auto;
+//     border-collapse: collapse;
+//   }
+  
+//   th, td {
+//     border: 1px solid #dddddd;
+//     padding: 8px;
+//     text-align: left;
+//     font-weight: bold; /* Make font bold */
+//   }
+  
+//   th {
+//     background-color:  #a3c2ed;
+//   }
+  
+//   tr:nth-child(even) {
+//     background-color: #f9f9f9;
+//   }
+  
+//   tr:hover {
+//     background-color: #ddd;
+//   }
+  
+//   .buy {
+//     color: green;
+//   }
+  
+//   .sell {
+//     color: red;
+//   }
+//   h3{
+//     margin: 15px;
+//     font-weight: bold;
+//   }
+
+// .container {
+//   display: flex;
+//   justify-content: space-around;
+//   flex-wrap: wrap;
+//   margin: 0 auto;
+//   padding: 10px;
+//   width: 100%;
+//   box-sizing: border-box;
+// }
+
+// .box {
+//   flex: 1 1 calc(33.333% - 20px); /* 3 columns with 10px margins */
+//   margin: 10px;
+//   border: 1px solid #eee;
+//   box-sizing: border-box;
+//   min-width: 280px; /* Ensures the boxes don't get too small on narrow screens */
+// }
+
+// #fx-pricing-widget-copyright {
+//   text-align: center;
+//   font-size: 13px;
+//   font-family: sans-serif;
+//   margin-top: 10px;
+//   margin-bottom: 10px;
+//   color: #9db2bd;
+// }
+
+// #fx-pricing-widget-copyright a {
+//   text-decoration: none;
+//   color: #bb3534;
+//   font-weight: 600;
+// }
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around; /* Ensures even spacing between boxes */
+  align-items: flex-start; /* Aligns the boxes to the top */
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.box {
+  flex: 1 1 30%; /* Makes the boxes take up 30% of the width with flexibility */
+  max-width: 400px; /* Optional: Limits the maximum width of each box */
+  margin: 10px;
+  // border: 1px solid #eee;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.tradingview-widget-container__widget {
+  width: 100%;
+  height: 100%;
+}

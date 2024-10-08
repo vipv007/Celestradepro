@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 
-declare const TradingView: any;
+// Declare TradingView globally
+declare var TradingView: any;
 
 @Component({
   selector: 'app-forexchart',
@@ -9,8 +10,7 @@ declare const TradingView: any;
 })
 export class ForexchartComponent implements AfterViewInit {
   @ViewChild('tradingview') tradingview?: ElementRef;
-  showWidget: boolean = true; // Default to true to show widget initially
-  scriptElement?: HTMLScriptElement;
+  showWidget: boolean = false;  // Set to false initially to hide the widget
 
   constructor(private _renderer2: Renderer2) {}
 
@@ -31,16 +31,16 @@ export class ForexchartComponent implements AfterViewInit {
         return;
       }
 
-      this.scriptElement = document.createElement('script');
-      this.scriptElement.src = 'https://s3.tradingview.com/tv.js';
-      this.scriptElement.onload = () => resolve();
-      this.scriptElement.onerror = (error) => reject(error);
-      document.body.appendChild(this.scriptElement);
+      const scriptElement = document.createElement('script');
+      scriptElement.src = 'https://s3.tradingview.com/tv.js';
+      scriptElement.onload = () => resolve();
+      scriptElement.onerror = (error) => reject(error);
+      document.body.appendChild(scriptElement);
     });
   }
 
   initTradingView() {
-    if (this.tradingview && TradingView) {
+    if (this.tradingview && typeof TradingView !== 'undefined') {
       new TradingView.MediumWidget({
         symbols: [
           ['EURUSD', 'EURUSD|1D'],
@@ -82,6 +82,5 @@ export class ForexchartComponent implements AfterViewInit {
         this.tradingview.nativeElement.innerHTML = '';
       }
     }
-    console.log('Toggle widget method called');
   }
 }

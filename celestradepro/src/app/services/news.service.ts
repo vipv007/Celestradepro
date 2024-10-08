@@ -18,4 +18,8 @@ export class NewsService {
   archiveNews(articleId: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/${articleId}/archive`, {});
   }
+
+  getTopSentimentScores(): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:3000/api/top10-sentiment-news`);
+  }
 }

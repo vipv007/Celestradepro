@@ -20,4 +20,8 @@ export class OptionnewsService {
   archiveOptionnews(articleId: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/${articleId}/archive`, {});
   }
+
+  summarizeUrl(url: string): Observable<any> {
+    return this.http.post<any>(this.baseUrl, { url });
+  }
 }

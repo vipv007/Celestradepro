@@ -1,34 +1,63 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title> List</ion-title>
-  </ion-toolbar>
-</ion-header>
+<div *ngIf="activeData && activeData.length" class="table-container">
+  <h3>Insider Transaction</h3>
+  <!-- Dropdown for Transaction Type Filtering -->
+  <div class="filter-container">
+    <label for="transactionType">Filter by Transaction Type:</label>
+    <select id="transactionType" [(ngModel)]="selectedTransactionType" (change)="filterData()">
+      <option value="">All</option>
+      <option value="S - Sale">S - Sale</option>
+      <option value="P - Purchase">P - Purchase</option>
+    </select>
+  </div>
 
-<ion-content>
+  <!-- Table for displaying data -->
+  <table class="screener-table">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Filing Date</th>
+        <th>Trade Date</th>
+        <th>Ticker</th>
+        <th>Insider Name</th>
+        <th>Title</th>
+        <th>Transaction Type</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Owned</th>
+        <th>Change of Amount Owned</th>
+        <th>Value</th>
+        <th>Date Filed Open</th>
+        <th>Date Filed Close</th>
+        <th>Date Traded Open</th>
+        <th>Date Traded Close</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of paginatedData">
+        <td>{{ data.Company }}</td>
+        <td>{{ data['Filing Date'] }}</td>
+        <td>{{ data['Trade Date'] | date:'yyyy-MM-dd' }}</td>
+        <td>{{ data.Ticker }}</td>
+        <td>{{ data['Insider Name'] }}</td>
+        <td>{{ data.Title }}</td>
+        <td>{{ data['Transaction Type'] }}</td>
+        <td>{{ data.Price | number:'1.2-2' }}</td>
+        <td>{{ data.Quantity }}</td>
+        <td>{{ data.Owned }}</td>
+        <td>{{ data['Change of Amount Owned'] }}</td>
+        <td>{{ data.Value | number:'1.0-0' }}</td>
+        <td>{{ data['Date Filed Open'] | number:'1.2-2' }}</td>
+        <td>{{ data['Date Filed Close'] | number:'1.2-2' }}</td>
+        <td>{{ data['Date Traded Open'] | number:'1.2-2' }}</td>
+        <td>{{ data['Date Traded Close'] | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
 
-  <ion-list>
-    <ion-item *ngFor="let option of Options">
-      <ion-label>
-        <h2>{{option.value}}</h2>
-        <h3>{{option.strike}}</h3>
-        <h3>{{option.price}}</h3>
-        <h3>{{option.bid}}</h3>
-        <h3>{{option.ask}}</h3>
-        <h3>{{option.openint}}</h3>
-        
-        
-      
-      </ion-label>
-
-      <div class="item-note" item-end>
-        <button ion-button clear [routerLink]="['/upt/', option._id]">
-          <ion-icon name="create" style="zoom:1.5"></ion-icon>
-        </button>
-        <button ion-button clear (click)="removeOption(option, i)">
-          <ion-icon name="trash" style="zoom:1.5"></ion-icon>
-        </button>
-      </div>
-    </ion-item>
-  </ion-list>
-
-</ion-content>
+  <!-- Pagination controls -->
+  <div class="pagination">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+</div>

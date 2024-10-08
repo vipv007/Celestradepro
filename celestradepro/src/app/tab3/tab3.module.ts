@@ -28,11 +28,20 @@ import { EventModalComponent } from './event-modal/event-modal.component';
 import { GainerComponent } from './gainer/gainer.component';
 import { EarningsComponent } from './earnings/earnings.component';
 import { MarkethourComponent } from './markethour/markethour.component';
+import { GbpusdComponent } from './gbpusd/gbpusd.component';
+import { UsdgpyComponent } from './usdgpy/usdgpy.component';
+import { FxSentimentComponent } from './fx-sentiment/fx-sentiment.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ChartsModule } from 'ng2-charts';
+import { EurusdComponent } from './eurusd/eurusd.component';
+import { AudusdComponent } from './audusd/audusd.component';
+
 
 @NgModule({
     declarations: [Tab3Page, ForexchartComponent, CalenderComponent, MarkethourComponent ,InterestComponent,GainerComponent,
     FundamentalviewComponent, ForexcrossComponent, ScreenerComponent, NewsComponent, ForexchComponent,
-    FmultichartComponent, EventModalComponent, EarningsComponent ],
+    FmultichartComponent, EventModalComponent, EarningsComponent,GbpusdComponent,UsdgpyComponent,EurusdComponent,AudusdComponent
+    ,FxSentimentComponent],
     exports:[ForexchComponent],
     imports: [
         IonicModule,
@@ -45,8 +54,8 @@ import { MarkethourComponent } from './markethour/markethour.component';
         ExploreContainerComponentModule,
         RouterModule.forChild([{ path: '', component: Tab3Page }]),
         Tab3PageRoutingModule,
-        
-
+        NgxPaginationModule,
+        ChartsModule
     ]
 })
 export class Tab3PageModule {}

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface Comprof {
-  _id: { $oid: string };
+  _id: string;
   country: string;
   currency: string;
   estimateCurrency: string;
@@ -25,7 +25,7 @@ interface Comprof {
 })
 export class ComprofComponent implements OnInit {
 
-  earns: Comprof[];
+  earns: Comprof[] = [];
 
   constructor(private http: HttpClient) {}
 

@@ -1,0 +1,21 @@
+<div *ngFor="let company of companies" class="company-container">
+  <h4>{{ company }} Shareholders</h4>
+  <div class="content-container">
+    <div id="chart-container-{{ company }}" class="chart-container"></div>
+    <table *ngIf="data.length" class="shareholder-table">
+      <thead>
+        <tr>
+          <th>Shareholder</th>
+          <th>Ownership Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let shareholder of ['Vanguard Group', 'BlackRock', 'Berkshire Hathaway', 'State Street Corporation', 'Fidelity Investments']">
+          <td>{{ shareholder }}</td>
+          <td>{{ getOwnershipPercentage(company, shareholder) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

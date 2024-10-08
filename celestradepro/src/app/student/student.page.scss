@@ -1,29 +1,14 @@
-#c1{
-  background-color: rgb(247, 175, 241);
+.widgets-container {
+  display: flex;
+  justify-content: space-around;
 }
-#c2{
-  background-color: rgb(143, 243, 130);
+
+.widget {
+  flex: 1;
+  margin: 3%;
 }
-#c3{
-  background-color: rgb(243, 140, 140);
-}
-#c4{
-  background-color: rgb(247, 247, 150);
-}
-#c5{
-  background-color: rgb(146, 240, 243);
-}
-#c6{
-  background-color: rgb(101, 179, 243);
-}
-ion-title{
-  text-align: center;
-  color: rgb(73, 38, 230);
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-weight: bold;
-}
-#head{
-  font-size: large;
-  font-weight: bold;
-  font-family: Georgia, 'Times New Roman', Times, serif;
+
+.sta-stocks-return-comparison-display,
+.sta-stocks-analyst-rating-comparison-display {
+  width: 100%;
 }

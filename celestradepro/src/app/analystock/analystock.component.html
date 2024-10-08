@@ -1,0 +1,27 @@
+
+<!-- <div>
+  <div class="sta-stocks-return-comparison-display">
+    <p><a href="https://www.stocktargetadvisor.com/" target="_blank"
+        style="text-decoration:none;color: #4b6db5 !important;"> Stocks Analyst Return Comparison</a> by Stock Target
+      Advisor</p>
+
+   
+  </div>
+  <script class="stocks-return-comparison" type="text/javascript"
+    src="https://www.stocktargetadvisor.com/assets/js/stocks_return_comparison_widget.js" data-theme="wt_bg_light"
+    data-uid="196605201166962855c9bab66962855c9bad" data-width="1000" data-height="1000"
+    data-stocks="AMZN,CCA:CA,GOOGL,INTC,META,MSFT,NVDA,O,ROKU,SHOP">
+    </script>
+</div> -->
+
+<!-- STA Widget END -->
+
+<!-- src/app/components/financial-data/financial-data.component.html -->
+<div class="checkbox-container ">
+  <label *ngFor="let year of uniqueYears">
+    <input type="checkbox" [(ngModel)]="selectedYears[year]" (change)="updateChart(year)">
+    {{ year }}
+  </label>
+  <canvas id="financialChart"></canvas>
+
+</div>

@@ -12,14 +12,13 @@ import { MarketdepthService } from '../services/marketdepth.service';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 
-
 @Component({
   selector: 'app-portfolio',
   templateUrl: './portfolio.page.html',
   styleUrls: ['./portfolio.page.scss'],
 })
 export class PortfolioPage implements OnInit {
-   @ViewChild('segment') segment: IonSegment;
+  @ViewChild('segment') segment: IonSegment;
 
   modalOpen = false;
   email = '';
@@ -40,6 +39,7 @@ export class PortfolioPage implements OnInit {
   triggerprice: number;
   target: number;
   stoploss: number;
+  order: string;
   trailingstoploss: number;
   selectedDateTime: Date = new Date();
   selectedOrderType = '';
@@ -72,7 +72,6 @@ export class PortfolioPage implements OnInit {
     private marketdepthService: MarketdepthService
   ) {}
 
-
   ngOnInit() {
     this.fetchStocks();
     this.fetchForex();
@@ -102,56 +101,57 @@ export class PortfolioPage implements OnInit {
       this.uniqueTypes = this.getUniqueTypes(response);
       console.log('Fetched portfolio:', response);
       
-        // Initialize an empty object to store aggregated quantities for each stock
-        const aggregatedStocks = {};
+      // Initialize an empty object to store aggregated quantities for each stock
+      const aggregatedStocks = {};
 
-        // Loop through the portfolio data
-        response.forEach((item) => {
-            const { stock, quantity, price, target, stoploss, type, totalamount,credit,margininitial,marginmaint } = item;
-            // If the stock is already in the aggregatedStocks object, add the quantity
-            if (aggregatedStocks[stock]) {
-                aggregatedStocks[stock].quantity += quantity;
-                // If you have multiple prices for the same stock, you might want to adjust how you calculate the aggregated price
-                aggregatedStocks[stock].totalPrice += quantity * price;
-                aggregatedStocks[stock].target += target;
-            } else {
-                // If the stock is not in the object, initialize it with the quantity and price
-                aggregatedStocks[stock] = {
-                    quantity,
-                    totalPrice: quantity * price,
-                    target,
-                    stoploss,
-                    type,
-                    totalamount,
-                    credit,
-                    margininitial,
-                    marginmaint
-                };
-            }
-        });
+      // Loop through the portfolio data
+      response.forEach((item) => {
+        const { stock, quantity, price, target, stoploss, type, totalamount, credit, margininitial, marginmaint, order } = item;
+        // If the stock is already in the aggregatedStocks object, add the quantity
+        if (aggregatedStocks[stock]) {
+          aggregatedStocks[stock].quantity += quantity;
+          // If you have multiple prices for the same stock, you might want to adjust how you calculate the aggregated price
+          aggregatedStocks[stock].totalPrice += quantity * price;
+          aggregatedStocks[stock].target += target;
+        } else {
+          // If the stock is not in the object, initialize it with the quantity and price
+          aggregatedStocks[stock] = {
+            quantity,
+            totalPrice: quantity * price,
+            target,
+            stoploss,
+            type,
+            order,
+            totalamount,
+            credit,
+            margininitial,
+            marginmaint
+          };
+        }
+      });
 
-        // Convert the aggregated stocks object to an array of objects
-        this.filteredPortfolio = Object.keys(aggregatedStocks).map((stock) => {
-            const { quantity, totalPrice, target, stoploss, type, totalamount,credit,margininitial,marginmaint } = aggregatedStocks[stock];
-            const averagePrice = totalPrice / quantity; // Calculate average price
-            //const profit = (this.getCurrentPrice(stock) - averagePrice) * quantity; // Calculate profit
+      // Convert the aggregated stocks object to an array of objects
+      this.filteredPortfolio = Object.keys(aggregatedStocks).map((stock) => {
+        const { quantity, totalPrice, target, stoploss, type, order, totalamount, credit, margininitial, marginmaint } = aggregatedStocks[stock];
+        const averagePrice = totalPrice / quantity; // Calculate average price
+        //const profit = (this.getCurrentPrice(stock) - averagePrice) * quantity; // Calculate profit
 
-            return {
-                stock,
-                quantity,
-                price: averagePrice,
-                totalamount,
-                target,
-                stoploss,
-                type,
-                credit,
-                margininitial,
-                 marginmaint
-                
-                // Add any other necessary properties
-            };
-        });
-
+        return {
+          stock,
+          quantity,
+          price: averagePrice,
+          totalamount,
+          target,
+          stoploss,
+          type,
+          order,
+          credit,
+          margininitial,
+          marginmaint
+          // Add any other necessary properties
+        };
+      });
+   
         // Group orders by type
         const ordersByType = this.groupOrdersByType(this.filteredPortfolio);
 

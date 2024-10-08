@@ -1,14 +1,15 @@
-<div *ngFor="let commodity of Commodities">
-  <input type="radio" name="commoditySymbol" [value]="commodity.Commodity" (change)="onSymbolChange($event)" /> {{ commodity.Commodity }}
+<div class="stock-ticker"
+     (mouseover)="onMouseOver($event)"
+     (mouseleave)="onMouseLeave()"
+     (mousemove)="onMouseMove($event)">
+  WHLR
 </div>
 
-<div *ngIf="selectedSymbol">
-  <igx-financial-chart
-    width="100%"
-    height="500px"
-    [dataSource]="CommoditiesData[selectedSymbol]"
-    chartType="Candle"
-    xAxisMode="Time"
-    yAxisMode="Numeric">
-  </igx-financial-chart>
+<!-- Chart Tooltip -->
+<div *ngIf="showChart" [ngStyle]="{'top.px': yPos, 'left.px': xPos}" class="tooltip-chart">
+  <canvas baseChart
+          [data]="chartData"
+          [options]="chartOptions"
+          [type]="chartType">
+  </canvas>
 </div>

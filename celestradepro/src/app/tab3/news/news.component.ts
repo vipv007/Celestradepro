@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ForexnewsService } from '../../services/forexnews.service';
+import { ChartType, ChartOptions } from 'chart.js';
+import { Label, SingleDataSet } from 'ng2-charts';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-news',
@@ -20,14 +23,73 @@ export class NewsComponent implements OnInit {
   activeCurrentPage: number = 1;
   archivedCurrentPage: number = 1;
   itemsPerPage: number = 10;
-  mainUrls: string[] = [];
+   mainUrls: { name: string, selected: boolean }[] = []; // Updated type
   showPopup: boolean = false;
 
-  constructor(private forexnewsService: ForexnewsService) {}
+  manualUrl: string = '';
+  summaryData: any = null;
+  errorMessage: string = '';
+  loading: boolean = false;
+  contentUnavailable: boolean = false;
+
+
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+    },
+  };
+  public pieChartLabels: Label[] = ['Positive Sentiment', 'Negative Sentiment'];
+  public pieChartData: SingleDataSet = [];
+  public pieChartType: ChartType = 'pie';
+  public pieChartPlugins = [];
+  pieChartColors: { backgroundColor: string[]; }[] = [
+    {
+      backgroundColor: ['#987D9A', '#EECEB9'],
+    },
+  ];
+
+  constructor(private forexnewsService: ForexnewsService, private http: HttpClient) {}
 
   ngOnInit() {
     this.loadNews();
   }
+
+  fxSummarizeUrl() {
+    if (!this.manualUrl) {
+        this.errorMessage = "Please enter a valid URL.";
+        return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+    this.summaryData = null;
+    this.contentUnavailable = false;
+
+    this.http.post('http://localhost:3000/api/fnews/fx-summarize-url', { url: this.manualUrl.trim() })
+      .subscribe(
+        (response: any) => {
+          this.loading = false;
+          console.log(response);
+
+          if (response.message === 'Content behind a paywall or unavailable.') {
+            this.contentUnavailable = true;
+          } else {
+            this.summaryData = response;
+          }
+        },
+        (error) => {
+          this.loading = false;
+          console.error('Error:', error);
+          this.errorMessage = 'Error fetching the content. Please try again.';
+        }
+      );
+}
+
+
 
   loadNews() {
     this.forexnewsService.getAllFnews().subscribe(
@@ -37,6 +99,7 @@ export class NewsComponent implements OnInit {
         this.filterNews();
         this.updatePagedNews();
         this.populateMainUrls();
+        this.prepareChartData();
       },
       error => {
         console.log(error);
@@ -45,21 +108,34 @@ export class NewsComponent implements OnInit {
   }
 
   populateMainUrls() {
-    this.mainUrls = Array.from(new Set(this.news.map(article => new URL(article.url).hostname)));
+    this.mainUrls = Array.from(
+      new Set(
+        this.news.map(article => this.extractSiteName(new URL(article.url).hostname))
+      )
+    ).map(siteName => ({ name: siteName, selected: false }));
+  }
+
+   extractSiteName(hostname: string): string {
+    return hostname.replace(/^www\./, '').replace(/\.com$/, '');
   }
 
   togglePopup() {
     this.showPopup = !this.showPopup;
   }
 
-  filterNewsByMainUrl(mainUrl: string) {
-    this.searchQuery = ''; // Clear any existing search query
-    this.activeNews = this.news.filter(
-      (article) => !article.archive && new URL(article.url).hostname === mainUrl
-    );
-    this.archivedNews = this.news.filter(
-      (article) => article.archive && new URL(article.url).hostname === mainUrl
-    );
+  filterNewsByMainUrl() {
+   const selectedSites = this.mainUrls.filter(site => site.selected).map(site => site.name);
+
+    if (selectedSites.length === 0) {
+      this.filterNews(); // No sites selected, show all news
+    } else {
+      this.activeNews = this.news.filter(article =>
+        !article.archive && selectedSites.includes(this.extractSiteName(new URL(article.url).hostname))
+      );
+      this.archivedNews = this.news.filter(article =>
+        article.archive && selectedSites.includes(this.extractSiteName(new URL(article.url).hostname))
+      );
+    }
     this.updatePagedNews();
   }
 
@@ -82,6 +158,17 @@ export class NewsComponent implements OnInit {
       );
     }
     this.updatePagedNews();
+  }
+
+  getSiteName(url: string): string {
+    try {
+      const hostname = new URL(url).hostname.replace('www.', '');
+      const siteName = hostname.split('.')[0]; // Gets the domain name part
+      return siteName.charAt(0).toUpperCase() + siteName.slice(1); // Capitalize the first letter
+    } catch (e) {
+      console.error('Invalid URL:', url);
+      return 'Unknown';
+    }
   }
 
   updatePagedNews() {
@@ -109,6 +196,7 @@ export class NewsComponent implements OnInit {
       article.archive = true;
       this.filterNews();
       this.updatePagedNews();
+      this.prepareChartData();
     });
   }
 
@@ -153,27 +241,57 @@ export class NewsComponent implements OnInit {
   }
 
   sortActiveNews(property: string) {
-    if (this.currentSortProperty === property) {
-      this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.currentSortOrder = 'asc';
-    }
-    this.currentSortProperty = property;
-
-    this.activeNews.sort((a, b) => {
-      if (property === 'title') {
-        const titleA = a.headline.toLowerCase();
-        const titleB = b.headline.toLowerCase();
-        return this.currentSortOrder === 'asc' ? titleA.localeCompare(titleB) : titleB.localeCompare(titleA);
-      } else if (property === 'sentimentScore') {
-        return this.currentSortOrder === 'asc' ? a.sentimentScore - b.sentimentScore : b.sentimentScore - a.sentimentScore;
-      } else if (property === 'fetchedTime') {
-        return this.currentSortOrder === 'asc' ? new Date(b.fetchedTime).getTime() - new Date(a.fetchedTime).getTime() : new Date(a.fetchedTime).getTime() - new Date(b.fetchedTime).getTime();
-      }
-      return 0;
-    });
-    this.updatePagedNews();
+  if (this.currentSortProperty === property) {
+    this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
+  } else {
+    this.currentSortOrder = 'asc';
   }
+  this.currentSortProperty = property;
+
+  this.activeNews.sort((a, b) => {
+    let comparison = 0;
+
+    if (property === 'title') {
+      const titleA = a.headline?.toLowerCase() || '';
+      const titleB = b.headline?.toLowerCase() || '';
+      comparison = titleA.localeCompare(titleB);
+    } else if (property === 'sentimentScore') {
+      const sentimentA = a.sentimentScore ?? 0;
+      const sentimentB = b.sentimentScore ?? 0;
+      comparison = sentimentA - sentimentB;
+    } else if (property === 'fetchedTime') {
+      const dateA = a[property];
+      const dateB = b[property];
+
+      if (!dateA || !dateB) {
+        console.error(`Invalid date format: ${dateA || 'undefined'} or ${dateB || 'undefined'}`);
+        return dateA ? -1 : 1;
+      }
+
+      const parsedDateA = new Date(dateA);
+      const parsedDateB = new Date(dateB);
+
+      if (isNaN(parsedDateA.getTime())) {
+        console.error(`Invalid date format: ${dateA}`);
+        return 1;  // Move invalid dates to the end
+      }
+
+      if (isNaN(parsedDateB.getTime())) {
+        console.error(`Invalid date format: ${dateB}`);
+        return -1;  // Move invalid dates to the end
+      }
+
+      comparison = parsedDateA.getTime() - parsedDateB.getTime();
+    }
+
+    return this.currentSortOrder === 'asc' ? comparison : -comparison;
+  });
+
+  this.updatePagedNews();
+}
+
+
+
 
   defaultSortSymbol(property: string): string {
     switch (property) {
@@ -181,10 +299,25 @@ export class NewsComponent implements OnInit {
         return this.currentSortProperty === 'title' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
       case 'sentimentScore':
         return this.currentSortProperty === 'sentimentScore' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
-      case 'fetchedTime':
-        return this.currentSortProperty === 'fetchedTime' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
+      case 'articleDateTime':
+        return this.currentSortProperty === 'articleDateTime' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
       default:
         return '';
     }
+  }
+
+  prepareChartData() {
+    const positiveCount = this.news.filter(article => article.sentimentScore > 0).length;
+    const negativeCount = this.news.filter(article => article.sentimentScore < 5).length;
+
+    this.pieChartData = [positiveCount, negativeCount];
+    this.pieChartLabels = ['Positive', 'Negative'];
+    this.pieChartColors = [
+      {
+        backgroundColor: ['#009FBD', '#ECCEAE'], // Colors for positive and negative
+      },
+    ];
+
+    console.log('Positive Count:', positiveCount, 'Negative Count:', negativeCount); // Debug log
   }
 }

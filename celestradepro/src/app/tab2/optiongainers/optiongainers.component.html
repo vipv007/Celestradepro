@@ -1,0 +1,23 @@
+
+
+<div class="update-info">
+  <p>Last Updated: 16 Jul, 2024 03:29 PM (IST)</p>
+  <p>Expiry Date: </p> <!-- You can add the actual expiry date dynamically if needed -->
+</div>
+<div class="grid-container">
+  <div class="chart-container" *ngFor="let chartData of optionsDataArray">
+    <ngx-charts-bar-horizontal
+      *ngIf="chartData.data && chartData.data.length"
+      [results]="chartData.data"
+      [scheme]="chartData.colorScheme"
+      [xAxis]="true"
+      [yAxis]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="chartData.xLabel"
+      [yAxisLabel]="chartData.yLabel"
+      [barPadding]="barPadding"
+      class="bar-chart">
+    </ngx-charts-bar-horizontal>
+  </div>
+</div>

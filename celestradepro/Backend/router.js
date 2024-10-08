@@ -30,15 +30,39 @@ const fortopgainerController = require('./fortopgainerController');
 const StockGainerController = require('./StockGainerController');
 const commodityGainerController = require('./commoditygainerController');
 const hourController = require('./hourController');
+const sectorController = require('./sectorController');
+const holderController = require('./holderController');
+const insiderController = require('./insiderController');
 const technicalController = require('./technicalController');
-
+const dividendController = require('./dividendController');
+const finrevproController = require('./finrevproController');
 const comindexController = require('./comindexController');
 const frxindexController = require('./frxindexController');
 const OptionactiveController = require('./OptionactiveController');
+const userController = require('./userController');
+const { opSummarizeUrl } = require("./op-summarize");
+const { fxSummarizeUrl } = require('./fxsummariController');
+const { comSummarizeUrl } = require('./comsummarizer');
 
+router.post('/login', userController.loginOrFetchUser);
 
-// Define routes
+// Route for updating selected sections
+router.post('/update-selected-sections', userController.updateSelectedSections);
 
+// Route for fetching user theme
+router.get('/user-theme/:email', userController.getUserTheme);
+
+router.post('/fnews/fx-summarize-url', fxSummarizeUrl);
+router.post('/comnews/com-summarize-url', comSummarizeUrl);
+router.post('/optionnews/summarize-url', opSummarizeUrl);
+// Route for updating user theme
+router.post('/update-user-theme', userController.updateUserTheme);
+router.post('/update-watchlist', userController.addToWatchlist);
+router.post('/store-email', userController.storeEmail);
+router.post('/add-to-watchlist', userController.addToWatchlist);
+router.post('/remove-from-watchlist', userController.removeFromWatchlist );
+router.get('/watchlist/:email', userController.getWatchlist);
+router.get('/top10-sentiment-news', newsController.getTopNewsBySentiment);
 router.get('/', newsController.getAllNews);
 router.put('/:id/archive', newsController.archiveNews);
 router.put('/:id/restore', newsController.restoreNews);
@@ -89,11 +113,16 @@ router.get('/gainer-loser', StockGainerController.getGainersAndLosers);
 router.get('/all', commodityGainerController.getAllComGainers);
 router.get('/gainers-losers', commodityGainerController.getComGainersLosers);
 router.get('/hour', hourController.getHour);
-router.get('/technical', technicalController.getTechnical);
+router.get('/sector', sectorController.getSector);
 
+router.get('/holder', holderController.getHolder);
+router.get('/insider', insiderController.getInsider);
+
+router.get('/technical', technicalController.getTechnical);
+router.get('/dividend', dividendController.getDividend);
 router.get('/comindex', comindexController.getComindex);
 router.get('/frxindex', frxindexController.getFrxindex);
 router.get('/active', OptionactiveController.getAllActive);
-
+router.get('/finrevpro', finrevproController.getAllFinancialData);
 
 module.exports = router;

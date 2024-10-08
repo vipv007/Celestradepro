@@ -11,6 +11,7 @@ import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
 import { ChartsModule } from 'ng2-charts';
 
+import { NgxChartsModule } from '@swimlane/ngx-charts'; // Import NgxChartsModule
 
  PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -28,13 +29,14 @@ import { NiftyPage } from '../nifty/nifty.page';
 import { MyComponent } from './my/my.component';
 import { StrikePeggerComponent } from './strike-pegger/strike-pegger.component';
 import { OpstrikePeggerComponent } from './opstrike-pegger/opstrike-pegger.component';
+import { OptiongainersComponent } from './optiongainers/optiongainers.component';
 
 
 @NgModule({
     declarations: [Tab2Page,
 
         ChartingComponent, OptionIoComponent, VolatilityComponent, VolChartComponent,NiftyPage,ActiveOptionsComponent,
-        OptionchComponent, OptionnewsComponent, MyComponent,StrikePeggerComponent,OpstrikePeggerComponent],
+        OptionchComponent, OptionnewsComponent, MyComponent,StrikePeggerComponent,OpstrikePeggerComponent,OptiongainersComponent],
 
     imports: [
         IonicModule,
@@ -45,6 +47,7 @@ import { OpstrikePeggerComponent } from './opstrike-pegger/opstrike-pegger.compo
         ExploreContainerComponentModule,
         Tab2PageRoutingModule,
         Ng2SearchPipeModule,
+        NgxChartsModule
 
     ],
     exports: [

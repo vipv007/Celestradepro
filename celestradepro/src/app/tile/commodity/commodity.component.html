@@ -1,4 +1,11 @@
 <div class="ion-padding">
+
+  <select id="Symbol" [(ngModel)]="Symbol" (change)="loadSymbolData(Symbol)" class="sele">
+    <option value="GC=F">GC=F</option>
+    <option value="SI=F">SI=F</option>
+    <option value="CL=F">CL=F</option>
+  </select>
+
   <button expand="block" class="buys" (click)="showBox = !showBox">Order&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
     <button class="buys" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button><br>
     <div class="adj">
@@ -55,7 +62,7 @@
   </div>
 
           <div class="sto" *ngIf="showButton" style="color: black;">
-                    <table class="table table-borderless table-hover">
+                    <table class="table table-borderless table-hover" >
                       <thead class="thead-light">
                         <tr>
                           <th>Quantity</th>

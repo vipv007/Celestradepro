@@ -1,93 +1,95 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ForexService } from '../services/forex.service';
-import * as Plotly from 'plotly.js/dist/plotly.js';
-import moment from 'moment';
+import { Component, AfterViewInit, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-student',
   templateUrl: './student.page.html',
   styleUrls: ['./student.page.scss'],
 })
-export class StudentPage implements OnInit {
-  @ViewChild('chart') chartElement: ElementRef;
-  chart: any;
+export class StudentPage implements AfterViewInit {
 
-  constructor(private forexService: ForexService) {}
+  constructor(private renderer: Renderer2) { }
 
-  ngOnInit() {}
-
-  ionViewDidEnter() {
-    this.forexService.getAllForexs().subscribe((response: any) => {
-      const fxname = 'GBPUSD=X';
-      const forex = response.find(entry => entry.symbol === fxname);
-      if (forex) {
-        const ohlcData = forex.values;
-        console.log(ohlcData);
-        this.createCandlestickChart(ohlcData, fxname);
-      }
-    });
+  ngAfterViewInit(): void {
+    this.loadStockComparisonWidget();
+    this.loadStocksAnalystRatingComparisonWidget();
   }
 
-  createCandlestickChart(ohlcData: any[], fxname: string) {
-    // Process OHLC data for candlestick chart
-    const dates = [];
-    const opens = [];
-    const highs = [];
-    const lows = [];
-    const closes = [];
-    const volumes = [];
+  private loadStockComparisonWidget(): void {
+    const symbolElements = document.getElementsByClassName("stocks-return-comparison");
+    const singleTickerElements = document.getElementsByClassName("sta-stocks-return-comparison-display");
 
-    ohlcData.forEach((doc) => {
-      dates.push(moment(doc.Date).format('YYYY-MM-DD'));
-      opens.push(doc.Open);
-      highs.push(doc.High);
-      lows.push(doc.Low);
-      closes.push(doc.Close);
-      volumes.push(doc.Volume);
-    });
+    for (let i = 0; i < symbolElements.length; i++) {
+      const symbolElement = symbolElements[i];
+      const singleTickerElement = singleTickerElements[i];
 
-    // Create candlestick chart
-    const data = [{
-      type: 'candlestick',
-      x: dates,
-      open: opens,
-      high: highs,
-      low: lows,
-      close: closes,
-      yaxis: 'y2',
-      name: fxname,
-      increasing: { line: { color: '#00C805' } },
-      decreasing: { line: { color: '#FF3319' } },
-    }, {
-      type: 'bar',
-      x: dates,
-      y: volumes,
-      yaxis: 'y',
-      name: 'GBPUSD=X Volume',
-      marker: { color: '#F97B22' }
-    }];
+      const iWidth = this.getAttributeValue(symbolElement, 'data-width', 600);
+      let iHeight = this.getAttributeValue(symbolElement, 'data-height', 700);
+      const iTheme = this.getAttributeValue(symbolElement, 'data-theme', 'wt_bg_light');
+      const iuid = this.getAttributeValue(symbolElement, 'data-uid', '103363042966961595bf30b66961595bf30c');
+      const iStocks = this.getAttributeValue(symbolElement, 'data-stocks', 'AMZN,GOOGL,META,MSFT,NVDA,AAPL');
+      const iStocksArr = iStocks.split(',');
 
-    const layout = {
-      dragmode: 'zoom',
-      xaxis: {
-        rangeslider: {
-          visible: false
-        }
-      },
-      yaxis: { domain: [0, 0.2], title: 'Volume' },
-      yaxis2: { domain: [0.2, 1], title: fxname }
-    };
+      iHeight = Math.max(150, Math.min(iHeight, 700));
+      const tabHeight = iHeight - 115;
 
-    const config = {
-      responsive: true
-    };
+      const iframe = this.renderer.createElement('iframe');
+      iframe.setAttribute('src', `https://www.stocktargetadvisor.com/widget/stocks-return-comparison-widget/${iTheme}/${iuid}?symbols=${iStocksArr}&tab_height=${tabHeight}`);
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('width', `${iWidth}px`);
+      iframe.setAttribute('height', `${iHeight}px`);
+      iframe.setAttribute('scrolling', 'auto');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('class', iTheme);
 
-    // Remove existing chart (if any)
-    if (this.chart) {
-      Plotly.purge(this.chartElement.nativeElement);
+      if (iTheme !== 'wt_bg_trans') {
+        iframe.setAttribute('style', 'background: url(https://www.stocktargetadvisor.com/assets/images/rolling_loader.gif) no-repeat center center; background-size: 50px 50px;');
+      }
+
+      if (!singleTickerElement.innerHTML.includes('iframe')) {
+        this.renderer.appendChild(singleTickerElement, iframe);
+      }
     }
+  }
 
-    // Create new chart
-    this.chart = Plotly.newPlot(this.chartElement.nativeElement, data, layout, config);
+  private loadStocksAnalystRatingComparisonWidget(): void {
+    const symbolElements = document.getElementsByClassName("stocks-analyst-rating-comparison");
+    const singleTickerElements = document.getElementsByClassName("sta-stocks-analyst-rating-comparison-display");
+
+    for (let i = 0; i < symbolElements.length; i++) {
+      const symbolElement = symbolElements[i];
+      const singleTickerElement = singleTickerElements[i];
+
+      const iWidth = this.getAttributeValue(symbolElement, 'data-width', 600);
+      let iHeight = this.getAttributeValue(symbolElement, 'data-height', 700);
+      const iTheme = this.getAttributeValue(symbolElement, 'data-theme', 'wt_bg_light');
+      const iuid = this.getAttributeValue(symbolElement, 'data-uid', '19716959096698f514ec20c6698f514ec20e');
+      const iStocks = this.getAttributeValue(symbolElement, 'data-stocks', 'AAPL,AMZN,CCA:CA,CHR:CA,DE:CA,GOOGL,INTC,META,MSFT,NVDA');
+      const iStocksArr = iStocks.split(',');
+
+      iHeight = Math.max(150, Math.min(iHeight, 700));
+      const tabHeight = iHeight - 115;
+
+      const iframe = this.renderer.createElement('iframe');
+      iframe.setAttribute('src', `https://www.stocktargetadvisor.com/widget/stocks-analyst-rating-comparison-widget/${iTheme}/${iuid}?symbols=${iStocksArr}`);
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('width', `${iWidth}px`);
+      iframe.setAttribute('height', `${iHeight}px`);
+      iframe.setAttribute('scrolling', 'auto');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('class', iTheme);
+
+      if (iTheme !== 'wt_bg_trans') {
+        iframe.setAttribute('style', 'background: url(https://www.stocktargetadvisor.com/assets/images/rolling_loader.gif) no-repeat center center; background-size: 50px 50px;');
+      }
+
+      if (!singleTickerElement.innerHTML.includes('iframe')) {
+        this.renderer.appendChild(singleTickerElement, iframe);
+      }
+    }
+  }
+
+  private getAttributeValue(element: Element, attributeName: string, defaultValue: any): any {
+    const value = element.getAttribute(attributeName);
+    return value ? value : defaultValue;
   }
 }

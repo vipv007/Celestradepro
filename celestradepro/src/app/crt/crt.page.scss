@@ -1,14 +1,723 @@
-.quotes-widget-container {
-    position: fixed;
-    top: 10%;
-    left: 10%;
-    width: 100%;
-    background-color: #ffffff; /* Adjust the background color as needed */
-    z-index: 1000; /* Ensure the widget is on top of other content */
+/* Color Variables */
+$primary-color: #007bff; /* Professional primary blue */
+$secondary-color: #f3f4f6; /* Light neutral background */
+$accent-color: #495057; /* Darker accent for contrast */
+$hover-color: #e9ecef; /* Light hover background */
+$background-color: #ffffff; /* White background for cards, containers */
+$border-color: #dee2e6; /* Light border for separators */
+$text-color: #343a40; /* Dark gray for text */
+$text-light: #6c757d; /* Light gray for secondary text */
+$button-bg-color: #007bff;
+$button-hover-color: #0056b3;
+$dropdown-bg-color: #f8f9fa;
+$dropdown-border-color: #ced4da;
+$primary-text-color: #333333;  // Example text color
+$secondary-text-color-light: #666666;  // A lighter, subtle color for light mode
+$secondary-text-color-dark: #cccccc;   // A softer color for dark mode
+// Define secondary text color for light and dark modes
+$secondary-text-color-light: #666666; // Subtle text color for light mode
+$secondary-text-color-dark: #bbbbbb; // Subtle text color for dark mode
+
+// Or, if you need a single variable, define it like this:
+$secondary-text-color: #777777; // Universal subtle text color
+
+
+/* Dropdown Settings */
+.settings-dropdown {
+  position: absolute;
+  margin-top: 90px;
+  margin-right: 30px;
+  right: 10px;
+  background: #ef8c94;
+  box-shadow: 0 2px 10px rgba(239, 141, 141, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  display: none;
+  z-index: 1000;
+  border: 1px solid $dropdown-border-color;
+}
+
+.settings-dropdown.open {
+  display: block;
+}
+
+.settings-dropdown h3 {
+  margin-bottom: 10px;
+  color: $text-color;
+}
+
+.settings-dropdown ion-checkbox {
+  margin-right: 10px;
+}
+
+/* Table Container */
+.table-container {
+  padding: 1rem;
+  overflow-x: auto;
+  background-color: $background-color;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+}
+
+/* Stock Table */
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, color 0.3s;
+
+  th, td {
+    padding: 0.75rem;
+    border-bottom: 1px solid $border-color;
   }
-  
-  #quotesWidgetOverview {
-    width: 100%;
-    height: 420px; /* Adjust the height to your preference */
+
+  th {
+    background-color: $secondary-color;
+    color: $text-color;
   }
-  
+
+  td {
+    color: $text-color;
+  }
+
+  tr:nth-child(even) {
+    background-color: $hover-color;
+  }
+
+  /* Responsive adjustments */
+  @media screen and (max-width: 768px) {
+    td {
+      font-size: 0.9rem;
+      padding: 0.5rem;
+    }
+
+    th {
+      font-size: 1rem;
+    }
+  }
+}
+
+/* Theme Styles */
+body.light-mode {
+  --ion-background-color-light: #ffffff;
+  --ion-background-color-secondary: #f3f4f6;
+  --ion-text-color: $text-color;
+  --ion-border-color: $border-color;
+}
+
+body.dark-mode {
+  --ion-background-color-light: #343a40;
+  --ion-background-color-secondary: #495057;
+  --ion-text-color: #ffffff;
+  --ion-border-color: #ced4da;
+}
+
+:root {
+  --background-light: $background-color;
+  --background-dark: #1e1e1e;
+  --text-light: $text-color;
+  --text-dark: #ffffff;
+}
+
+/* Light and Dark Theme Variables */
+[data-theme="light"] {
+  --background-color: var(--background-light);
+  --text-color: var(--text-light);
+}
+
+[data-theme="dark"] {
+  --background-color: var(--background-dark);
+  --text-color: var(--text-dark);
+}
+
+/* Container Styles */
+.container {
+  width: 100%;
+  max-width: 1700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  overflow-y: auto;
+  margin-top: 20px;
+}
+
+/* Home Section */
+.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bolder;
+  margin-top: 20px;
+}
+
+/* Header */
+.head {
+  color: $text-color;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 25px;
+  text-align: center;
+}
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  background-color: $secondary-color;
+}
+
+.top-bar img {
+  width: 50px;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* Login Button */
+.login-btn {
+  border: none;
+  cursor: pointer;
+  background-color: $button-bg-color;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  margin-left: 90%;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: $button-hover-color;
+  }
+}
+
+/* Dropdown Menu */
+.login-dropdown {
+  display: none;
+  position: absolute;
+  margin-top: 90px;
+  margin-left: 70%;
+  background-color: $dropdown-bg-color;
+  padding: 15px;
+  border: 1px solid $dropdown-border-color;
+  border-radius: 5px;
+  width: 200px;
+}
+
+.login-dropdown.open {
+  display: block;
+}
+
+.login-dropdown input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid $dropdown-border-color;
+}
+
+/* Stock Table */
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid $border-color;
+  }
+
+  tr:hover {
+    background-color: $hover-color;
+    cursor: pointer;
+  }
+}
+
+
+/* Content section styling */
+.content-section {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  flex-wrap: wrap;
+  gap: 20px; /* Adds space between sections */
+}
+
+/* Top news section */
+.top-news {
+  flex: 1 1 65%; /* Flex-grow and basis for width */
+  background-color: $secondary-color; /* Replaced with professional light neutral background */
+  border: 1px solid $border-color; /* Replaced with professional border color */
+  padding: 10px;
+  font-weight: bolder;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 15px;
+  margin-top: 20px;
+  height: auto; /* Adjusts height based on content */
+}
+
+// /* Side section */
+// .side-section {
+//   flex: 1 1 30%; /* Flex-grow and basis for width */
+//   display: flex;
+//   flex-direction: column;
+//   margin-top: 20px;
+// }
+
+// /* Side section items */
+// .side-section div {
+//   background-color: $secondary-color; /* Professional background */
+//   border: 1px solid $border-color; /* Professional border */
+//   margin-bottom: 20px;
+//   padding: 10px;
+//   border-radius: 10px;
+//   height: auto; /* Adjusts height based on content */
+// }
+
+/* Header and content in top-news section */
+.top-news h3 {
+  font-size: 20px;
+  text-align: center;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $border-color; /* Professional border color */
+}
+
+/* Top gainer section */
+.top-gainers-table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.top-gainers-table h3 {
+  font-size: 20px;
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+  background-color: $primary-color; /* Professional blue */
+  color: $text-light; /* Light text color */
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table thead {
+  background-color: $secondary-color; /* Neutral background */
+}
+
+table th, table td {
+  padding: 10px;
+  border: 1px solid $border-color; /* Professional border */
+  text-align: left;
+}
+
+table th {
+  background-color: $background-color; /* Professional table header */
+  color: $text-color; /* Text color */
+  font-weight: bolder;
+}
+
+table tr:nth-child(even) {
+  background-color: $hover-color; /* Subtle hover color */
+}
+
+
+
+/* Responsiveness */
+@media (max-width: 1200px) {
+  .top-news {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .side-section {
+    width: 100%;
+  }
+
+  .side-section div {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-bar {
+    flex-direction: column;
+  }
+
+  .menu-bar button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .top-news, .side-section div {
+    height: auto;
+    max-height: 800px;
+  }
+
+  .top-news, .side-section {
+    width: 100%;
+  }
+}
+
+/* Scrollbar styling for better visibility */
+.top-news, .side-section div {
+  scrollbar-width: thin;
+  scrollbar-color: $primary-color $hover-color; /* Professional scrollbar */
+}
+
+.top-news::-webkit-scrollbar, .side-section div::-webkit-scrollbar {
+  width: 8px;
+}
+
+.top-news::-webkit-scrollbar-thumb, .side-section div::-webkit-scrollbar-thumb {
+  background-color: $primary-color;
+  border-radius: 10px;
+}
+
+.top-news::-webkit-scrollbar-track, .side-section div::-webkit-scrollbar-track {
+  background-color: $hover-color;
+}
+
+/* General styling for stock items */
+.top-gainers-table h3 {
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+  background-color: $primary-color;
+  color: $text-light;
+}
+
+p {
+  text-align: center;
+  font-weight: bolder;
+}
+
+
+.news-header h1 {
+  font-size: 30px;
+  margin-bottom: 40px;
+  text-align: center;
+  color: $primary-text-color; /* Professional dark text color */
+}
+
+.news-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid $border-color; /* Professional border color */
+  padding-bottom: 10px;
+}
+
+.news-item h2, .news-item h3 {
+  font-size: 18px;
+  color: $primary-color; /* Professional primary color (blue) */
+  margin: 0;
+}
+
+.news-item p {
+  font-size: 14px;
+  color: $secondary-text-color; /* Subtle text color */
+}
+
+.news-image {
+  width: 170px;
+  height: 130px;
+  margin-right: 20px;
+  border-radius: 5px;
+}
+
+.news-details {
+  flex: 1;
+}
+
+.summary {
+  white-space: pre-wrap;
+  text-indent: -10px;
+  overflow-wrap: break-word;
+  padding-left: 2px;
+  max-height: 4.5em;
+  font-size: small;
+  overflow: hidden;
+  text-decoration: underline;
+}
+
+.news1 {
+  margin-left: 30px;
+  margin-bottom: 50px;
+  margin-right: 10px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.btn-outline-primary {
+  border-color: $primary-color; /* Professional primary color */
+  color: $primary-color;
+  font-size: small;
+}
+
+.btn-outline-primary:hover {
+  background-color: $primary-color; /* Professional hover color */
+  color: $text-light; /* Light text on hover */
+}
+
+h5 {
+  color: $primary-color; /* Professional blue */
+}
+
+span {
+  font-size: 15px;
+  font-weight: 500;
+  color: $primary-text-color; /* Professional text color */
+}
+/* Variables for colors, fonts, and common properties */
+$primary-color-light: #b3d5f9; /* Professional light theme primary color */
+$secondary-color-light: #e5eaf0; /* Lighter secondary color for contrast */
+$text-color-light: #000; /* Text color for light mode */
+$border-color-light: #ccc; /* Softer border color for light mode */
+
+$primary-color-dark: #2e3b4e; /* Professional dark theme primary color */
+$secondary-color-dark: #404854; /* Darker secondary color */
+$text-color-dark: #ffffff; /* Text color for dark mode */
+$border-color-dark: #555555; /* Softer border color for dark mode */
+
+/* Variables for colors, fonts, and common properties */
+$primary-color-light: #b3d5f991;
+$secondary-color-light: #aeb7c1;
+$text-color-light: #000;
+$border-color-light: #ddd;
+
+$primary-color-dark: #1e1e1e;
+$secondary-color-dark: #333333;
+$text-color-dark: #ffffff;
+$border-color-dark: #444444;
+
+/* General Layout Settings */
+.table-container {
+  margin: 20px 0;
+  padding: 0 10px;
+  overflow-x: auto; // Scrollable for small screens
+  border: 1px solid $border-color-light;
+  border-radius: 8px;
+  background-color: $secondary-color-light; /* Consistent background */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+
+    th, td {
+      padding: 10px; /* Default padding for larger screens */
+      border: 1px solid $border-color-light;
+    }
+
+    tr:nth-child(even) {
+      background-color: $secondary-color-light; /* Subtle row background */
+    }
+
+    th {
+      background-color: $primary-color-light;
+      color: $text-color-light;
+    }
+  }
+
+  /* Reduce padding on smaller screens */
+  @media (max-width: 768px) {
+    table {
+      th, td {
+        padding: 6px; /* Reduced padding for smaller screens */
+        font-size: 14px; /* Optional: Adjust font size */
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    table {
+      th, td {
+        padding: 4px; /* Further reduce padding for very small screens */
+        font-size: 12px; /* Optional: Further reduce font size */
+      }
+    }
+  }
+}
+
+/* Side section */
+.side-section {
+  flex: 1 1 30%; /* Flex-grow and basis for width */
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+
+  div {
+    background-color: $secondary-color-light; /* Professional background */
+    border: 1px solid $border-color-light; /* Professional border */
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    height: auto; /* Adjusts height based on content */
+  }
+}
+
+/* Dark theme styles */
+.dark-mode {
+  .table-container {
+    border-color: $border-color-dark;
+    background-color: $secondary-color-dark;
+
+    table {
+      border-color: $border-color-dark;
+
+      th, td {
+        border-color: $border-color-dark;
+      }
+
+      tr:nth-child(even) {
+        background-color: $secondary-color-dark;
+      }
+
+      th {
+        background-color: $primary-color-dark;
+        color: $text-color-dark;
+      }
+
+      td {
+        color: $text-color-dark; /* Change text color in table rows */
+      }
+    }
+  }
+
+  .side-section {
+    div {
+      background-color: $secondary-color-dark; /* Dark background */
+      border: 1px solid $border-color-dark; /* Dark border */
+    }
+  }
+}
+
+
+/* Flexbox for even layout */
+.table-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+}
+
+/* Each individual table's container */
+.table-layout .table-container {
+  flex: 1 1 30%; /* Each table takes up 30% of the available width */
+  margin: 10px;
+
+  @media (max-width: 1024px) {
+    flex: 1 1 100%;
+  }
+}
+
+.calender {
+  margin: 20px 0;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: $secondary-color-light; /* Light background color */
+
+  h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: $primary-color-light; /* Updated to professional light theme primary color */
+  }
+
+  iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+
+    @media (max-width: 768px) {
+      height: 300px;
+    }
+  }
+}
+
+/* Mobile and Tablet Responsiveness */
+@media (max-width: 768px) {
+  .table-layout {
+    flex-direction: column;
+  }
+
+  .table-container {
+    margin-bottom: 15px;
+  }
+
+  table {
+    font-size: 0.9rem;
+
+    th, td {
+      padding: 5px;
+    }
+  }
+}
+/* Container to hold both calendar and market hours side by side */
+.forex-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px; /* Adjust space between sections */
+}
+
+/* Individual divs for calendar and market sections */
+.calender, .market {
+  flex: 1;
+  background-color: #ffffff; /* White background */
+  border: 7px solid #c6bebe; /* Light border */
+  border-radius: 10px; /* Rounded corners */
+  padding: 50px;
+  box-shadow: 0 5px 6px rgba(153, 150, 150, 0.9); /* Light shadow for depth */
+}
+
+/* Header style, similar to Gainers/Losers section */
+.calender h3, .market h3 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333; /* Darker text for the header */
+  margin-bottom: 10px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/* Iframe full-width and height, styled like the tables in Gainers/Losers */
+.calender iframe, .market iframe {
+  margin-top: 20px;
+  width: 100%;
+  height: 400px; /* You can adjust height if needed */
+  border: none;
+}
+
+/* Additional padding and margin for consistent spacing */
+.calender h3 b, .market h3 b {
+  color: #007bff; /* Color similar to Gainers/Losers section */
+}
+
+.calender {
+  background-color:  #d5dde1; /* Light gray background for calendar section */
+}
+
+.market {
+  background-color: #d5dde1; /* Light gray background for market section */
+}
+
+/* Ensure responsiveness */
+@media (max-width: 768px) {
+  .forex-container {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+  }
+}
+

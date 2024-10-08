@@ -4,19 +4,17 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const Sentiment = require("sentiment");
 
-// MongoDB connection URL
+// Configuration
 const MONGODB_URI = "mongodb://127.0.0.1/";
 const DB_NAME = "FinanceDB";
-
-// Configuration
 const API_KEY = "AIzaSyBzfYWVF3kbttQfwzzWKBhPQtZe6teGSZU"; // Replace with your actual Google API Key
 const MAIN_URLS = [
     "https://www.fxstreet.com/",
     "https://www.forexfactory.com/",
-    "https://www.dailyfx.com/"
+    "https://www.dailyfx.com/",
+    "https://in.investing.com/news/forex-news",
+    "https://www.myfxbook.com/news"
 ];
-
-// Keywords for forex-related news
 const forexKeywords = [
     "forex", "currency", "exchange rate", "FX", "forex trading",
     "forex market", "foreign exchange", "forex news", "forex analysis",
@@ -35,7 +33,6 @@ async function connectToDb() {
 async function fetchNewsUrls(mainUrls, keywords) {
     const newsUrls = [];
     const promises = [];
-
     const axiosConfig = {
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -47,33 +44,13 @@ async function fetchNewsUrls(mainUrls, keywords) {
             console.log("Fetching news URLs from:", mainUrl);
             const response = await axios.get(mainUrl, axiosConfig);
             const html = response.data;
-
             const $ = cheerio.load(html);
 
             $("a").each((index, element) => {
                 const url = $(element).attr("href");
-                if (
-                    url &&
-                    !url.startsWith("#") &&
-                    !url.startsWith("javascript")
-                ) {
+                if (url && !url.startsWith("#") && !url.startsWith("javascript")) {
                     const fullUrl = new URL(url, mainUrl).href;
-                    promises.push(
-                        axios.get(fullUrl, axiosConfig)
-                            .then(response => {
-                                const html = response.data;
-                                const $ = cheerio.load(html);
-                                const articleText = $("article").text();
-                                const mainPoints = $("article").find("h2").length;
-                                if (mainPoints > 0 && articleText.length > 0) {
-                                    const headline = $("title").text();
-                                    newsUrls.push({ url: fullUrl, headline });
-                                }
-                            })
-                            .catch(error => {
-                                console.error("Error fetching URL:", fullUrl, "-", error.message);
-                            })
-                    );
+                    promises.push(fetchAndProcessNews(fullUrl, axiosConfig, mainUrl));
                 }
             });
 
@@ -84,32 +61,59 @@ async function fetchNewsUrls(mainUrls, keywords) {
     }
 
     await Promise.all(promises);
-
     return newsUrls;
+}
+
+// Helper function to fetch news content and process it
+async function fetchAndProcessNews(fullUrl, axiosConfig, mainUrl) {
+    try {
+        const response = await axios.get(fullUrl, axiosConfig);
+        const html = response.data;
+        const $ = cheerio.load(html);
+        const articleText = $("article").text();
+        const mainPoints = $("article").find("h2").length;
+        if (mainPoints > 0 && articleText.length > 0) {
+            const headline = $("title").text();
+            const imageUrl = $("meta[property='og:image']").attr("content") || $("img").first().attr("src");
+            newsUrls.push({ url: fullUrl, headline, imageUrl });
+        }
+    } catch (error) {
+        console.error("Error fetching URL:", fullUrl, "-", error.message);
+    }
 }
 
 // Function to fetch, summarize, and store data from a sub-URL
 async function processSubUrl(newsData) {
-    const { url, headline } = newsData;
+    const { url, headline, imageUrl } = newsData;
     try {
         console.log("Fetching news content from URL:", url);
         const response = await axios.get(url);
         const html = response.data;
-
         const $ = cheerio.load(html);
 
         const articleText = $("article").text();
         const isPremium = articleText.includes("subscribe") || articleText.includes("premium");
-
         if (!articleText || isPremium) {
             console.log("Content is behind a paywall or not available. Skipping storage.");
-            return; // Skip storing this URL
+            return; 
         }
 
         const mainPoints = [];
         $("article").find("h2").each((index, element) => {
             mainPoints.push($(element).text());
         });
+
+        const articleDateTime = $("time").attr("datetime") || $("meta[property='article:published_time']").attr("content");
+        if (!articleDateTime) {
+            console.log("No article date and time found.");
+            return;
+        }
+
+        const articleDate = new Date(articleDateTime);
+        const istOffset = 5 * 60 + 30; 
+        const istDate = new Date(articleDate.getTime() + istOffset * 60000);
+        const istDateTimeString = istDate.toLocaleString('en-IN', { hour12: true });
+        console.log("Article Date and Time (IST):", istDateTimeString);
 
         console.log("Main points of the news article:", mainPoints);
 
@@ -162,19 +166,19 @@ async function processSubUrl(newsData) {
         console.log("Sentiment:", sentimentLabel);
 
         await storeFetchedDetailsInDb({
-            url: url,
-            headline: headline,
-            mainPoints: mainPoints,
-            articleText: articleText,
+            url,
+            headline,
+            mainPoints,
+            articleText,
+            imageUrl,
             summary: result.response.text(),
             sentimentScore: sentimentScoreNormalized.toFixed(2),
             sentiment: sentimentLabel,
-            fetchedTime: new Date()
+            articleDateTime: istDateTimeString
         });
 
     } catch (error) {
         console.error("Error fetching or summarizing news:", error.message);
-        // Do not store error messages for sub-URLs
     }
 }
 
@@ -184,18 +188,17 @@ async function storeMainUrlErrorInDb(url, message) {
     const db = client.db(DB_NAME);
     const collection = db.collection("Fx_news");
 
-    const existingNews = await collection.findOne({ url: url });
+    const existingNews = await collection.findOne({ url });
 
     if (!existingNews) {
         await collection.insertOne({
-            url: url,
+            url,
             headline: url,
             mainPoints: ["N/A"],
             articleText: "N/A",
             summary: message,
             sentimentScore: "N/A",
-            sentiment: "N/A",
-            fetchedTime: new Date()
+            sentiment: "N/A"
         });
 
         console.log("Stored main URL error message in MongoDB.");
@@ -216,7 +219,6 @@ async function storeFetchedDetailsInDb(details) {
 
     if (!existingNews) {
         await collection.insertOne(details);
-
         console.log("Fetched details stored in MongoDB.");
     } else {
         console.log("News already exists in the database. Skipping storage.");
@@ -230,7 +232,6 @@ async function summarizeMultipleMainUrls() {
     const newsUrls = await fetchNewsUrls(MAIN_URLS, forexKeywords);
     if (newsUrls.length === 0) {
         console.log("No relevant news URLs found. Fetching general news articles.");
-        // Fetch general news articles
         for (const mainUrl of MAIN_URLS) {
             const newsData = { url: mainUrl, headline: `General news from ${mainUrl}` };
             await processSubUrl(newsData);

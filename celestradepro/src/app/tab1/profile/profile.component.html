@@ -1,19 +1,18 @@
 <div class="card-container">
   <ng-container *ngFor="let chunk of chunkedEarns">
-    <div *ngFor="let company of chunk" class="card">
-      <h3>{{ company.name }}</h3>
-      <img [src]="company.logo" alt="{{ company.name }} Logo" />
-      <p>Country: {{ company.country }}</p>
-      <p>Currency: {{ company.currency }}</p>
-      <p>Exchange: {{ company.exchange }}</p>
-      <p>Industry: {{ company.finnhubIndustry }}</p>
-      <p>IPO Date: {{ company.ipo }}</p>
-      <p>Market Capitalization: {{ company.marketCapitalization }}</p>
-      <p>Phone: {{ company.phone }}</p>
-      <p>Share Outstanding: {{ company.shareOutstanding }}</p>
-      <p>Ticker: {{ company.ticker }}</p>
-      <p>Web URL: <a href="{{ company.weburl }}">{{ company.weburl }}</a></p>
+    <div *ngFor="let profile of chunk" [ngClass]="{'highlight': isHighlighted(profile.ticker)}" class="card">
+      <h3>{{ profile.name }}</h3>
+      <img [src]="profile.logo" alt="{{ profile.name }} Logo" />
+      <p>Country: {{ profile.country }}</p>
+      <p>Currency: {{ profile.currency }}</p>
+      <p>Exchange: {{ profile.exchange }}</p>
+      <p>Industry: {{ profile.finnhubIndustry }}</p>
+      <p>IPO Date: {{ profile.ipo }}</p>
+      <p>Market Capitalization: {{ profile.marketCapitalization }}</p>
+      <p>Phone: {{ profile.phone }}</p>
+      <p>Share Outstanding: {{ profile.shareOutstanding }}</p>
+      <p>Ticker: {{ profile.ticker }}</p>
+      <p>Web URL: <a href="{{ profile.weburl }}">{{ profile.weburl }}</a></p>
     </div>
   </ng-container>
 </div>
-

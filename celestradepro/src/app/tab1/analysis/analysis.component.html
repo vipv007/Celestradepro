@@ -1,5 +1,13 @@
 <div class="ion-padding">
- 
+  
+  <!--select id="symbol" [(ngModel)]="symbol" (change)="loadSymbolData(symbol)" class="sele">
+    <option value="AAPL">AAPL</option>
+    <option value="GOOGL">GOOGL</option>
+    <option value="AMZN">AMZN</option>
+    <option value="MSFT">MSFT</option>
+  </select-->
+
+
   <button  class="buy" (click)="showBox = !showBox">{{ this.symbol }}&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
     <button class="buy" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button>
     <div class="adj">
@@ -8,7 +16,7 @@
           
           <ion-label style="font-size: 20px; font-weight: bold; margin-left: 5%;"> {{ this.symbol }}</ion-label>
           <input class="m1" type="number" [(ngModel)]="quantity" placeholder="quantity">
-
+ 
         <ion-row>
           <ion-card class="buy" color="primary" (click)="onSubmit('BUY')" >
             <ion-row *ngFor="let stock of stocks">
@@ -145,7 +153,10 @@
   
   
     -->
+
+    
   <br>
+  
       <button (click)="toggleDarkMode()"> Dark Mode</button>
     <div class="chart-container" [ngClass]="{'dark-mode': isDarkMode}">
       <br>

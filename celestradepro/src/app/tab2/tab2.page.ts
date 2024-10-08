@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { OptionsService } from '../services/options.service';
 import { OptionsChainService } from '../services/optionschain.service';
+import { StockService } from '../services/stock.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-tab2',
@@ -9,6 +11,23 @@ import { OptionsChainService } from '../services/optionschain.service';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page implements OnInit, OnDestroy {
+  selectedTab: number = 1;
+
+  selectTab(tabNumber: number) {
+      this.selectedTab = tabNumber;
+  }
+  filteredOptions: any[] = [];
+  symbols: string[] = ['AAPL', 'MSFT', 'GOOGL','NIFTY']; // Example symbol
+  expiries: string[] = ['09-05-2024', '2024-08-19', '2024-09-19']; // Example expiry dates
+  strikePrices: number[] = [22900,22300,22150, 200];
+
+  selectedSegment: any;
+  
+  selectedSymbol: string ;
+  selectedExpiry: string = this.expiries[0];
+  selectedStrikePrice: number =this.strikePrices[0];
+  stocks: any[] = [];
+
   options: any[] = [];
   optionschain: any;
   clickedOptions: string;
@@ -20,13 +39,53 @@ export class Tab2Page implements OnInit, OnDestroy {
   constructor(
     private optionsService: OptionsService,
     private router: Router,
-    private optionschainService: OptionsChainService
+    private route: ActivatedRoute,
+    private optionschainService: OptionsChainService,
+    private stockService: StockService
   ) {}
 
   ngOnInit() {
     this.loadOptions();
     this.loadOptionsChain();
+    this.fetchStockData();
+
+    this.route.queryParams.subscribe(params => {
+      if (params['segment'] === 'contacts') {
+        this.selectTabs = 'contacts'; // Change to the desired tab if necessary
+        this.activeContent = params['content'] || 'recent'; // Default to 'recent' if no content specified
+      }
+    });
+
   }
+
+  activeContent: string = ''; // Initially no content is active
+
+
+  showContent(content: string, event: Event) {
+    if (this.activeContent === content) {
+      // If the clicked content is already active, hide it
+      this.activeContent = '';
+    } else {
+      // Show the new content and hide the previous one
+      this.activeContent = content;
+    }
+  
+    // Scroll the clicked details item to the top
+    const targetElement = (event.target as HTMLElement).parentElement;
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  
+    // Handle highlight effect
+    const allDetails = document.querySelectorAll('.sidebar details');
+    allDetails.forEach(details => details.classList.remove('active'));
+  
+    const detailsElement = targetElement as HTMLDetailsElement;
+    if (detailsElement && detailsElement.hasAttribute('open')) {
+      detailsElement.classList.add('active');
+    }
+  }
+ 
 
   ngOnDestroy() {
     if (this.intervalId) {
@@ -34,12 +93,49 @@ export class Tab2Page implements OnInit, OnDestroy {
     }
   }
 
-  loadOptions() {
+  loadOptions(): void {
     this.optionsService.getOptions().subscribe((options: any[]) => {
       this.options = options;
+       this.filteredOptions = this.options;
     });
   }
+  fetchStockData() {
+    this.stockService.getSelectedStocks().subscribe(
+      (selectedStocks) => {
+        // Update the stocks array with the response data
+        this.stocks = selectedStocks;
+        console.log(this.stocks);
+      },
+      (error) => {
+        console.error('Error fetching stock data:', error);
+      }
+    );
+  }
 
+  objectKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+
+
+  onSymbolChange(event: Event): void {
+    this.filterOptions();
+  }
+
+  onExpiryChange(event: Event): void {
+    this.filterOptions();
+  }
+
+  onStrikePriceChange(event: Event): void {
+    this.filterOptions();
+  }
+
+  filterOptions(): void {
+    this.filteredOptions = this.options.filter(option => {
+      return (!this.selectedSymbol || option['Underlying Name'] === this.selectedSymbol) &&
+             (!this.selectedExpiry || option['Expiration Date'] === this.selectedExpiry) &&
+             (this.selectedStrikePrice  === null   || option['Strike Price'] === this.selectedStrikePrice);
+    });
+  }
   loadOptionsChain() {
     this.optionschainService.getoptions().subscribe((optionschain: any[]) => {
       this.optionschain = optionschain;

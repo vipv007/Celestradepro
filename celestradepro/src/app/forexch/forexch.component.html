@@ -1,5 +1,14 @@
 <div class="ion-padding">
   
+  <!--select id="symbol" [(ngModel)]="symbol" (change)="loadSymbolData(symbol)" class="sele">
+    <option value="EURUSD">EURUSD</option>
+    <option value="GBPUSD">GBPUSD</option>
+    <option value="USDJPY">USDJPY</option>
+    <option value="AUDUSD">AUDUSD</option>
+    <option value="USDCHF">USDCHF</option>
+    <option value="USDCAD">USDCAD</option>
+  </select-->
+
   <button expand="block" class="buy" (click)="showBox = !showBox">{{ this.symbol }}&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
   <button class="buy" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button>
   <div class="adj">
@@ -56,46 +65,46 @@
   
   </div>
 
-          <div class="sto" *ngIf="showButton" style="color: black;">
-            <table class="table table-borderless table-hover">
-              <thead class="thead-light">
-                <tr>
-                  <th>Quantity</th>
-                  <th>Orders</th>
-                  <th>Buy Price</th>
-                  <th>Sell Price</th>
-                  <th>Orders</th>
-                  <th>Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container *ngFor="let depth of marketDepthData" class="ms1">
-                  <ng-container *ngFor="let item of depth.market_depth; let i = index">
-                    <tr *ngIf="i >= 0" class="border-top">
-                      <td colspan="8"></td> <!-- Spanning all columns -->
-                    </tr>
-                    <tr>
-                      <td>{{ item.buy_quantity }}</td>
-                      <td>{{ item.b_order }}</td>
-                      <td class="buy-price">{{ item.buy_price }}</td>
-                      <td>{{ item.sell_price }}</td>
-                      <td>{{ item.s_order }}</td>
-                      <td>{{ item.sell_quantity }}</td>
+            <div class="sto" *ngIf="showButton" style="color: black;">
+              <table class="table table-borderless table-hover">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Quantity</th>
+                    <th>Orders</th>
+                    <th>Buy Price</th>
+                    <th>Sell Price</th>
+                    <th>Orders</th>
+                    <th>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let depth of marketDepthData" class="ms1">
+                    <ng-container *ngFor="let item of depth.market_depth; let i = index">
+                      <tr *ngIf="i >= 0" class="border-top">
+                        <td colspan="8"></td> <!-- Spanning all columns -->
+                      </tr>
+                      <tr>
+                        <td>{{ item.buy_quantity }}</td>
+                        <td>{{ item.b_order }}</td>
+                        <td class="buy-price">{{ item.buy_price }}</td>
+                        <td>{{ item.sell_price }}</td>
+                        <td>{{ item.s_order }}</td>
+                        <td>{{ item.sell_quantity }}</td>
+                      </tr>
+                    </ng-container>
+            
+                    <tr *ngIf="1 >= 0" class="border-top">
+                      <td>{{ getTotalOrders(depth.market_depth, 'buy') }}</td>
+                      <td></td>
+                      <td style="font-size: 13px; width: 50%; font-weight: bold;">Total </td>
+                      <td style="font-size: 13px; width: 50%; font-weight: bold;">Quantity</td>
+                      <td></td>
+                      <td>{{ getTotalOrder(depth.market_depth, 'sell') }}</td>
                     </tr>
                   </ng-container>
-          
-                  <tr *ngIf="1 >= 0" class="border-top">
-                    <td>{{ getTotalOrders(depth.market_depth, 'buy') }}</td>
-                    <td></td>
-                    <td style="font-size: 13px; width: 50%; font-weight: bold;">Total </td>
-                    <td style="font-size: 13px; width: 50%; font-weight: bold;">Quantity</td>
-                    <td></td>
-                    <td>{{ getTotalOrder(depth.market_depth, 'sell') }}</td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
           </div> 
 
 

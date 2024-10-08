@@ -116,7 +116,7 @@ export class ForexchComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.symbol = params.symbol || '';
+      this.symbol = params.symbol || 'EURUSD';
       console.log('Query Params Symbol:', this.symbol);
       this.loadChartvalues();
       this.fetchMarketDepthvalues();
@@ -140,6 +140,16 @@ export class ForexchComponent implements OnInit {
       }
     });
   }
+
+  loadSymbolData(selectedSymbol: string) {
+  this.symbol = selectedSymbol; // Update the symbol
+  this.mk = this.symbol; // Update the market symbol if necessary
+  this.loadChartvalues(); // Load chart data for the new symbol
+ // this.fetchPortfolio(); // Fetch portfolio data
+  this.fetchMarketDepthvalues(); // Fetch market depth data
+  console.log(`Loaded data for symbol: ${this.symbol}`);
+}
+
 
   onSelectionChange(values: any) {
     if (values.selected) {
@@ -199,16 +209,16 @@ export class ForexchComponent implements OnInit {
   }
 
   fetchMarketDepthvalues() {
-    this.marketdepthService.getAllMarketDepth().subscribe(
-      (values: any[]) => {
-        this.marketDepthvalues = values.filter((depth: any) => depth.symbol === this.symbol);
-        console.log('market', this.mk);
+     this.marketdepthService.getAllMarketDepth().subscribe(
+      (data: any[]) => {
+        this.marketDepthData = data.filter((depth: any) => depth.symbol === this.symbol);
       },
       (error) => {
-        console.error('Error fetching marketDepthvalues:', error);
+        console.error('Error fetching marketDepthData:', error);
       }
     );
   }
+ 
 
   getTotalOrders(marketDepth: any[], side: string): number {
     return marketDepth.reduce((total, item) => total + (side === 'buy' ? item.buy_quantity : 0), 0);

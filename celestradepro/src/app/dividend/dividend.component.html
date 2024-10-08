@@ -1,0 +1,37 @@
+<div class="checkbox-container  card-body  card trend-forexs-card container-watchlist  ">
+  <p>{{ title }}</p>
+  <table class="trend-forexs-table">
+    <thead>
+      <tr class="header-row">
+        <th>Symbol</th>
+        <th>Ex-Dividend Date</th>
+        <th>Per-share</th>
+        <th>Growth</th>
+        <th>Yield</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="dividends.length > 0; else noDividends">
+      <tr *ngFor="let divident of dividends">
+        <td>{{ divident.symbol }}</td>
+        <td>{{ divident.exdate }}</td>
+        <td>{{ divident.pershare }}</td>
+        <td>{{ divident.growth }}</td>
+        <td>{{ divident.yield }}</td>
+        <td>{{ divident.patout }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noDividends>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>No Dividends Available</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        You currently do not have any dividends for the selected stocks.
+      </ion-card-content>
+    </ion-card>
+  </ng-template>
+  
+</div>

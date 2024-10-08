@@ -21,7 +21,7 @@ export class LoginPage {
         this.errorMessage = 'Invalid email or password';
       } else {
         // Navigate to the home page or any other desired page on successful login
-        this.navCtrl.navigateRoot('/tabs/tab1');
+        this.navCtrl.navigateRoot('/celestradepro/stocks');
       }
     } catch (error) {
       console.error('Sign-in error:', error);

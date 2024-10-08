@@ -25,11 +25,21 @@ import { TechanalysisComponent } from './techanalysis/techanalysis.component';
 import { ScreenerComponent } from './screener/screener.component';
 import { HeatmapComponent } from './heatmap/heatmap.component';
 import { StockmarketComponent } from './stockmarket/stockmarket.component';
+import { TechnicalAnalysisComponent } from './technical-analysis/technical-analysis.component';
+import { FundamendalComponent } from 'src/app/fundamendal/fundamendal.component';
+import { AnalystockComponent } from 'src/app/analystock/analystock.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ChartsModule } from 'ng2-charts'; 
+import { DividendComponent } from '../dividend/dividend.component';
+import { ShareholderComponent } from './shareholder/shareholder.component';
+import { SectorComponent } from './sector/sector.component';
+import { InsiderComponent } from './insider/insider.component';
 
 @NgModule({
-    declarations: [Tab1Page, ChartsComponent, RibbonComponent, Chart1Component, EarningComponent,
-        AnalysisComponent, ProfileComponent, MetricsComponent, MultichartComponent, WidgetchartComponent,
-        TechanalysisComponent, ScreenerComponent,HeatmapComponent, StockmarketComponent],
+    declarations: [Tab1Page, ChartsComponent, RibbonComponent, Chart1Component, EarningComponent,FundamendalComponent,DividendComponent,
+        AnalysisComponent, ProfileComponent, MetricsComponent, MultichartComponent, WidgetchartComponent, AnalystockComponent,
+        ShareholderComponent,InsiderComponent,
+        TechanalysisComponent, ScreenerComponent,HeatmapComponent, StockmarketComponent,  TechnicalAnalysisComponent,SectorComponent],
 
 
     imports: [
@@ -43,8 +53,9 @@ import { StockmarketComponent } from './stockmarket/stockmarket.component';
         Ng2SearchPipeModule,
         HttpClientModule,
         IgxFinancialChartModule,
-        IgxLegendModule
-
+        IgxLegendModule,
+        ChartsModule,
+        NgxPaginationModule 
     ]
 })
 export class Tab1PageModule {}

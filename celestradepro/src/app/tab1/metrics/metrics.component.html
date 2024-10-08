@@ -1,6 +1,6 @@
 <div class="checkbox-container">
   <div>
-    <input type="checkbox" id="pbCheckbox" (change)="toggleData('P/B')"  />
+    <input type="checkbox" id="pbCheckbox" (change)="toggleData('P/B')" checked />
     <label for="pbCheckbox">P/B</label>
   </div>
   <div>
@@ -12,42 +12,36 @@
     <label for="forwardPECheckbox">Forward P/E</label>
   </div>
   <div>
-    <input type="checkbox" id="forwardPECheckbox" (change)="toggleData('PEG')" />
-    <label for="forwardPECheckbox">PEG</label>
+    <input type="checkbox" id="pegCheckbox" (change)="toggleData('PEG')" />
+    <label for="pegCheckbox">PEG</label>
   </div>
   <div>
-    <input type="checkbox" id="forwardPECheckbox" (change)="toggleData('Debt/Eq')" />
-    <label for="forwardPECheckbox">Debt/Eq</label>
+    <input type="checkbox" id="debtEqCheckbox" (change)="toggleData('Debt/Eq')" />
+    <label for="debtEqCheckbox">Debt/Eq</label>
   </div>
   <div>
-    <input type="checkbox" id="forwardPECheckbox" (change)="toggleData('EPS (ttm)')" />
-    <label for="forwardPECheckbox">EPS (ttm)</label>
+    <input type="checkbox" id="epsTtmCheckbox" (change)="toggleData('EPS (ttm)')" />
+    <label for="epsTtmCheckbox">EPS (ttm)</label>
   </div>
   <div>
-    <input type="checkbox" id="forwardPECheckbox" (change)="toggleData('Forward P/E')" />
-    <label for="forwardPECheckbox">Forward P/E</label>
+    <input type="checkbox" id="dividendCheckbox" (change)="toggleData('Dividend %')" />
+    <label for="dividendCheckbox">Dividend %</label>
   </div>
   <div>
-    <input type="checkbox" id="forwardPECheckbox" (change)="toggleData('Dividend %')" />
-    <label for="forwardPECheckbox">Dividend %</label>
+    <input type="checkbox" id="roeCheckbox" (change)="toggleData('ROE')" />
+    <label for="roeCheckbox">ROE</label>
   </div>
   <div>
-    <input type="checkbox" id="forwardPECheckbox" (change)="toggleData('ROE')" />
-    <label for="forwardPECheckbox">ROE</label>
+    <input type="checkbox" id="roiCheckbox" (change)="toggleData('ROI')" />
+    <label for="roiCheckbox">ROI</label>
   </div>
   <div>
-    <input type="checkbox" id="forwardPECheckbox" (change)="toggleData('ROI')" />
-    <label for="forwardPECheckbox">ROI</label>
+    <input type="checkbox" id="epsQqCheckbox" (change)="toggleData('EPS Q/Q')" />
+    <label for="epsQqCheckbox">EPS Q/Q</label>
   </div>
   <div>
-    <input type="checkbox" id="forwardPECheckbox" (change)="toggleData('EPS Q/Q')" />
-    <label for="forwardPECheckbox">EPS Q/Q</label>
-  </div>
-  <div>
-    <input type="checkbox" id="forwardPECheckbox" (change)="toggleData('Insider Own')" />
-    <label for="forwardPECheckbox">Insider Own</label>
+    <input type="checkbox" id="insiderOwnCheckbox" (change)="toggleData('Insider Own')" />
+    <label for="insiderOwnCheckbox">Insider Own</label>
   </div>
   <canvas id="cylinderChart"></canvas>
 </div>
-
-<!-- TradingView Widget BEGIN -->

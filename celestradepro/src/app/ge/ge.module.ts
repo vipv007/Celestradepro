@@ -7,13 +7,20 @@ import { IonicModule } from '@ionic/angular';
 import { GEPageRoutingModule } from './ge-routing.module';
 
 import { GEPage } from './ge.page';
+import { NgxChartsModule } from '@swimlane/ngx-charts'; // Import NgxChartsModule
+
+import { ChartsModule } from 'ng2-charts';
+
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    GEPageRoutingModule
+    GEPageRoutingModule,
+    NgxChartsModule,
+    ChartsModule
   ],
   declarations: [GEPage]
 })

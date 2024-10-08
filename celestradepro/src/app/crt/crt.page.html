@@ -1,3 +1,305 @@
-<div class="quotes-widget-container">
-  <div id="quotesWidgetOverview"></div>
+<ion-header>
+  <app-ribbon></app-ribbon>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <div class="top-bar">
+      <h1 class="head"><img src="assets/celeslogo.jpg"> Celespro</h1>
+     
+      <div class="button-group">
+        <button (click)="toggleLogin()" class="login-btn">
+          <ion-icon name="person"></ion-icon>
+          <ion-label> Login </ion-label>
+        </button>
+      </div>
+      <ion-buttons slot="end">
+        <ion-button (click)="toggleSettings()">
+          <ion-icon name="settings"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </div>
+
+    <div class="home"><h3>Home</h3></div>
+
+    <!-- Settings Dropdown -->
+    <div class="settings-dropdown" [ngClass]="{ 'open': isSettingsOpen }">
+      <h3>Customize Sections</h3>
+      <form>
+        <div *ngFor="let section of sections">
+          <ion-checkbox [(ngModel)]="section.visible" [ngModelOptions]="{ standalone: true }" (ionChange)="saveSectionPreferences()"></ion-checkbox>
+          <ion-label>{{ section.name }}</ion-label>
+        </div>
+      </form>
+    </div>
+
+    <!-- Login Dropdown -->
+    <div class="login-dropdown" [ngClass]="{ 'open': isLoginOpen }">
+      <form *ngIf="!isLoggedIn && isLoginOpen" (ngSubmit)="onLogin()">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input id="email" type="email" class="form-control" [(ngModel)]="email" name="email" placeholder="Enter your email" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+      </form>
+
+      <div class="logout" *ngIf="isLoggedIn && isLoginOpen">
+        <div style="display: flex;">
+          <ion-icon name="person-circle" style="font-size: 30px;"></ion-icon>
+          <label style="margin-top: 5px; margin-left: 2px;">My Profile</label>
+        </div>
+        <button type="button" class="btn btn-primary btn-block mt-3" (click)="onLogout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content-section">
+
+  <div *ngIf="isSectionVisible('Top Market News')" class="top-news">
+<!-- Stock News Section -->
+<div class="news-container">
+  <div class="news-header">
+    <h1 (click)="navigateToTab1()">
+      Stock News <b> &gt;&gt; </b>
+    </h1>
+  </div>
+
+  <!-- Display news articles from NewsService -->
+  <div *ngFor="let article of topSentiments | slice:0:1" class="news1">
+    <img [src]="article.imageUrl" alt="Article Image"  width="150" height="150" (error)="onImageError(article)" (load)="onImageLoad(article)">
+    <div class="news-content">
+      <h5><a href="{{ article.url }}" class="news-link">{{ article.headline }}</a></h5>
+      <span *ngIf="!article.showMore">{{ article.summary.slice(0, 150) }}...</span>
+      <span *ngIf="article.showMore">{{ article.summary }}</span>
+      <button (click)="toggleShowMore(article)" class="btn btn-outline-primary mt-2">
+        {{ article.showMore ? 'Read less' : 'Read more' }}
+      </button>
+      <hr>
+    </div>
+  </div>
 </div>
+
+<!-- Option News Section -->
+<div class="option-news-container">
+  <div class="news-header">
+    <h1 (click)="navigateToTab2()">
+      Option News<b> &gt;&gt; </b>
+    </h1>
+  </div>
+
+  <!-- Display news articles from OptionnewsService -->
+  <div *ngFor="let optionArticle of optionNews | slice:0:1" class="news1">
+    <img [src]="optionArticle.imageUrl" alt="Article Image"  width="150" height="150" (error)="onImageError(optionArticle)" (load)="onImageLoad(optionArticle)">
+    <div class="news-content">
+      <h5><a href="{{ optionArticle.url }}" class="news-link">{{ optionArticle.headline }}</a></h5>
+      <span *ngIf="!optionArticle.showMore">{{ optionArticle.summary.slice(0, 150) }}...</span>
+      <span *ngIf="optionArticle.showMore">{{ optionArticle.summary }}</span>
+      <button (click)="toggleShowMore(optionArticle)" class="btn btn-outline-primary mt-2">
+        {{ optionArticle.showMore ? 'Read less' : 'Read more' }}
+      </button>
+      <hr>
+    </div>
+  </div>
+</div>
+
+<!-- Commodity News Section -->
+<div class="commodity-news-container">
+  <div class="news-header">
+    <h1 (click)="navigateToTab3()">
+      Commodity News <b> &gt;&gt; </b>
+    </h1>
+  </div>
+
+  <!-- Display a single news article from ComNewsService -->
+  <div *ngIf="commodityNews.length > 0" class="news-item">
+    <img [src]="commodityNews[0].imageUrl" alt="Article Image"  width="150" height="150" (error)="onImageError(commodityNews[0])" (load)="onImageLoad(commodityNews[0])">
+    <div class="news-content">
+      <h5><a href="{{ commodityNews[0].url }}" class="news-link">{{ commodityNews[0].headline }}</a></h5>
+      <span *ngIf="!commodityNews[0].showMore">{{ commodityNews[0].summary.slice(0, 150) }}...</span>
+      <span *ngIf="commodityNews[0].showMore">{{ commodityNews[0].summary }}</span>
+      <button (click)="toggleShowMore(commodityNews[0])" class="btn btn-outline-primary mt-2">
+        {{ commodityNews[0].showMore ? 'Read less' : 'Read more' }}
+      </button>
+      <hr>
+    </div>
+  </div>
+</div>
+  </div>
+
+
+
+      <div *ngIf="isSectionVisible('Top Stories')" class="side-section">
+        <h3>Top Stories</h3>
+        <div class="top-stories">
+          <app-topnews></app-topnews>
+        </div>
+        <div *ngIf="isSectionVisible('Most Events')" class="side-section">
+          <h3>Most Events</h3>
+          <div class="most-active">
+            <app-events></app-events>
+          </div>
+        </div>
+        
+      </div>
+
+      <div *ngIf="isSectionVisible('Top Gainers')" class="side-section">
+        <h3 (click)="navigateToGainer()">
+          Top Gainer <b> &gt;&gt; </b>
+        </h3>
+        
+        <div class="top-gainer">
+          <table>
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Price</th>
+                <th>Change</th>
+                <th>% Gain</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let topGainer of topGainers | slice:0:5" class="data-row">
+                <td><a [routerLink]="['/celestradepro/stocks', 'gainer']">{{ topGainer.symbol }}</a></td>
+                <td>{{ topGainer.price }}</td>
+                <td>{{ topGainer.change }}%</td>
+                <td [ngStyle]="{'color': topGainer.change < 0 ? 'red' : 'green'}">{{ topGainer.changesPercentage }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="isSectionVisible('Top Losers')" class="side-section">
+        <h3 (click)="navigateToGainer()">
+          Top Loser <b> &gt;&gt; </b>
+        </h3>
+        <div class="top-loser">
+          <table [routerLink]="['/celestradepro/stocks']">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Price</th>
+                <th>Change</th>
+                <th>% Gain</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let topLoser of topLosers | slice:0:5" class="data-row">
+                <td>{{ topLoser?.symbol }}</td>
+                <td>{{ topLoser.price }}</td>
+                <td>{{ topLoser.change }}%</td>
+                <td style="color: rgb(237, 8, 8); font-weight: bold;">{{ topLoser.changesPercentage }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="forex-container">
+      <div *ngIf="isSectionVisible('Ecalendar')" class="ecalendar"></div>
+      <div class="calender">
+        <h3 (click)="navigateToCalender()">
+          Forex Economic Calendar <b> &gt;&gt; </b>
+        </h3>
+        <iframe src="https://widget.myfxbook.com/widget/calendar.html?lang=en&impacts=0,1,2,3&symbols=AUD,CAD,CHF,CNY,EUR,GBP,JPY,NZD,USD"></iframe>
+      </div>
+    
+      <div *ngIf="isSectionVisible('Fx Hours')" class="fxmarket"></div>
+      <div class="market">
+        <h3>Forex Market Hours</h3>
+        <iframe src="https://widget.myfxbook.com/widget/market-hours.html"></iframe>
+      </div>
+    </div>
+    
+  
+    
+    <div *ngIf="isSectionVisible('Trending stocks')" class="Trending stocks">
+      <div class="table-layout">
+        <div class="table-container">
+          <h2><a href="/celestradepro/Stocks">Stocks</a></h2>
+          <table class="stock-table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Open</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Close</th>
+                <th>Volume</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let stock of selectedStocks">
+                <td>{{ stock.symbol }}</td>
+                <td>{{ stock.stock[0].Open.toFixed(2) }}</td>
+                <td>{{ stock.stock[0].High.toFixed(2) }}</td>
+                <td>{{ stock.stock[0].Low.toFixed(2) }}</td>
+                <td>{{ stock.stock[0].Close.toFixed(2) }}</td>
+                <td>{{ stock.stock[0].Volume.toFixed(2) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      
+        <div class="table-container">
+          <h2><a href="/celestradepro/Forex">Forex</a></h2>
+          <table class="stock-table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Open</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Close</th>
+                <th>Bid</th>
+                <th>Ask</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let forex of selectedForexStocks">
+                <td>{{ forex.symbol }}</td>
+                <td>{{ forex.values[0].Open.toFixed(4) }}</td>
+                <td>{{ forex.values[0].High.toFixed(4) }}</td>
+                <td>{{ forex.values[0].Low.toFixed(4) }}</td>
+                <td>{{ forex.values[0].Close.toFixed(4) }}</td>
+                <td>{{ forex.values[0].Bid.toFixed(4) }}</td>
+                <td>{{ forex.values[0].Ask.toFixed(4) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      
+        <div class="table-container">
+          <h2><a href="/celestradepro/Futures">Commodities</a></h2>
+          <table class="commodity-table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Open</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Close</th>
+                <th>Bid</th>
+                <th>Ask</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let com of commodities; let i = index">
+                <tr *ngIf="i < 2">
+                  <td>{{ com.Symbol }}</td>
+                  <td>{{ com.Data[0]?.Open.toFixed(2)}}</td>
+                  <td>{{ com.Data[0]?.High.toFixed(2)}}</td>
+                  <td>{{ com.Data[0]?.Low.toFixed(2)}}</td>
+                  <td>{{ com.Data[0]?.Close.toFixed(2)}}</td>
+                  <td>{{ com.Data[0]?.Bid.toFixed(2)}}</td>
+                  <td>{{ com.Data[0]?.Ask.toFixed(2)}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div> 
+  </ion-content>

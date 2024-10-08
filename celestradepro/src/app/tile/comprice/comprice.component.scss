@@ -1,0 +1,29 @@
+ion-content {
+    ion-grid {
+      margin: 20px;
+      ion-row {
+        font-weight: bold;
+        &:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+        ion-col {
+          padding: 10px;
+          border: 1px solid #ddd;
+        }
+      }
+    }
+  }
+ 
+.s1{
+  height: 400px;
+  width: 800px;
+  margin-left: 10%;
+  margin-top: 10px;
+}
+
+.chart {
+  background-color: azure;
+  height: 400px;
+  width: 800px;
+ 
+}

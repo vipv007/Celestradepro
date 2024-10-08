@@ -26,362 +26,459 @@
       <button class="tablinks" (click)="openTab($event, 'watchlist')">Watchlist</button>
       <button class="tablinks" (click)="openTab($event, 'gainer')">Top Gainer</button>
       <button class="tablinks" (click)="openTab($event, 'loser')">Top Loser</button>
-      <button class="tablinks" (click)="openTab($event, 'index')">Indices</button>
+      <button class="tablinks" (click)="openTab($event, 'index')">Sectors</button>
     </div>
-    
-  <div id="watchlist" class="tabcontent">
-    <h4>Commodity Name</h4>
-    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="getDataBySymbol(searchTerm)"></ion-searchbar>
-    <ion-grid class="col" >
-    <ion-row *ngFor="let com of searchedDatas | filter: searchTerm" style="font-size: larger;  font-family: Georgia, 'Times New Roman', Times, serif;" >
-        <ion-col col-4 class="ch">
-          {{ com.Symbol }}
-        </ion-col>
-        <ion-col col-4>
-          {{ com.Data[1].Close.toFixed(2) }}
-        </ion-col>
-        <ion-col col-4>
-          {{ com.Data[1].Change.toFixed(0)}}
-        </ion-col>
-        <ion-col col-4>
-          {{ com.Data[1].ChangePercentage.toFixed(0)}}
-        </ion-col>
-        <ion-col col-4>
-        <ion-label>{{ com.Data[1].Low.toFixed(2) }}</ion-label>
-        <input type="range" [min]="com.Data[2].Low" [max]="com.Data[2].High" [value]="com.Data[2].Close" #rangeSlider>
-        <ion-label>{{ com.Data[1].High.toFixed(2) }}</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          {{ com.Data[1].Bid.toFixed(0)}}
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>{{ com.Data[1].Open.toFixed(2) }}</ion-label>
-          <input type="range" [min]="lowestPrices?.[com.Symbol]" [max]="highestPrices?.[com.Symbol]" [value]="com.Data[2].Close"
-            #rangeSlider>
-          <ion-label>{{ com.Data[1].Ask.toFixed(2)}} </ion-label>
-        </ion-col>
-        <ion-col col-4>
-        <ion-button (click)="addSelectedCom(com)">Add</ion-button>
-        </ion-col>
-    </ion-row>
-    </ion-grid>
-
-    <ion-grid class="col">
-      <ion-row style="border-top:groove">
-        <ion-col col-4>
-          <ion-label (click)="sortSymbols()" class="sort-label"> Symbol
-            <ion-icon name="arrow-down-outline" *ngIf="sortOrder === 'asc'"></ion-icon>
-            <ion-icon name="arrow-up-outline" *ngIf="sortOrder === 'desc'"></ion-icon>
-            <ion-icon name="swap-vertical" *ngIf="sortOrder === ''"></ion-icon>
-          </ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>Last</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>High</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>Low</ion-label>
-        </ion-col> 
-        <ion-col col-4>
-          <ion-label>Day Range</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>Volume</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>Change</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>%Chg</ion-label>
-        </ion-col>
-        <ion-col col-4>
-          <ion-label>Week Range</ion-label>
-        </ion-col>
-        <ion-col col-4></ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <ion-grid *ngIf="selectedDatas && selectedDatas.length > 0" class="col">
-      <ion-row *ngFor="let com of selectedDatas" style="border-top:groove" >
-        <ng-container *ngIf="com.currentDataIndex !== undefined">
-        <ion-col col-4 id="c5">
-          <ion-label class="ch" (click)="setClickedData(com.Symbol)">{{ com.Symbol }}</ion-label>
-        </ion-col>
-        <ion-col col-4 id="c5">
-          <ion-label>{{ com.Data[com.currentDataIndex].Close.toFixed(2) }}</ion-label>
-        </ion-col>
-        <!-- <ion-col col-4 id="c5">
-          <ion-label >{{ com.Data[1].Date}}</ion-label>
-        </ion-col> -->
-        <!-- <ion-col col-4 id="c5">
-          <ion-label >{{ com.Data[1].Open.toFixed(2) }}</ion-label>
-        </ion-col>-->
-        <ion-col col-4 id="c5">
-          <ion-label style="color: green;" >{{ com.Data[com.currentDataIndex].High.toFixed(2) }}</ion-label>
-        </ion-col>
-        <ion-col col-4 id="c5">
-          <ion-label style="color: red;" >{{ com.Data[com.currentDataIndex].Low.toFixed(2) }}</ion-label>
-        </ion-col>
-      <ion-col col-4 id="c5">
-          <ion-label>{{ com.Data[com.currentDataIndex].Low.toFixed(2) }}</ion-label>
-          <div style="width: 120px; position: relative;">
-            <!-- Graphical bar representing the range -->
-            <div class="progress position-relative" style="height: 20px;">
-                <div
-                    [ngStyle]="{
-                        backgroundColor: com.Data[com.currentDataIndex].Close > com.Data[com.currentDataIndex].Open ? 'green' : 'red',
-                        width: ((com.Data[com.currentDataIndex].High - com.Data[com.currentDataIndex].Low) / (com.Data[com.currentDataIndex].High - com.Data[com.currentDataIndex].Low)) * 100 + '%',
-                        left: '0',
-                        height: '50%'
-                    }"
-                ></div>
-                <!-- Marker for the close value -->
-                <div
-                    class="caret-down"
-                    [ngStyle]="{
-                        position: 'absolute',
-                        left: ((com.Data[com.currentDataIndex].Close - com.Data[com.currentDataIndex].Low) / (com.Data[com.currentDataIndex].High - com.Data[com.currentDataIndex].Low)) * 100 + '%',
-                        transform: 'translateX(-20%)',
-                        top: '50%',
-                        fontSize: '6px',
-                        color: com.Data[com.currentDataIndex].Close > com.Data[com.currentDataIndex].Open ? 'green' : 'red'
-                    }"
-                >
-                    ▼
-                </div>
+  
+    <div id="watchlist" class="tabcontent" style="display: block;">
+      <div class="container-watchlist">
+        <!-- Watchlist Section -->
+        <div *ngIf="watchlist.length > 0" class="watchlist-container">
+          <div class="card watchlist-card">
+            <div class="card-header">
+              <h3 class="text-center">Watchlist</h3>
             </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="watchlist-table">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Open</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Close</th>
+                      <th>Bid</th>
+                      <th>Ask</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let com of watchlist">
+                      <td (click)="setClickedData(com.Symbol)">{{ com.symbol }}</td>
+                      <td>{{ com.open.toFixed(4) }}</td>
+                      <td>{{ com.high.toFixed(4) }}</td>
+                      <td>{{ com.low.toFixed(4) }}</td>
+                      <td>{{ com.close.toFixed(4) }}</td>
+                      <td>{{ com.bid.toFixed(4) }}</td>
+                      <td>{{ com.ask.toFixed(4) }}</td>
+                      <td>
+                        <button class="btn btn-danger btn-sm" (click)="onDeletecom(com)">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
-            <ion-label>{{ com.Data[com.currentDataIndex].High.toFixed(2) }}</ion-label>
-       </ion-col>
-        <ion-col col-4 id="c5">
-          <ion-label>{{ com.Data[com.currentDataIndex].Ask.toFixed(0)}}</ion-label>
-        </ion-col>
-        <ion-col col-4 id="c5"  [ngClass]="{'positive-value': com.Data[com.currentDataIndex].Change< 0, 'negative-value': com.Data[com.currentDataIndex].Change< 0}">
-          <ion-label>{{ com.Data[com.currentDataIndex].Change.toFixed(0)}}</ion-label>
-        </ion-col>
-        <ion-col col-4 id="c5"  [ngClass]="{'positive-value': com.Data[com.currentDataIndex].ChangePercentage< 0, 'negative-value': com.Data[com.currentDataIndex].ChangePercentage< 0}">
-          <ion-label>{{ com.Data[com.currentDataIndex].ChangePercentage.toFixed(0)}}</ion-label>
-        </ion-col>
-        <ion-col col-4 id="c5">
-           <ion-label>{{ com.Data[com.currentDataIndex].Open.toFixed(2) }}</ion-label>
-          <input type="range" [min]="lowestPrices?.[com.Symbol]" [max]="highestPrices?.[com.Symbol]" [value]="com.Data[com.currentDataIndex].Close" #rangeSlider>
-          <ion-label>{{ com.Data[com.currentDataIndex].Low.toFixed(2) }} </ion-label>
-        </ion-col>
-      <ion-col col-4 id="c5">
-          <ion-button (click)="removeSelectedCom(com)">Remove</ion-button>
-        </ion-col>
-      </ng-container>
-        </ion-row>
-        </ion-grid>
-    </div> 
+        
+  
+        <!-- Trend com Section -->
+        <div *ngIf="email && availablecoms.length > 0" class="trend-coms-container">
+          <div class="card trend-coms-card">
+            <div class="card-header">
+              <h3 class="text-center">Trend Futures</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Filter by Symbol"
+                  [(ngModel)]="filterText"
+                  (input)="filterUnstoredcoms()"
+                />
+              </div>
+              <div class="table-responsive">
+                <table class="trend-coms-table">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Open</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Close</th>
+                      <th>Bid</th>
+                      <th>Ask</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let com of filteredUnstoredcoms">
+                       <!-- Clicking the symbol will navigate to the chart view -->
+                    <td (click)="setClickedData(com.Symbol)" style="cursor: pointer; color: blue;">
+                      {{ com.Symbol }}
+                    </td>
+                      <td>{{ com.Data[0].Open.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].High.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].Low.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].Close.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].Bid.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].Ask.toFixed(4) }}</td>
+                      <td>
+                        <button class="btn btn-success btn-sm" (click)="onAddcom(com)">
+                          Add
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div id="gainer" class="tabcontent"> 
-      <h4>Top Gainer</h4>
-      <ion-grid class="col">
-        <ion-row style="border-top:groove">
-          <ion-col col-4>
-            <ion-label>Name</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Company</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Change (%)</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Change</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Live Prices</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Last Prices</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    
-      <ion-grid class="col">
-        <ion-row *ngFor="let loser of topGainers">
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Name }}</ion-label><br>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Company }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Changeper }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Change }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Liveprices }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Lastprice }}</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+        <div *ngIf="!email && availablecoms.length > 0" class="trend-coms-container">
+          <div class="card trend-coms-card">
+            <div class="card-header">
+              <h3 class="text-center">Most Active Stocks</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Filter by Symbol" [(ngModel)]="filterText"
+                  (input)="filterUnstoredcoms()" />
+              </div>
+              <div class="table-responsive">
+                <table class="trend-coms-table">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Open</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Close</th>
+                      <th>Bid</th>
+                      <th>Ask</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let com of filteredUnstoredcoms.slice(0,2)">
+                      <!-- Clicking the symbol will navigate to the chart view -->
+                      <td (click)="setClickedData(com.Symbol)" style="cursor: pointer; color: blue;">
+                        {{ com.Symbol }}
+                      </td>
+                      <td>{{ com.Data[0].Open.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].High.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].Low.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].Close.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].Bid.toFixed(4) }}</td>
+                      <td>{{ com.Data[0].Ask.toFixed(4) }}</td>
+                      
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="loser" class="tabcontent">
-      <h4>Top Loser</h4>
-      <ion-grid class="col">
-        <ion-row style="border-top:groove">
-          <ion-col col-4>
-            <ion-label>Name</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Company</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Change (%)</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Change</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Live Prices</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Last Prices</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    
-      <ion-grid class="col">
-        <ion-row *ngFor="let loser of topLosers">
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Name }}</ion-label><br>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Company }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Changeper }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Change }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Liveprices }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ loser.Lastprice }}</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+  
+  <!-- Gainers Section -->
+  <div id="gainer" class="tabcontent">
+    <!-- Radio buttons to toggle between chart and table -->
+    <div>
+      <label>
+        <input type="radio" name="toggleGainer" [(ngModel)]="viewGainer" value="chart"> Chart
+      </label>
+      <label>
+        <input type="radio" name="toggleGainer" [(ngModel)]="viewGainer" value="table"> Table
+      </label>
     </div>
-
-    <div id="index" class="tabcontent">
-      <h4>Indices</h4>
-      <ion-grid class="col">
-        <ion-row style="border-top:groove">
-          <ion-col col-4>
-            <ion-label>Symbol</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>High</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Low</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Close</ion-label>
-          </ion-col>
-          <ion-col col-4>
-            <ion-label>Chg%</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    
-      <ion-grid class="col" style="font-size: small;">
-        <ion-row *ngFor="let index of indexData" style="border-top:groove">
-          <ion-col col-4 id="c5">
-            <ion-label>{{ index.Name }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ index.High }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ index.Low }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ index.Last }}</ion-label>
-          </ion-col>
-          <ion-col col-4 id="c5">
-            <ion-label>{{ index.Chg }}</ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+  
+    <!-- Chart for Gainers -->
+    <div *ngIf="viewGainer === 'chart'" style="width: 800px; height: 400px; background-color: black; margin-left: 25%; color: white;">
+      <canvas baseChart [datasets]="gainerChartData" [labels]="gainerChartLabels" [chartType]="'horizontalBar'"
+        [options]="chartOptions">
+      </canvas>
+    </div>
+  
+    <!-- Table for Gainers -->
+    <div *ngIf="viewGainer === 'table'" class=" card-body  card trend-forexs-card container-watchlist ">
+      <h4 class="text-center">Gainers Table</h4>
+      <table class="trend-forexs-table">
+        <thead>
+          <tr class="header-row">
+            <th>Name</th>
+            <th>Change %</th>
+            <th>Change</th>
+            <th>Live Prices</th>
+            <th>Last Prices</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let gainer of topGainers">
+            <td>{{ gainer.Name }}</td>
+            <td>{{ gainer.Changeper }}</td>
+            <td>{{ gainer.Change }}</td>
+            <td>{{ gainer.Liveprices }}</td>
+            <td>{{ gainer.Lastprice }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- Losers Section -->
+  <div id="loser" class="tabcontent">
+    <!-- Radio buttons to toggle between chart and table -->
+    <div>
+      <label>
+        <input type="radio" name="toggleLoser" [(ngModel)]="viewLoser" value="chart"> Chart
+      </label>
+      <label>
+        <input type="radio" name="toggleLoser" [(ngModel)]="viewLoser" value="table"> Table
+      </label>
+    </div>
+  
+    <!-- Chart for Losers -->
+    <div *ngIf="viewLoser === 'chart'" style="width: 800px; height: 400px; background-color: black; margin-left: 25%; color: white;" >
+      <canvas baseChart [datasets]="loserChartData" [labels]="loserChartLabels" [chartType]="'horizontalBar'"
+        [options]="chartOptions">
+      </canvas>
+    </div>
+  
+    <!-- Table for Losers -->
+    <div *ngIf="viewLoser === 'table'" class=" card-body  card trend-forexs-card container-watchlist">
+      <h4 class="text-center">Losers Table</h4>
+      <table class="trend-forexs-table">
+        <thead>
+          <tr class="header-row">
+            <th>Name</th>
+            <th>Change %</th>
+            <th>Change</th>
+            <th>Live Prices</th>
+            <th>Last Prices</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let loser of topLosers">
+            <td>{{ loser.Name }}</td>
+            <td>{{ loser.Changeper }}</td>
+            <td>{{ loser.Change }}</td>
+            <td>{{ loser.Liveprices }}</td>
+            <td>{{ loser.Lastprice }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
+    
+    
+  
+    <div id="index" class="tabcontent">
+      <div class="box1">
+        <!-- Radio buttons to toggle between chart and table -->
+        <div>
+          <label>
+            <input type="radio" name="toggle" [(ngModel)]="displayMode" value="chart">  Chart
+          </label>
+          <label>
+            <input type="radio" name="toggle" [(ngModel)]="displayMode" value="table">  Table
+          </label>
+        </div>
+    
+        <!-- Tabs -->
+        <div class="tabss">
+          <button class="style" (click)="selectTab(1)" [class.active]="selectedTab === 1">Energy</button>
+          <button class="style" (click)="selectTab(2)" [class.active]="selectedTab === 2">Agriculture</button>
+          <button class="style" (click)="selectTab(3)" [class.active]="selectedTab === 3">Metals</button>
+        </div><br>
+    
+        <!-- Energy Tab -->
+        <div *ngIf="selectedTab === 1">
+          <!-- Chart -->
+          <div *ngIf="displayMode === 'chart'"style="width: 800px; height: 400px;  margin-left: 25%; color: white;">
+            <canvas baseChart 
+                    [datasets]="energyChartData" 
+                    [labels]="energyLabels" 
+                    [chartType]="'horizontalBar'"
+                    [options]="chartOptions">
+            </canvas>
+          </div>
+          <!-- Table -->
+          <div *ngIf="displayMode === 'table'" class=" card-body  card trend-forexs-card container-watchlist">
+            <table class="trend-forexs-table">
+              <thead>
+                <tr class="header-row">
+                  <th>Name</th>
+                  <th>Last</th>
+                  <th>High</th>
+                  <th>Low</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of energyData">
+                  <td>{{ item.Name }}</td>
+                  <td>{{ item.Last }}</td>
+                  <td>{{ item.High }}</td>
+                  <td>{{ item.Low }}</td>
+                  <td>{{ item.Chg }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    
+        <!-- Agriculture Tab -->
+        <div *ngIf="selectedTab === 2">
+          <!-- Chart -->
+          <div *ngIf="displayMode === 'chart'"style="width: 800px; height: 400px; margin-left: 25%; color: white;">
+            <canvas baseChart 
+                    [datasets]="agricultureChartData" 
+                    [labels]="agricultureLabels" 
+                    [chartType]="'horizontalBar'"
+                    [options]="chartOptions">
+            </canvas>
+          </div>
+          <!-- Table -->
+          <div *ngIf="displayMode === 'table'" class=" card-body  card trend-forexs-card  container-watchlist">
+            <table class="trend-forexs-table">
+              <thead>
+                <tr class="header-row">
+                  <th>Name</th>
+                  <th>Last</th>
+                  <th>High</th>
+                  <th>Low</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of agricultureData">
+                  <td>{{ item.Name }}</td>
+                  <td>{{ item.Last }}</td>
+                  <td>{{ item.High }}</td>
+                  <td>{{ item.Low }}</td>
+                  <td>{{ item.Chg }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    
+        <!-- Metals Tab -->
+        <div *ngIf="selectedTab === 3">
+          <!-- Chart -->
+          <div *ngIf="displayMode === 'chart'"style="width: 800px; height: 400px;  margin-left: 25%; color: white;">
+            <canvas baseChart 
+                    [datasets]="metalsChartData" 
+                    [labels]="metalsLabels" 
+                    [chartType]="'horizontalBar'"
+                    [options]="chartOptions">
+            </canvas>
+          </div>
+          <!-- Table -->
+          <div *ngIf="displayMode === 'table'" class=" card-body  card trend-forexs-card container-watchlist ">
+            <table class="trend-forexs-table">
+              <thead>
+                <tr class="header-row">
+                  <th>Name</th>
+                  <th>Last</th>
+                  <th>High</th>
+                  <th>Low</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of metalsData">
+                  <td>{{ item.Name }}</td>
+                  <td>{{ item.Last }}</td>
+                  <td>{{ item.High }}</td>
+                  <td>{{ item.Low }}</td>
+                  <td>{{ item.Chg }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <!-- Chart tab -->
   <div *ngIf="selectTabs === 'missed'">
     <app-commodity></app-commodity>
   </div>
 
   <!-- Tile tab -->
-
   <div *ngIf="selectTabs === 'contact'" class="grid-container">
-    <!--ion-card *ngFor="let com of selectedDatas" id="card">
-      <ion-card-title>{{ com.Symbol }}</ion-card-title>
-      <ion-card-content>
-        <ion-row>
-          <ion-col>
-            <p>Buy</p>
-            <ion-col col-4 >
-              <ion-label color="success">{{ com.Data[0].Ask.toFixed(4) }}</ion-label>
-            </ion-col>
-          </ion-col>
-          <ion-col>
-            <p>Sell</p>
-            <ion-col col-4>
-              <ion-label color="danger">{{ com.Data[0].Bid.toFixed(4) }}</ion-label>
-            </ion-col>
-          </ion-col>
-        </ion-row>
-      </ion-card-content>
-    </ion-card-->
     <app-com-chart></app-com-chart>
   </div>
 
-
-  
-
   <!-- Research tab -->
-  <div class="design">
-    <div *ngIf="selectTabs === 'contacts'">
-      <details>
-        <summary>NEWS</summary>
-        <app-com-news></app-com-news>
-        </details>
-        <details>
-          <summary>ECONOMIC CALENDER</summary>
-          <app-comcalender></app-comcalender>
-         </details>
-        <details>
-          <summary>MARKET HEATMAP</summary>
-          <app-marketheat></app-marketheat>
-        </details>
-        <details>
-          <summary>SCREENER CROSS RATES</summary>
-          <app-screener></app-screener>
-        </details>
-          <details>
-            <summary>PROFILE</summary>
-            <app-comprof></app-comprof>
-          </details>
-          <details>
-            <summary>GAINERS</summary>
-            <app-commodity-gainer></app-commodity-gainer>
-          </details>
-          <details>
-            <summary>MARKET HOURS</summary>
-            <app-commarket></app-commarket>
-          </details>
+
+  <div *ngIf="selectTabs === 'contacts'" class="container">
+    <div class="container">
+    <div class="sidebar">
+      <details (toggle)="showContent('NEWS', $event)">
+        <summary [class.active]="activeContent === 'NEWS'">NEWS</summary>
+      </details>
+      <details (toggle)="showContent('ECONOMIC CALENDAR', $event)">
+        <summary [class.active]="activeContent === 'ECONOMIC CALENDAR'">CALENDAR</summary>
+      </details>
+      <details (toggle)="showContent('MARKET HEATMAP', $event)">
+        <summary [class.active]="activeContent === 'MARKET HEATMAP'">HEATMAP</summary>
+      </details>
+      <details (toggle)="showContent('SCREENER CROSS RATES', $event)">
+        <summary [class.active]="activeContent === 'SCREENER CROSS RATES'">SCREENER CROSS RATES</summary>
+      </details>
+      <details (toggle)="showContent('PROFILE', $event)">
+        <summary [class.active]="activeContent === 'PROFILE'">PROFILE</summary>
+      </details>
+      <details (toggle)="showContent('GAINERS', $event)">
+        <summary [class.active]="activeContent === 'GAINERS'">GAINERS&LOSERS</summary>
+      </details>
+      <details (toggle)="showContent('MARKET HOURS', $event)">
+        <summary [class.active]="activeContent === 'MARKET HOURS'">MARKET HOURS</summary>
+      </details>
+      <details (toggle)="showContent('TECHNICAL ANALYSIS', $event)">
+        <summary [class.active]="activeContent === 'TECHNICAL ANALYSIS'">ANALYSIS</summary>
+      </details>
+      <details (toggle)="showContent('VOLATILITY', $event)">
+        <summary [class.active]="activeContent === 'VOLATILITY'">VOLATILITY</summary>
+      </details>
+      <details (toggle)="showContent('MOVING AVERAGE', $event)">
+        <summary [class.active]="activeContent === 'MOVING AVERAGE'">MOVING AVERAGE</summary>
+      </details>
     </div>
+
+    <div class="content-area">
+      <div *ngIf="activeContent === 'NEWS'">
+        <app-com-news></app-com-news>
+      </div>
+      <div *ngIf="activeContent === 'ECONOMIC CALENDAR'">
+        <app-comcalender></app-comcalender>
+      </div>
+      <div *ngIf="activeContent === 'MARKET HEATMAP'">
+        <app-marketheat></app-marketheat>
+      </div>
+      <div *ngIf="activeContent === 'SCREENER CROSS RATES'">
+        <app-screener></app-screener>
+      </div>
+      <div *ngIf="activeContent === 'PROFILE'">
+        <app-comprof></app-comprof>
+      </div>
+      <div *ngIf="activeContent === 'GAINERS'">
+        <app-commodity-gainer></app-commodity-gainer>
+      </div>
+      <div *ngIf="activeContent === 'MARKET HOURS'">
+        <app-commarket></app-commarket>
+      </div>
+      <div *ngIf="activeContent === 'TECHNICAL ANALYSIS'">
+        <app-comtechnical></app-comtechnical>
+      </div>
+      <div *ngIf="activeContent === 'VOLATILITY'">
+        <app-compri></app-compri>
+      </div>
+      <div *ngIf="activeContent === 'MOVING AVERAGE'">
+        <app-comprice></app-comprice>
+      </div>
+    </div>
+    
+</div>
   </div>
-</ion-content>

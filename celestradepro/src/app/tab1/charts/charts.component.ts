@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NewsService } from '../../services/news.service';
+import { ChartType, ChartOptions } from 'chart.js';
+import { Label, SingleDataSet } from 'ng2-charts';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-charts',
@@ -12,60 +15,98 @@ export class ChartsComponent implements OnInit {
   activeNews: any[] = [];
   archivedNews: any[] = [];
 
-
-// Initialize default sorting property and order
-currentSortProperty: string = 'title'; // Default sorting property
-currentSortOrder: string = 'asc'; // Default sorting order
+  currentSortProperty: string = 'title';
+  currentSortOrder: string = 'asc';
 
   pagedActiveNews: any[] = [];
-  pagedArchivedNews: any[] = []; 
+  pagedArchivedNews: any[] = [];
   activeCurrentPage: number = 1;
   archivedCurrentPage: number = 1;
   itemsPerPage: number = 10;
   mainUrls: string[] = [];
-  showPopup: boolean;
-  constructor(private newsService: NewsService) { }
+  selectedSites: Set<string> = new Set();
+  showPopup: boolean = false;
+
+  manualUrl: string = '';
+  summaryData: any = null;
+  errorMessage: string = '';
+  loading: boolean = false;
+  contentUnavailable: boolean = false;
+
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+    },
+  };
+  public pieChartLabels: Label[] = ['Positive Sentiment', 'Negative Sentiment'];
+  public pieChartData: SingleDataSet = [];
+  public pieChartType: ChartType = 'pie';
+  public pieChartPlugins = [];
+  pieChartColors: { backgroundColor: string[]; }[];
+
+  constructor(private newsService: NewsService, private http: HttpClient) { }
 
   ngOnInit() {
     this.loadNews();
   }
 
+  summarizeManualUrl() {
+    if (!this.manualUrl) {
+      this.errorMessage = "Please enter a valid URL.";
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+    this.summaryData = null;
+    this.contentUnavailable = false;
+
+    this.http.post('http://localhost:3000/api/news/summarize-url', { url: this.manualUrl.trim() })
+      .subscribe(
+        (response: any) => {
+          this.loading = false;
+          console.log(response);
+
+          if (response.message === 'Content behind a paywall or unavailable.') {
+            this.contentUnavailable = true;
+          } else {
+            this.summaryData = response;
+          }
+        },
+        (error) => {
+          this.loading = false;
+          console.error('Error:', error);
+          this.errorMessage = 'Error fetching the content. Please try again.';
+        }
+      );
+  }
+
   loadNews() {
     this.newsService.getAllNews().subscribe(
       (data: any) => {
-        this.news = data.sort((a, b) => a.z - b.z);
-        this.news.reverse();
+        this.news = data.sort((a, b) => a.z - b.z).reverse();
+        this.news.forEach(article => {
+          console.log('Headline:', article.headline, 'Sentiment Score:', article.sentimentScore);
+        });
         this.filterNews();
         this.updatePagedNews();
-        // Populate mainUrls from the news data
         this.populateMainUrls();
+        this.prepareChartData();
       },
       error => {
-        console.log(error);
+        console.error(error);
       }
     );
-  }
-
-  // Method to populate mainUrls with unique hostnames from news URLs
-  populateMainUrls() {
-    this.mainUrls = Array.from(new Set(this.news.map(article => new URL(article.url).hostname)));
   }
 
   togglePopup() {
     this.showPopup = !this.showPopup;
   }
-  
-  filterNewsByMainUrl(mainUrl: string) {
-    this.searchQuery = '';  // Clear any existing search query
-    this.activeNews = this.news.filter(
-      (article) => !article.archive && new URL(article.url).hostname === mainUrl
-    );
-    this.archivedNews = this.news.filter(
-      (article) => article.archive && new URL(article.url).hostname === mainUrl
-    );
-    this.updatePagedNews();
-  }
-  
+
   filterNews() {
     this.activeNews = this.news.filter(article => !article.archive);
     this.archivedNews = this.news.filter(article => article.archive);
@@ -73,26 +114,75 @@ currentSortOrder: string = 'asc'; // Default sorting order
 
   applySearchFilter() {
     if (this.searchQuery.trim() === '') {
-      this.activeNews = this.news.filter(article => !article.archive);
-      this.archivedNews = this.news.filter(article => article.archive);
+      this.filterNewsBySelectedSites();
     } else {
-      const searchRegex = new RegExp(this.searchQuery.trim(), 'i'); 
-      this.activeNews = this.news.filter(article => 
-        !article.archive && (searchRegex.test(article.headline) || searchRegex.test(article.summary))
+      const searchRegex = new RegExp(this.searchQuery.trim(), 'i');
+      this.activeNews = this.news.filter(article =>
+        !article.archive && (searchRegex.test(article.headline) || searchRegex.test(article.summary)) &&
+        (this.selectedSites.size === 0 || this.selectedSites.has(new URL(article.url).hostname))
       );
-      this.archivedNews = this.news.filter(article => 
-        article.archive && (searchRegex.test(article.headline) || searchRegex.test(article.summary))
+      this.archivedNews = this.news.filter(article =>
+        article.archive && (searchRegex.test(article.headline) || searchRegex.test(article.summary)) &&
+        (this.selectedSites.size === 0 || this.selectedSites.has(new URL(article.url).hostname))
       );
     }
 
     this.updatePagedNews();
   }
 
+  filterNewsBySelectedSites() {
+    if (this.selectedSites.size === 0) {
+      this.activeNews = this.news.filter(article => !article.archive);
+      this.archivedNews = this.news.filter(article => article.archive);
+    } else {
+      this.activeNews = this.news.filter(article =>
+        !article.archive && this.selectedSites.has(this.getSiteName(article.url))
+      );
+      this.archivedNews = this.news.filter(article =>
+        article.archive && this.selectedSites.has(this.getSiteName(article.url))
+      );
+    }
+    this.updatePagedNews();
+  }
+
+  populateMainUrls() {
+    this.mainUrls = Array.from(new Set(this.news.map(article => this.getSiteName(article.url))));
+  }
+
+  toggleSiteSelection(mainUrl: string) {
+    if (this.selectedSites.has(mainUrl)) {
+      this.selectedSites.delete(mainUrl);
+    } else {
+      this.selectedSites.add(mainUrl);
+    }
+    this.filterNewsBySelectedSites();
+  }
+
+  isSiteSelected(mainUrl: string): boolean {
+    return this.selectedSites.has(mainUrl);
+  }
+
+  getSiteName(url: string): string {
+    try {
+      const hostname = new URL(url).hostname.replace('www.', '');
+      const siteName = hostname.split('.')[0]; // Gets the domain name part
+      return siteName.charAt(0).toUpperCase() + siteName.slice(1); // Capitalize the first letter
+    } catch (e) {
+      console.error('Invalid URL:', url);
+      return 'Unknown';
+    }
+  }
+
+  onCheckboxChange(site: string, isChecked: boolean) {
+    this.selectedSites[site] = isChecked;
+    this.filterNews();
+  }
+
   updatePagedNews() {
     const startIndexActive = (this.activeCurrentPage - 1) * this.itemsPerPage;
     const endIndexActive = Math.min(startIndexActive + this.itemsPerPage, this.activeNews.length);
     this.pagedActiveNews = this.activeNews.slice(startIndexActive, endIndexActive);
-    
+
     const startIndexArchived = (this.archivedCurrentPage - 1) * this.itemsPerPage;
     const endIndexArchived = Math.min(startIndexArchived + this.itemsPerPage, this.archivedNews.length);
     this.pagedArchivedNews = this.archivedNews.slice(startIndexArchived, endIndexArchived);
@@ -113,11 +203,12 @@ currentSortOrder: string = 'asc'; // Default sorting order
       article.archive = true;
       this.filterNews();
       this.updatePagedNews();
+      this.prepareChartData();
     });
   }
 
   activePageRange(): number[] {
-    const numPagesToShow = 5; 
+    const numPagesToShow = 5;
     const currentPage = this.activeCurrentPage;
     const totalPages = this.activeTotalPagesArray().length;
     const halfPagesToShow = Math.floor(numPagesToShow / 2);
@@ -147,56 +238,145 @@ currentSortOrder: string = 'asc'; // Default sorting order
     return Array(totalPages).fill(0).map((x, i) => i + 1);
   }
 
+  archivedPageRange(): number[] {
+    const numPagesToShow = 5;
+    const currentPage = this.archivedCurrentPage;
+    const totalPages = this.archivedTotalPagesArray().length;
+    const halfPagesToShow = Math.floor(numPagesToShow / 2);
+
+    let startPage: number;
+    let endPage: number;
+
+    if (totalPages <= numPagesToShow) {
+      startPage = 1;
+      endPage = totalPages;
+    } else if (currentPage - halfPagesToShow <= 0) {
+      startPage = 1;
+      endPage = numPagesToShow;
+    } else if (currentPage + halfPagesToShow >= totalPages) {
+      startPage = totalPages - numPagesToShow + 1;
+      endPage = totalPages;
+    } else {
+      startPage = currentPage - halfPagesToShow;
+      endPage = currentPage + halfPagesToShow;
+    }
+
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  }
+
   archivedTotalPagesArray(): number[] {
     const totalPages = Math.ceil(this.archivedNews.length / this.itemsPerPage);
     return Array(totalPages).fill(0).map((x, i) => i + 1);
   }
+
+  // prepareChartData() {
+  //   const positiveSentiments = this.news.filter(article => article.sentimentScore > 0).length;
+  //   const negativeSentiments = this.news.filter(article => article.sentimentScore < 0).length;
+
+  //   this.pieChartData = [positiveSentiments, negativeSentiments];
+  // }
+
 
   toggleSummary(article) {
     article.showFullSummary = !article.showFullSummary;
   }
 
   sortActiveNews(property: string) {
-    // Check if the same property is clicked again to toggle sort order
+    // Toggle sort order if the same property is selected
     if (this.currentSortProperty === property) {
       this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
     } else {
-      // If a different property is clicked, reset sort order to 'asc'
-      this.currentSortOrder = 'asc';
+      this.currentSortOrder = 'asc'; // Default to ascending order
     }
+  
     this.currentSortProperty = property;
   
     this.activeNews.sort((a, b) => {
+      let comparison = 0;
+
       if (property === 'title') {
         const titleA = a.headline.toLowerCase();
         const titleB = b.headline.toLowerCase();
-        return this.currentSortOrder === 'asc' ? titleA.localeCompare(titleB) : titleB.localeCompare(titleA);
+        comparison = titleA.localeCompare(titleB);
       } else if (property === 'sentimentScore') {
-        return this.currentSortOrder === 'asc' ? a.sentimentScore - b.sentimentScore : b.sentimentScore - a.sentimentScore;
-      } else if (property === 'fetchedTime') {
-        return this.currentSortOrder === 'asc' ? new Date(b.fetchedTime).getTime() - new Date(a.fetchedTime).getTime() : new Date(a.fetchedTime).getTime() - new Date(b.fetchedTime).getTime();
+        comparison = a.sentimentScore - b.sentimentScore;
+      } else if (property === 'articleDateTime') {
+        const dateA = this.parseDate(a.articleDateTime);
+        const dateB = this.parseDate(b.articleDateTime);
+        comparison = dateA.getTime() - dateB.getTime();
       }
-      return 0;
+
+      return this.currentSortOrder === 'asc' ? comparison : -comparison;
     });
+
     this.updatePagedNews();
   }
 
+   parseDate(dateString: string): Date {
+  // Example date format: "26/8/2024, 7:08:00 pm"
+  const [datePart, timePart] = dateString.split(', ');
 
-
-
-// Determine default sorting symbol for a given property
-defaultSortSymbol(property: string): string {
-  switch (property) {
-    case 'title':
-      return this.currentSortProperty === 'title' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
-    case 'sentimentScore':
-      return this.currentSortProperty === 'sentimentScore' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
-    case 'fetchedTime':
-      return this.currentSortProperty === 'fetchedTime' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
-    default:
-      return '';
+  if (!datePart || !timePart) {
+    console.error('Invalid date string format:', dateString);
+    return new Date(); // Return a default date or handle the error appropriately
   }
+
+  // Split the date part into day, month, and year
+  const [day, month, year] = datePart.split('/').map(Number);
+
+  // Split the time part into hour, minute, second, and meridian
+  const [time, meridian] = timePart.split(' ');
+  const [hour, minute, second] = time.split(':').map(Number);
+
+  // Validate the meridian
+  const meridianLower = (meridian || '').toLowerCase(); // Default to an empty string if meridian is undefined
+
+  // Adjust hour based on meridian
+  let adjustedHour = hour;
+  if (meridianLower === 'pm' && hour < 12) {
+    adjustedHour += 12;
+  }
+  if (meridianLower === 'am' && hour === 12) {
+    adjustedHour = 0;
+  }
+
+  // Return a new Date object
+  return new Date(year, month - 1, day, adjustedHour, minute, second);
 }
 
 
+
+  defaultSortSymbol(property: string): string {
+    switch (property) {
+      case 'title':
+        return this.currentSortProperty === 'title' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
+      case 'sentimentScore':
+        return this.currentSortProperty === 'sentimentScore' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
+      case 'articleDateTime':
+        return this.currentSortProperty === 'articleDateTime' ? (this.currentSortOrder === 'asc' ? '↑↓' : '↓↑') : '↓↑';
+      default:
+        return '';
+    }
+  }
+  
+  
+  
+  
+
+  prepareChartData() {
+    const positiveCount = this.news.filter(article => article.sentimentScore > 0).length;
+    const negativeCount = this.news.filter(article => article.sentimentScore < 4).length;
+  
+    this.pieChartData = [positiveCount, negativeCount];
+    this.pieChartLabels = ['Positive', 'Negative'];
+    this.pieChartColors = [
+      {
+        backgroundColor: ['#987D9A', '#EECEB9'], // Green for positive, Red for negative
+      },
+    ];
+  
+    console.log('Positive Count:', positiveCount, 'Negative Count:', negativeCount); // Debug log
+  }
+
+ 
 }

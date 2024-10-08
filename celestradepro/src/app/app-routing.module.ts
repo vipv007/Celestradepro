@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'celestradepro/homes',
     pathMatch: 'full'
   },
   {
@@ -60,7 +60,7 @@ const routes: Routes = [
     loadChildren: () => import('./update/update.module').then( m => m.UpdatePageModule)
   },
   {
-    path: 'crt',
+    path: 'homes',
     loadChildren: () => import('./crt/crt.module').then( m => m.CrtPageModule)
   },
   {
@@ -117,7 +117,7 @@ const routes: Routes = [
     loadChildren: () => import('./chart1/chart1.module').then( m => m.Chart1PageModule)
   },
   {
-    path: 'tile',
+    path: 'Futures',
     loadChildren: () => import('./tile/tile.module').then( m => m.TilePageModule)
   },
   {
@@ -188,7 +188,7 @@ const routes: Routes = [
     loadChildren: () => import('./upp/upp.module').then( m => m.UppPageModule)
   },
   {
-    path: 'portfolio',
+    path: 'Portfolio',
     loadChildren: () => import('./portfolio/portfolio.module').then( m => m.PortfolioPageModule)
   },
   {
@@ -286,6 +286,19 @@ const routes: Routes = [
     path: 'settings',
     loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
   },
+  {
+    path: 'compri',
+    loadChildren: () => import('./compri/compri.module').then( m => m.CompriPageModule)
+  },
+  {
+    path: 'otp-login',
+    loadChildren: () => import('./otp-login/otp-login.module').then( m => m.OtpLoginPageModule)
+  },  {
+    path: 'blog',
+    loadChildren: () => import('./blog/blog.module').then( m => m.BlogPageModule)
+  },
+
+
 
 
 

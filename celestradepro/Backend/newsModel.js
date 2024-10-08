@@ -17,8 +17,8 @@ let News = new Schema({
   sentiment: {
     type: String
   },
-  fetchedTime: {
-    type: Date
+  articleDateTime: {
+    type: String
   },
   archive: {
     type: Boolean,

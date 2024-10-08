@@ -1,0 +1,32 @@
+.company-container {
+    margin-bottom: 2rem;
+    margin-left: 3%;
+}
+
+.content-container {
+    display: flex;
+    align-items: center;
+}
+
+.shareholder-table {
+    margin-left: 2rem;
+    border-collapse: collapse;
+    max-width: 40%;
+    height: 10%;
+}
+
+.shareholder-table th,
+.shareholder-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.shareholder-table th {
+    background-color: #f2f2f2;
+}
+
+.chart-container {
+    flex: 1;
+    max-width: 50%;
+    height: 40%;
+}

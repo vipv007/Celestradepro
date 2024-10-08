@@ -1,0 +1,70 @@
+<!-- <h3>Technical Analysis Summary</h3>
+<table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>5 Minutes</th>
+        <th>15 Minutes</th>
+        <th>Hourly</th>
+        <th>Daily</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let item of data">
+        <tr>
+          <td rowspan="3">{{ item.name }}</td>
+          <td>Moving Averages:</td>
+          <td>{{ item.movingAverages?.fiveMinutes }}</td>
+          <td>{{ item.movingAverages?.fifteenMinutes }}</td>
+          <td>{{ item.movingAverages?.hourly }}</td>
+          <td>{{ item.movingAverages?.daily }}</td>
+        </tr>
+        <tr>
+          <td>Indicators:</td>
+          <td>{{ item.indicators?.fiveMinutes }}</td>
+          <td>{{ item.indicators?.fifteenMinutes }}</td>
+          <td>{{ item.indicators?.hourly }}</td>
+          <td>{{ item.indicators?.daily }}</td>
+        </tr>
+        <tr>
+          <td>Summary:</td>
+          <td [ngClass]="getSummaryClass(item.summary?.fiveMinutes)">{{ item.summary?.fiveMinutes }}</td>
+          <td [ngClass]="getSummaryClass(item.summary?.fifteenMinutes)">{{ item.summary?.fifteenMinutes }}</td>
+          <td [ngClass]="getSummaryClass(item.summary?.hourly)">{{ item.summary?.hourly }}</td>
+          <td [ngClass]="getSummaryClass(item.summary?.daily)">{{ item.summary?.daily }}</td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+  
+  <h3>Technical Indicators</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Value</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let indicator of technicalIndicators">
+        <td>{{ indicator.name }}</td>
+        <td>{{ indicator.value }}</td>
+        <td>{{ indicator.action }}</td>
+      </tr>
+    </tbody>
+  </table>
+   -->
+  
+   <div class="container">
+    <div class="box">
+        <div class="tradingview-widget-container__widget" id="crude-oil-widget"></div>
+    </div>
+    <div class="box">
+        <div class="tradingview-widget-container__widget" id="silver-widget"></div>
+    </div>
+    <div class="box">
+        <div class="tradingview-widget-container__widget" id="gold-widget"></div>
+    </div>
+</div>

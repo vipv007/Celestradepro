@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TechnicalService } from '../services/technical.service';
+import { HourService } from '../services/hour.service';
 
 @Component({
   selector: 'app-nifty',
@@ -9,14 +9,14 @@ import { TechnicalService } from '../services/technical.service';
 export class NiftyPage implements OnInit {
   technicals: any;
 
-  constructor(private technicalService: TechnicalService) {}
+  constructor(private hourService: HourService) {}
 
   ngOnInit(): void {
     this.fetchtechnical();
   }
 
   fetchtechnical(): void {
-    this.technicalService.getTechnical().subscribe((response: any) => {
+    this.hourService.getHour().subscribe((response: any) => {
       this.technicals = response;
       console.log( this.technicals);
     });

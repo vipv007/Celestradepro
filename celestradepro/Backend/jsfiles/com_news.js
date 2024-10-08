@@ -37,7 +37,12 @@ async function fetchSubUrlsFromMainUrl(url) {
         const subUrls = [];
         $("a").each((index, element) => {
             const subUrl = $(element).attr("href");
-            if (subUrl && !subUrl.startsWith("#") && !subUrl.startsWith("javascript") && (subUrl.includes("bloomberg.com") || subUrl.includes("stock") || subUrl.includes("finance") || subUrl.includes("market"))) {
+            if (
+                subUrl &&
+                !subUrl.startsWith("#") &&
+                !subUrl.startsWith("javascript") &&
+                (subUrl.includes("bloomberg.com") || subUrl.includes("stock") || subUrl.includes("finance") || subUrl.includes("market"))
+            ) {
                 const fullUrl = new URL(subUrl, url).href; // Ensure it's a full URL
                 subUrls.push(fullUrl);
             }
@@ -50,6 +55,22 @@ async function fetchSubUrlsFromMainUrl(url) {
         await storeMainUrlErrorInDb(url, "Please see the site for more details.");
         return [];
     }
+}
+
+// Function to convert the posted time to IST with AM/PM format
+function convertToIST(dateTime) {
+    const options = {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+    };
+
+    return new Date(dateTime).toLocaleString("en-IN", options);
 }
 
 // Function to fetch, summarize, and store data from a sub-URL
@@ -74,6 +95,13 @@ async function processSubUrl(subUrl) {
         });
 
         console.log("Main points of the news article:", mainPoints);
+
+        // Extract the posted time from the article
+        const postedTime = $("time").attr("datetime") || $("meta[property='article:published_time']").attr("content");
+        const articleDateTime = postedTime ? convertToIST(postedTime) : convertToIST(new Date());
+
+        // Extract image URL related to the news article
+        const imageUrl = $("meta[property='og:image']").attr("content") || $("img").first().attr("src") || null;
 
         const genAI = new GoogleGenerativeAI(API_KEY);
         const model = await genAI.getGenerativeModel({ model: "models/gemini-1.0-pro" });
@@ -133,7 +161,8 @@ async function processSubUrl(subUrl) {
             summary: result.response.text(),
             sentimentScore: sentimentScoreNormalized.toFixed(2),
             sentiment: sentimentLabel,
-            fetchedTime: new Date()
+            articleDateTime: articleDateTime,
+            imageUrl: imageUrl  // Include the extracted image URL
         });
 
     } catch (error) {
@@ -159,7 +188,7 @@ async function storeMainUrlErrorInDb(url, message) {
             summary: message,
             sentimentScore: "N/A",
             sentiment: "N/A",
-            fetchedTime: new Date()
+            articleDateTime: convertToIST(new Date())
         });
 
         console.log("Stored main URL error message in MongoDB.");

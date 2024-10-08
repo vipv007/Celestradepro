@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js';
+import { UserService } from '../../services/user.service';  // Import UserService to fetch user's watchlist
 
 interface StockData {
   Symbol: string;
@@ -21,22 +22,48 @@ interface StockData {
 })
 export class Chart1Component implements OnInit {
 
-
-
   @ViewChild('myChart') myChart: ElementRef;
 
   stockData: StockData[] = [];
+  userSymbols: string[] = [];  // Store user's symbols
+  isLoggedIn: boolean = false; // Track login status
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private userService: UserService) {}
 
   ngOnInit() {
-    this.fetchStockData();
+    this.checkLoginStatus();  // Check login status on init
+  }
+
+  checkLoginStatus() {
+    const email = this.userService.getEmail();  // Get the user's email from the service
+    
+    if (email) {
+      this.isLoggedIn = true;  // User is logged in
+      this.fetchUserSymbols();  // Fetch user's symbols
+    } else {
+      this.isLoggedIn = false; // User is not logged in
+      this.fetchStockDataForDefault(); // Fetch default data
+    }
+  }
+
+  fetchUserSymbols() {
+    const email = this.userService.getEmail();  // Get the user's email from the service
+    this.userService.getWatchlist(email).subscribe(
+      (response: any) => {
+        this.userSymbols = response.watchlist.map((item: any) => item.symbol);
+        this.fetchStockData();  // Fetch stock data after getting user's symbols
+      },
+      error => {
+        console.error('Error fetching user symbols:', error);
+      }
+    );
   }
 
   fetchStockData() {
     this.http.get<StockData[]>('http://localhost:3000/api/analystic').subscribe(
       data => {
-        this.stockData = data;
+        // Filter stock data to include only the symbols in the user's watchlist
+        this.stockData = data.filter(stock => this.userSymbols.includes(stock.Symbol));
         this.renderChart();
       },
       error => {
@@ -45,7 +72,26 @@ export class Chart1Component implements OnInit {
     );
   }
 
+  fetchStockDataForDefault() {
+    this.http.get<StockData[]>('http://localhost:3000/api/analystic').subscribe(
+      data => {
+        if (data.length > 0) {
+          // Fetch only the first stock's data
+          this.stockData = [data[0]];
+          this.renderChart();
+        } else {
+          console.log('No stock data available.');
+        }
+      },
+      error => {
+        console.error('Error fetching default stock data:', error);
+      }
+    );
+  }
+
   renderChart() {
+    if (!this.stockData.length) return; // Exit if no data
+
     const labels = this.stockData.map(stock => stock.Symbol);
     const targetPriceValues = this.stockData.map(stock => stock.Data.AnalystTargetPrice);
     const strongBuyValues = this.stockData.map(stock => stock.Data.AnalystRatingStrongBuy);
@@ -103,5 +149,4 @@ export class Chart1Component implements OnInit {
       }
     });
   }
-  
 }

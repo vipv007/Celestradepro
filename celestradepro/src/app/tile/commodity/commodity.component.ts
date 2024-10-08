@@ -134,8 +134,8 @@ export class CommodityComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.Symbol = params.Symbol;
-      this.mk = params.Symbol;
+      this.Symbol = params.Symbol || 'GC=F';
+      this.mk = this.Symbol;
       console.log('Received:', this.Symbol);
       this.loadChartData();
       this.fetchMarketDepthData();
@@ -143,6 +143,15 @@ export class CommodityComponent implements OnInit {
     });
   }
 
+  loadSymbolData(selectedSymbol: string) {
+  this.Symbol = selectedSymbol; // Update the symbol
+  this.mk = this.Symbol; // Update the market symbol if necessary
+  this.loadChartData(); // Load chart data for the new symbol
+ // this.fetchPortfolio(); // Fetch portfolio data
+  this.fetchMarketDepthData(); // Fetch market depth data
+  console.log(`Loaded data for symbol: ${this.Symbol}`);
+  }
+  
   loadChartData() {
     this.commodityService.getCommodities().subscribe((response) => {
       this.commoditys = response;
@@ -233,7 +242,7 @@ export class CommodityComponent implements OnInit {
   fetchMarketDepthData() {
     this.marketdepthService.getAllMarketDepth().subscribe(
       (data: any[]) => {
-        this.marketDepthData = data.filter((depth: any) => depth.symbol === this.mk);
+        this.marketDepthData = data.filter((depth: any) => depth.symbol === this.Symbol);
       },
       (error) => {
         console.error('Error fetching marketDepthData:', error);

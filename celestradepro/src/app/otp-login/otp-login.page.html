@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>OTP Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="floating">Phone Number</ion-label>
+    <ion-input [(ngModel)]="phoneNumber" type="text"></ion-input>
+  </ion-item>
+
+  <ion-button expand="full" (click)="sendOtp()">Send OTP</ion-button>
+
+  <div *ngIf="otpSent">
+    <ion-item>
+      <ion-label position="floating">Enter OTP</ion-label>
+      <ion-input [(ngModel)]="otp" type="text"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" (click)="verifyOtp()">Verify OTP</ion-button>
+  </div>
+</ion-content>

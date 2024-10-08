@@ -2,29 +2,46 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 20px; /* Adjust the space between cards */
+  gap: 20px; /* Space between the cards */
 }
 
 .card {
-  width: calc(25% - 20px); /* Adjust card width */
+  flex: 1 1 calc(25% - 20px); /* Responsive card width with flex-grow and shrink */
   background-color: #fff; /* Example background color */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   box-sizing: border-box;
+  min-width: 250px; /* Ensure cards don't get too small */
+  max-width: 350px; /* Optional: set a max width */
+}
+
+@media screen and (max-width: 1200px) {
+  .card {
+    flex: 1 1 calc(33.33% - 20px); /* Adjust for medium screens */
+  }
 }
 
 @media screen and (max-width: 768px) {
   .card {
-    width: 100%; /* Cards take full width on smaller screens */
+    flex: 1 1 100%; /* Cards take full width on smaller screens */
   }
 }
 
-h3{
+h3 {
   text-align: center;
 }
-img{
+
+img {
   height: 200px;
-  width: 300px;
+  width: 100%;
   border-radius: 5px;
+  object-fit: cover; /* Ensures the image covers the space without distortion */
+}
+
+.highlight {
+  background-color: yellow;
+  color: black;
+  font-weight: bolder;
+  /* or any color to highlight */
 }

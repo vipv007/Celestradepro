@@ -1,20 +1,14 @@
-.grids{
-    background-color: rgb(15, 229, 229);
-}
-.red{
-    background-color: rgb(165, 225, 243);
-}
-.green{
-    background-color: #00ff7b;
-}
-.yellow{
-    background-color: rgb(240, 240, 121);
-}
-.redss{
-    background-color: rgb(249, 248, 248);
-}
-.content{
-  
-    font-family:Times New Roman !important;
-      font-size:1.1em;
+/* src/app/components/login/login.component.css */
+.table-responsive {
+    max-height: 300px;
+    overflow-y: auto;
   }
+  
+  .table-hover tbody tr:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .btn-block {
+    width: 100%;
+  }
+  

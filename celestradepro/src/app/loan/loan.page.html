@@ -1,12 +1,16 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-back-button defaultHref="/tabs/tab3"></ion-back-button>
-      <ion-title >AUDUSD </ion-title>
-  </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/components/sms-login/sms-login.component.html -->
 
-<ion-content>
-  <div #chart class="chart"></div>
-</ion-content>
+<div class="login-container">
+  <h2>Login with SMS</h2>
+  <div *ngIf="!otpSent" class="input-container">
+    <label for="phone">Phone Number:</label>
+    <input id="phone" type="text" [(ngModel)]="phoneNumber" placeholder="+1234567890" class="input-field" />
+    <button (click)="sendOTP()" class="button-primary">Send OTP</button>
+  </div>
+  
+  <div *ngIf="otpSent" class="input-container">
+    <label for="otp">Enter OTP:</label>
+    <input id="otp" type="text" [(ngModel)]="otp" class="input-field" />
+    <button (click)="verifyOTP()" class="button-primary">Verify OTP</button>
+  </div>
+</div>

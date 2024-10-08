@@ -1,6 +1,61 @@
-ion-title{
+/* src/app/components/sms-login/sms-login.component.css */
+
+.login-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-color: #f9f9f9;
   text-align: center;
-  color: rgb(73, 38, 230);
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+}
+
+h2 {
+  margin-bottom: 25px;
+  font-size: 26px;
+  color: #444;
+  font-weight: 600;
+}
+
+.input-container {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #666;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.button-primary {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button-primary:hover {
+  background-color: #0056b3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

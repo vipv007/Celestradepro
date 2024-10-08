@@ -1,25 +1,121 @@
-
-    <div class="container">
-        <div class="box">
-         <p> FX Pivot Point Widget</p> 
-         <iframe src="https://fxpricing.com/fx-widget/pivot-point-widget.php?id=1" width="100%" height="457" style="border: 1px solid #eee;" ></iframe>
-            <div id="fx-pricing-widget-copyright">
-                <span>Powered by </span><a href="https://fxpricing.com/" target="_blank">FX Pricing</a>
-            </div>
-        </div>
-        <div class="box">
-          <p>Forex Technical Indicator Widget </p>
-            <iframe src="https://fxpricing.com/fx-widget/technical-indicator-widget.php?id=1" width="100%" height="567"></iframe>
-            <div id="fx-pricing-widget-copyright">
-                <span>Powered by </span><a href="https://fxpricing.com/" target="_blank">FX Pricing</a>
-            </div>
-        </div>
-        <div class="box">
-          <p>Simple Moving Average Widget </p>
-
-            <iframe src="https://fxpricing.com/fx-widget/simple-moving-widget.php?id=1" width="100%" height="525"></iframe>
-            <div id="fx-pricing-widget-copyright">
-                <span>Powered by </span><a href="https://fxpricing.com/" target="_blank">FX Pricing</a>
-            </div>
-        </div>
-    </div>
+<div class="container">
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Participant</th>
+        <th>Segment</th>
+        <th>Bearish</th>
+        <th>Bullish</th>
+        <th>Net OI</th>
+        <th>Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let element of dataSource">
+        <!-- Row for Index Futures -->
+        <tr>
+          <td rowspan="2">{{ element.participant }}</td>
+          <td colspan="5">
+            <details>
+              <summary>Index Futures</summary>
+              <table class="inner-table">
+                <tr *ngFor="let future of element.indexFutures">
+                  <td>{{ future.segment }}</td>
+                  <td>
+                    <div class="progress-bar-container">
+                      <div 
+                        class="progress-bar" 
+                        [ngClass]="{
+                          'strong-bearish': future.bearishWidth >= 75,
+                          'medium-bearish': future.bearishWidth >= 50 && future.bearishWidth < 75,
+                          'mild-bearish': future.bearishWidth >= 25 && future.bearishWidth < 50,
+                          'indecisive': future.bearishWidth < 25
+                        }" 
+                        [style.width]="future.bearishWidth + '%'">
+                        <span *ngIf="future.bearishWidth >= 75">Strong Bearish</span>
+                        <span *ngIf="future.bearishWidth >= 50 && future.bearishWidth < 75">Medium Bearish</span>
+                        <span *ngIf="future.bearishWidth >= 25 && future.bearishWidth < 50">Mild Bearish</span>
+                        <span *ngIf="future.bearishWidth < 25">Indecisive</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="progress-bar-container">
+                      <div 
+                        class="progress-bar" 
+                        [ngClass]="{
+                          'strong-bullish': future.bullishWidth >= 75,
+                          'medium-bullish': future.bullishWidth >= 50 && future.bullishWidth < 75,
+                          'mild-bullish': future.bullishWidth >= 25 && future.bullishWidth < 50,
+                          'indecisive': future.bullishWidth < 25
+                        }" 
+                        [style.width]="future.bullishWidth + '%'">
+                        <span *ngIf="future.bullishWidth >= 75">Strong Bullish</span>
+                        <span *ngIf="future.bullishWidth >= 50 && future.bullishWidth < 75">Medium Bullish</span>
+                        <span *ngIf="future.bullishWidth >= 25 && future.bullishWidth < 50">Mild Bullish</span>
+                        <span *ngIf="future.bullishWidth < 25">Indecisive</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ future.netOI }}</td>
+                  <td>{{ future.change }}</td>
+                </tr>
+              </table>
+            </details>
+          </td>
+        </tr>
+        <!-- Row for Index Options -->
+        <tr>
+          <td colspan="5">
+            <details>
+              <summary>Index Options</summary>
+              <table class="inner-table">
+                <tr *ngFor="let option of element.indexOptions">
+                  <td>{{ option.segment }}</td>
+                  <td>
+                    <div class="progress-bar-container">
+                      <div 
+                        class="progress-bar" 
+                        [ngClass]="{
+                          'strong-bearish': option.bearishWidth >= 75,
+                          'medium-bearish': option.bearishWidth >= 50 && option.bearishWidth < 75,
+                          'mild-bearish': option.bearishWidth >= 25 && option.bearishWidth < 50,
+                          'indecisive': option.bearishWidth < 25
+                        }" 
+                        [style.width]="option.bearishWidth + '%'">
+                        <span *ngIf="option.bearishWidth >= 75">Strong Bearish</span>
+                        <span *ngIf="option.bearishWidth >= 50 && option.bearishWidth < 75">Medium Bearish</span>
+                        <span *ngIf="option.bearishWidth >= 25 && option.bearishWidth < 50">Mild Bearish</span>
+                        <span *ngIf="option.bearishWidth < 25">Indecisive</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="progress-bar-container">
+                      <div 
+                        class="progress-bar" 
+                        [ngClass]="{
+                          'strong-bullish': option.bullishWidth >= 75,
+                          'medium-bullish': option.bullishWidth >= 50 && option.bullishWidth < 75,
+                          'mild-bullish': option.bullishWidth >= 25 && option.bullishWidth < 50,
+                          'indecisive': option.bullishWidth < 25
+                        }" 
+                        [style.width]="option.bullishWidth + '%'">
+                        <span *ngIf="option.bullishWidth >= 75">Strong Bullish</span>
+                        <span *ngIf="option.bullishWidth >= 50 && option.bullishWidth < 75">Medium Bullish</span>
+                        <span *ngIf="option.bullishWidth >= 25 && option.bullishWidth < 50">Mild Bullish</span>
+                        <span *ngIf="option.bullishWidth < 25">Indecisive</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ option.netOI }}</td>
+                  <td>{{ option.change }}</td>
+                </tr>
+              </table>
+            </details>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>

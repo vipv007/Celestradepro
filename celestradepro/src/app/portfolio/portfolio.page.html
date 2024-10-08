@@ -21,7 +21,7 @@
             <thead class="thead-light">
                 <tr>
                     <th>Symbol</th>
-                    <!-- <th>Status</th> -->
+                    <th>Order</th>
                     <th>Type</th>
                     <th>Quantity</th>
                     <th>Price</th>
@@ -41,7 +41,7 @@
                 <ng-container *ngFor="let folio of filteredPortfolio">
                     <tr [ngClass]="getClassForOrderType(folio.type)">
                         <td (click)="navigateToMissedTab(folio.stock, folio.stock, folio.type)">{{ folio.stock }}</td>
-                        <!-- <td>{{ folio.order}}</td> -->
+                        <td>{{ folio.order}}</td>
                         <td>{{ folio.type }}</td>
                         <td>{{ folio.quantity }}</td>
                         <td>{{ folio.price.toFixed(2) }}</td>

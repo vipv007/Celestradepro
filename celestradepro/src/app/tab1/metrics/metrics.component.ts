@@ -1,47 +1,66 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Chart } from 'chart.js';
 import { RatioService } from '../../services/ratio.service';
-import { StockService } from '../../services/stock.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-metrics',
   templateUrl: './metrics.component.html',
   styleUrls: ['./metrics.component.scss'],
 })
-export class MetricsComponent implements OnInit {
+export class MetricsComponent implements OnInit, OnDestroy {
 
   ratios: any[] = [];
-  selectedFields: string[] = [];
-  selectedSymbols: string[] = [];
+  selectedFields: string[] = ['P/B']; // P/B selected by default
+  watchlistSymbols: string[] = [];
+  private myChart: Chart;
 
-  constructor(private ratioService: RatioService, private stockService: StockService) {}
+  constructor(
+    private ratioService: RatioService,
+    private userService: UserService
+  ) {}
 
-   ngOnInit() {
-    // Fetch selected stocks from the stock database
-    this.stockService.getSelectedStocks().subscribe((selectedStocks: any[]) => {
-      // Extract symbols of selected stocks
-      this.selectedSymbols = selectedStocks
-        .filter(stock => stock.selected)
-        .map(stock => stock.symbol);
-
-      // Check if any symbols are selected
-      if (this.selectedSymbols.length > 0) {
-        this.fetchRatiosForSelectedSymbols();
-      } else {
-        console.log('No symbols selected.');
-        // Handle the case where no symbols are selected
-      }
-    });
+  ngOnInit() {
+    // Fetch watchlist symbols from the user's collection or default data
+    this.fetchWatchlistSymbols();
   }
 
-  fetchRatiosForSelectedSymbols() {
+  ngOnDestroy() {
+    // Destroy the chart instance when the component is destroyed
+    if (this.myChart) {
+      this.myChart.destroy();
+    }
+  }
+
+  fetchWatchlistSymbols() {
+    const email = this.userService.getEmail(); // Get the user's email from the service
+    
+    if (email) {
+      // User is logged in, fetch watchlist symbols
+      this.userService.getWatchlist(email).subscribe((response: any) => {
+        this.watchlistSymbols = response.watchlist.map((item: any) => item.symbol);
+        if (this.watchlistSymbols.length > 0) {
+          this.fetchRatiosForWatchlistSymbols();
+        } else {
+          console.log('No symbols in watchlist.');
+          // Handle the case where no symbols are in the watchlist
+          this.fetchRatiosForDefaultSymbol();
+        }
+      });
+    } else {
+      // User is not logged in, fetch data for default symbol
+      this.fetchRatiosForDefaultSymbol();
+    }
+  }
+
+  fetchRatiosForWatchlistSymbols() {
     // Fetch all ratios
     this.ratioService.getAllRatios().subscribe((response: any[]) => {
-      // Filter ratios for each selected symbol
-      this.selectedSymbols.forEach(symbol => {
+      // Filter ratios for each symbol in the watchlist
+      this.watchlistSymbols.forEach(symbol => {
         const selectedRatios = response.filter(ratio => ratio.symbol === symbol);
         console.log('Selected Ratios for', symbol + ':', selectedRatios);
-        // Concatenate the fetched ratios with existing ratios array
+        // Concatenate the fetched ratios with the existing ratios array
         this.ratios = this.ratios.concat(selectedRatios);
       });
       // Update chart after fetching ratios for all selected symbols
@@ -49,7 +68,16 @@ export class MetricsComponent implements OnInit {
     });
   }
 
-  
+  fetchRatiosForDefaultSymbol() {
+    // Fetch ratios for a default symbol (e.g., 'AAPL')
+    this.ratioService.getAllRatios().subscribe((response: any[]) => {
+      // Get the first two items from the response
+      this.ratios = response.slice(0, 1); // Fetch only the first two items
+      this.updateChart();
+    }, error => {
+      console.error('Failed to fetch default stock data:', error);
+    });
+  }
 
   toggleData(field: string) {
     if (this.selectedFields.includes(field)) {
@@ -72,29 +100,13 @@ export class MetricsComponent implements OnInit {
     });
 
     const ctx = <HTMLCanvasElement>document.getElementById('cylinderChart');
-    let myChart = new Chart(ctx, {
-      type: 'horizontalBar',
-      data: {
-        labels: this.ratios.map(item => item.symbol),
-        datasets,
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    });
 
     // Destroy the existing chart instance before creating a new one
-    if (myChart) {
-      myChart.destroy();
+    if (this.myChart) {
+      this.myChart.destroy();
     }
 
-    myChart = new Chart(ctx, {
+    this.myChart = new Chart(ctx, {
       type: 'horizontalBar',
       data: {
         labels: this.ratios.map(item => item.symbol),

@@ -21,7 +21,7 @@ import { BillPage } from '../bill/bill.page';
     HttpClientModule,
     PortfolioPageRoutingModule
   ],
-  declarations: [PortfolioPage ,RibbonComponent,BillPage],
+  declarations: [PortfolioPage ,RibbonComponent],
   
 })
 export class PortfolioPageModule {}

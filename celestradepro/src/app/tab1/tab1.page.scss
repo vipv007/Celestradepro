@@ -1,356 +1,324 @@
+// /* Global Styles */
+// body {
+//   font-family: Georgia, 'Times New Roman', Times, serif;
+//   background-color: var(--ion-background-color);
+//   color: var(--ion-text-color);
+//   margin: 0;
+//   padding: 0;
+// }
+ 
+// :host {
+//   display: block;
+//   background-color: var(--ion-background-color);
+//   color: var(--ion-text-color);
+// }
 
-.cr{
-  margin-top: 3%;
-  margin-left: 3%;
-}
+// ion-card {
+//   background-color: var(--ion-card-background-color);
+//   color: var(--ion-text-color);
+// }
 
-.tool{
-   // --background: dodgerblue;
-    text-align: center;
-    font-family:'Times New Roman', Times, serif;
-    color: blue;
-   }
-   .cl1{
-       background-color: aquamarine;
-        font-family:Times New Roman !important;
-          font-size:1.1em;
+// ion-button {
+//   --background: var(--ion-button-background-color);
+//   --color: var(--ion-button-text-color);
+// }
 
-   }
-   .table{
-    margin-left: 40px;
+// .container-watchlist {
+//   width: 80%;
+//   margin: 0 auto;
+//   padding: 20px;
+// }
 
-   }
-   canvas{
-    height: 100px;
-    width: 100px;
-   }
-   #news{
-    text-decoration: none;
-    margin-left: 40px;
-    color: #000;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-weight: bold;
-   }
-   summary{
-    margin-left: 30px;
-    margin-top: 20px;
-    color: rgb(94, 10, 190);
-    font-weight: bold;
-   }
-   ion-segment{
-    ion-label{
-    color: #B445E6;
-    font-size: medium;
-    font-weight: bold;
-  }
-  }
-    .ch {
-      color: #B445E6;
-    }
+// .container {
+//   display: flex;
+//   flex-direction: row;
+//   height: 100%;
+// }
 
-   #btn{
-    margin-top: 20px;
-    margin-left: 200px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-   }
+// .sidebar {
+//   max-width: 300px;
+//   background-color: var(--ion-sidebar-background-color);
+//   padding: 10px;
+//   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+//   overflow-y: auto;
+// }
 
-    .color{
-    color: white;
-    padding-left: 35%;
+// .content-area {
+//   flex: 1;
+//   padding: 20px;
+//   background-color: var(--ion-card-background-color);
+//   overflow-y: auto;
+//   max-height: 100vh;
+// }
 
-    }
-   .car{
-    height: 200px;
-    width: 45%;
-    background-color: rgba(64, 40, 248, 0.659);
-    color: white;
-   }
-   .positive-value {
-    color: green;
-  }
+// /* Header */
+// ion-header {
+//   height: auto;
+//   background-color: var(--ion-header-background-color);
+// }
 
-  .negative-value {
-    color: red;
-  }
+// /* Styling for Forms */
+// .form-group {
+//   margin-bottom: 20px;
+// }
 
-   .card{
-       height: 100px;
-       width: 300px;
-       border-radius: 20%;
-       --background:darkblue;
-       color: white;
-      margin-left: 5%;
-   }
+// .form-control {
+//   border-radius: 4px;
+//   border: 1px solid #ddd;
+//   padding: 10px;
+//   font-size: 16px;
+//   width: 100%;
+//   background-color: var(--ion-card-background-color);
+//   color: var(--ion-text-color);
+// }
 
-.card2{
-  height: 100px;
-  width: 300px;
-  border-radius: 20%;
-  --background:darkblue;
-  color: white;
-  // margin-left: 35%;
-  // margin-top: -7%;
+// /* Button Styles */
+// .btn {
+//   border-radius: 4px;
+//   font-size: 16px;
+//   padding: 10px 15px;
+//   text-align: center;
+//   cursor: pointer;
+// }
 
-}
-.card3{
-  height: 100px;
-  width: 300px;
-  border-radius: 20%;
-  --background:darkblue;
-  color: white;
-  // margin-left: 64%;
-  // margin-top: -7%;
-}
+// .btn-primary {
+//   background-color: var(--ion-button-background-color);
+//   color: var(--ion-button-text-color);
+//   border: none;
+// }
 
-   .class{
-      --background: aqua;
-   }
-  .new{
-    padding-top: 5%;
-   }
-   #class1{
-    b{
-      margin: 5%;
-      margin-left: 20px;
-      font-weight: bold;
-      font-size: xx-large;
-      font-family: Georgia, 'Times New Roman', Times, serif;
-    }}
-    #class2{
-        margin-left: 20px;
-        font-weight: bold;
-        font-family: Georgia, 'Times New Roman', Times, serif;
-        font-size: xx-large;
-      }
-    ion-label{
-      font-size: larger;
-    }
-    #c1{
-      background-color: rgb(240, 213, 237);
-    }
-    #c2{
-      background-color: rgb(198, 241, 192);
-    }
-    #c3{
-      background-color: rgb(247, 175, 175);
-    }
-    #c4{
-      background-color: rgb(243, 243, 159);
-    }
-    #c5{
-      background-color: rgb(204, 212, 212);
-    }
-    #c6{
-      background-color: rgb(245, 209, 175);
+// .btn-primary:hover {
+//   background-color: #0056b3;
+// }
 
-    }
-  h2{
-    margin-left: 20px;
-  }
-  ion-label{
-    font-family: Georgia, 'Times New Roman', Times, serif;
+// .btn-danger {
+//   background-color: #dc3545;
+//   color: var(--ion-button-text-color);
+//   border: none;
+// }
 
-  }
-  .card1{
-    height: 40%;
-    width: 50%;
-    margin-left: 20%;
-    font-size: xx-large;
-    --background:rgb(240, 240, 250);
+// .btn-danger:hover {
+//   background-color: #c82333;
+// }
 
-    p{
-      margin-left: 15%;
-      font-size: medium;
-      color: blanchedalmond
-    }
-   }
-   p{
-    color: #000;
-    font-size: large;
-    margin-left: 5%;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-  }
-  b{
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: xx-large;
-    color:rgb(224, 172, 75);
+// .btn-success {
+//   background-color: #28a745;
+//   color: var(--ion-button-text-color);
+//   border: none;
+// }
 
-  }
-ion-card-content{
-  color:rgb(236, 181, 30);
-  margin-left: 20%;
-}
-ion-card-title{
-  margin-top: 5%;
-  color:rgba(153, 5, 121, 0.959);
- text-align: center;
- font-family: Georgia, 'Times New Roman', Times, serif;
- font-weight: bold;
-}
-.grid-container {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  padding: 40px;
-  #card{
-    --background:rgb(216, 216, 221);
-  }
-}
-.grid-item {
+// .btn-success:hover {
+//   background-color: #218838;
+// }
 
-  border: 1px  rgba(0, 0, 0, 0.8);
-  padding: 20px;
-  font-size: 20px;
-  text-align: center;
-}
+// /* Table Styles */
+// .table-container {
+//   max-height: 580px;
+//   overflow-y: auto;
+//   border: 1px solid #ddd;
+//   background-color: var(--ion-table-background-color);
+// }
 
-ion-button{
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: medium;
-  font-weight: 100;
+// table {
+//   width: 100%;
+//   border-collapse: collapse;
+//   background-color: var(--ion-table-background-color);
+// }
 
-}
-ion-searchbar{
-  --background:rgb(240, 240, 250);
-   width: 400px;
-}
-.col{
-  font-weight: bold;
-}
-/* Set the color of the range track */
-input[type=range]::-webkit-slider-runnable-track {
-  background-color: red; /* Set the default color to red */
-  height: 8px;
-  width: 8px;
-  border-radius: 50%;
-}
+// th,
+// td {
+//   border: 1px solid #ddd;
+//   padding: 8px;
+//   text-align: center;
+//   font-family: Georgia, 'Times New Roman', Times, serif;
+//   color: var(--ion-text-color);
+// }
 
-input[type=range]::-moz-range-track {
-  background-color: red; /* Set the default color to red */
-  height: 8px;
-  width: 8px;
-  border-radius: 50%;
-}
+// th {
+//   background-color: var(--ion-table-header-color);
+//   color: var(--ion-text-color);
+// }
 
-/* Set the color of the range track between the min and max values */
-input[type=range]::-webkit-slider-runnable-track {
-  background-image: linear-gradient(to right, green, red);
-}
+// .table-hover tbody tr:hover {
+//   background-color: #f1f1f1;
+// }
 
-input[type=range]::-moz-range-track {
-  background-image: linear-gradient(to right, green, red);
-}
+// .table-striped tbody tr:nth-of-type(odd) {
+//   background-color: #f9f9f9;
+// }
 
-/* Set the color of the range thumb */
-input[type=range]::-webkit-slider-thumb {
-  background-color: green; /* Set the thumb color to green */
-  height: 8px;
-  width: 8px;
-  border-radius: 50%;
-  -webkit-appearance: none;
-}
+// /* Summary and Segment Styles */
+// summary {
+//   margin: 10px 0 10px 30px;
+//   color: rgb(93, 46, 234);
+//   font-weight: bold;
+// }
 
-input[type=range]::-moz-range-thumb {
-  background-color: green; /* Set the thumb color to green */
-  height: 8px;
-  width: 8px;
-  border-radius: 50%;
-}
-.ms1{
-  color: black;
-}
+// summary.active {
+//   color: #FF5733;
+// }
 
-h4{
-  margin-left: 30px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-weight: bold;
-  margin-top: 20px;
-  color: black;
-}
-.col {
-  padding-left: 20px; /* Adjust as needed */
-  padding-right: 20px; /* Adjust as needed */
-} 
-ion-searchbar{
-  padding-left: 25px;
-  padding-right: 50px;
-  border-radius: 3px;
-  border-radius: 15px;
-}
+// ion-segment-button {
+//   --color: #FF5733;
+// }
 
-ion-segment-button.recent {
-  --color: #FF5733;
-  /* Change this to the desired color for the list view tab */
-}
+// /* Tab Content Styles */
+// .tab {
+//   overflow: hidden;
+//   border: 1px solid #ccc;
+//   background-color: var(--ion-background-color);
+// }
 
-ion-segment-button.missed {
-  --color: #337DFF;
-  /* Change this to the desired color for the chart view tab */
-}
+// .tab button {
+//   background-color: inherit;
+//   float: left;
+//   border: none;
+//   outline: none;
+//   cursor: pointer;
+//   padding: 14px 16px;
+//   transition: 0.3s;
+//   color: var(--ion-text-color);
+// }
 
-.sor{
-  font-size: 20px;
-  width: 20px;
-  
-}
-.ascending::after {
-  content: "\25B2";
-  /* Unicode for ▲ */
-  margin-left: 5px;
-  /* Add some spacing between the label and the arrow */
-}
+// .tab button:hover {
+//   background-color: #ddd;
+// }
 
-.descending::after {
-  content: "\25BC";
-  /* Unicode for ▼ */
-  margin-left: 1px;
-  /* Add some spacing between the label and the arrow */
-}
-.chart-container {
-  height: 100%; /* Ensure the container takes up the full height */
-  width: 100%; /* Ensure the container takes up the full width */
-  position: relative; /* Positioning context for absolutely positioned elements */
-}
+// .tab button.active {
+//   background-color: #ccc;
+// }
 
-app-widgetchart {
-  position: absolute; /* Position the chart absolutely within its container */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
+// .tabcontent {
+//   display: none;
+//   padding: 20px;
+//   border-top: 1px solid #ddd;
+//   background-color: var(--ion-card-background-color);
+//   color: var(--ion-text-color);
+// }
 
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
+// .tabcontent.active {
+//   display: block;
+// }
 
-/* Style the buttons that are used to open the tab content */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-}
+// /* Additional Styles */
+// h2,
+// h3,
+// h4 {
+//   color: var(--ion-text-color);
+//   font-weight: 600;
+//   margin-bottom: 15px;
+//   text-align: center;
+// }
 
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
+// .card {
+//   border: 1px solid #ddd;
+//   border-radius: 8px;
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+//   margin-bottom: 20px;
+//   background-color: var(--ion-card-background-color);
+// }
 
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
+// .card-header {
+//   background-color: var(--ion-card-header-background-color);
+//   color: var(--ion-text-color);
+//   border-radius: 8px 8px 0 0;
+//   padding: 5px;
+//   font-family: Georgia, 'Times New Roman', Times, serif;
+// }
 
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
+// .card-body {
+//   padding: 30px;
+//   color: var(--ion-text-color);
+// }
+
+// .p,
+// b {
+//   text-align: center;
+//   color: red;
+//   font-weight: bolder;
+// }
+
+// .card-content {
+//   color: rgb(236, 181, 30);
+//   margin-left: 20%;
+// }
+
+// .card-title {
+//   margin-top: 5%;
+//   color: rgba(153, 5, 121, 0.959);
+//   text-align: center;
+//   font-family: Georgia, 'Times New Roman', Times, serif;
+//   font-weight: bold;
+// }
+
+// select {
+//   background-color: rgb(219, 243, 243);
+//   text-align: justify;
+//   height: 20px;
+//   border-radius: 0px;
+//   color: var(--ion-text-color);
+// }
+
+// .grid-container {
+//   display: grid;
+//   grid-template-columns: auto auto auto;
+//   padding: 40px;
+// }
+
+// .grid-item {
+//   border: 1px rgba(0, 0, 0, 0.8);
+//   padding: 20px;
+//   font-size: 20px;
+//   text-align: center;
+//   color: var(--ion-text-color);
+// }
+
+// .tabs-content {
+//   padding: 10px;
+//   background-color: #f8f9fa; /* Light background for better contrast */
+//   background-color: var(--ion-background-color);
+// }
+
+// .tab-content {
+//   flex: 1;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   overflow-x: auto; /* Handle overflow */
+//   background-color: var(--ion-card-background-color);
+//   color: var(--ion-text-color);
+// }
+
+// .watchlist-table {
+//   width: 100%;
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+//   font-family: Georgia, 'Times New Roman', Times, serif;
+//   font-size: 14px;
+//   background-color: var(--ion-table-background-color);
+// }
+
+// .watchlist-table th,
+// .watchlist-table td {
+//   padding: 10px;
+//   text-align: center;
+//   border-bottom: 1px solid #dee2e6;
+//   color: var(--ion-text-color);
+// }
+
+// .watchlist-table th {
+//   background-color: var(--ion-table-header-color);
+// }
+
+// .watchlist-table .active-sort {
+//   background-color: #007bff;
+//   color: var(--ion-button-text-color);
+// }
+// canvas {
+//   background-color: #2E2E2E;
+//   width: 100% !important; /* Ensure canvas resizes with container */
+//   height: auto !important; /* Maintain aspect ratio */
+// }
+// canvas {
+//   max-width: 800px;
+//   margin: 0 auto;
+// }
