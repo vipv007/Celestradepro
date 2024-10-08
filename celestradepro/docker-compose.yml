@@ -3,16 +3,17 @@ services:
   app:
     build: .
     ports:
-      - "3003:3003"
+      - "4200:4200"  # Expose Angular app
+      - "3000:3000"  # Expose Node.js app
     environment:
-      - MONGO_URL=mongodb://mongo:27018
-      - DB_NAME=FinanceDB
+      MONGO_URL: mongodb://mongo:27017
+      DB_NAME: FinanceDB
     depends_on:
       - mongo
 
   mongo:
     image: mongo
     ports:
-      - "27018:27018"
+      - "27017:27017"
     volumes:
       - ./data:/data/db
