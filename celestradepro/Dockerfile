@@ -7,11 +7,11 @@ WORKDIR /app
 # Copy the package.json and package-lock.json from the Angular app directory to the container
 COPY ./package*.json ./
 
-# Install dependencies and handle the specific packages
-RUN npm install
-RUN npm install highcharts
-RUN npm uninstall igniteui-angular-charts igniteui-angular-core
-RUN npm install igniteui-angular-charts igniteui-angular-core
+# Install dependencies and handle the specific packages with legacy peer deps
+RUN npm install --legacy-peer-deps
+RUN npm install highcharts --legacy-peer-deps
+RUN npm uninstall igniteui-angular-charts igniteui-angular-core --legacy-peer-deps
+RUN npm install igniteui-angular-charts igniteui-angular-core --legacy-peer-deps
 
 # Modify TypeScript files to add @ts-ignore to specific lines
 RUN find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
@@ -43,8 +43,8 @@ COPY ./Backend/server.js ./Backend/server.js
 # Copy the package.json and package-lock.json for the backend server
 COPY ./Backend/package*.json ./Backend/
 
-# Install dependencies for the backend server
-RUN cd ./Backend && npm install
+# Install dependencies for the backend server with legacy-peer-deps
+RUN cd ./Backend && npm install --legacy-peer-deps
 
 # Expose the port your Angular app will listen on (e.g., 4200)
 EXPOSE 4200
