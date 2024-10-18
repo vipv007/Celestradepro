@@ -1,19 +1,36 @@
-version: '3'
-services:
-  app:
-    build: .
-    ports:
-      - "4200:4200"  # Expose Angular app
-      - "3000:3000"  # Expose Node.js app
-    environment:
-      MONGO_URL: mongodb://mongo:27017
-      DB_NAME: FinanceDB
-    depends_on:
-      - mongo
+version: '3.8'
 
+services:
+
+  # MongoDB service
   mongo:
-    image: mongo
+    image: mongo:latest
+    container_name: mongodb  # Optional: Name your container
     ports:
-      - "27017:27017"
+      - "27017:27017"  # Mapping MongoDB port
     volumes:
-      - ./data:/data/db
+      - mongo_data:/data/db  # Persistent storage for MongoDB data
+    restart: always  # Always restart the container if it crashes
+
+  # App service (for both frontend and backend)
+  app:
+    build:
+      context: .  # Build context is the root of your project
+      dockerfile: Dockerfile  # Dockerfile for your application
+    container_name: celestradepro_app  # Optional: Name your app container
+    ports:
+      - "4200:4200"  # Port for the Angular frontend
+      - "3000:3000"  # Port for the backend
+    depends_on:
+      - mongo  # Ensure MongoDB starts before the app
+    volumes:
+      - ./src:/usr/src/app/src  # Sync Angular source code with the container
+      - ./Backend:/usr/src/app/Backend  # Sync Backend folder with the container
+      - /usr/src/app/node_modules  # Prevent syncing node_modules
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/celespro  # MongoDB connection string
+    restart: always  # Always restart the container if it crashes
+
+# Volumes for persistent storage
+volumes:
+  mongo_data:

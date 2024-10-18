@@ -1,53 +1,59 @@
-# Stage 1: Build Angular app
-FROM node:16 AS build
+# Base image for building the Angular frontend
+FROM node:16 AS build-frontend
 
-# Set the working directory in the container
-WORKDIR /app
+# Set the working directory in the container for frontend
+WORKDIR /app/frontend
 
 # Copy the package.json and package-lock.json from the Angular app directory to the container
-COPY ./package*.json ./
+COPY package*.json ./
 
-# Install dependencies and handle the specific packages with legacy peer deps
-RUN npm install --legacy-peer-deps
-RUN npm install highcharts --legacy-peer-deps
-RUN npm uninstall igniteui-angular-charts igniteui-angular-core --legacy-peer-deps
-RUN npm install igniteui-angular-charts igniteui-angular-core --legacy-peer-deps
-
-# Modify TypeScript files to add @ts-ignore to specific lines
-RUN find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+# Install dependencies for frontend
+RUN npm install --force
 
 # Copy the entire Angular app source code from the Angular app directory to the container
 COPY . .
 
-# Set the Node.js memory limit
-ENV NODE_OPTIONS=--max_old_space_size=4096
+# Set the Node.js memory limit to 8 GB
+ENV NODE_OPTIONS=--max_old_space_size=8192
 
 # Build the Angular app
-RUN npm run build -- --output-path=dist
+RUN npm run build -- --output-path=www  # Temporary build command without verification
 
-# Stage 2: Serve Angular app and run Node.js server
+# Base image for building the backend
+FROM node:16 AS build-backend
+
+# Set the working directory in the container for backend
+WORKDIR /app/backend
+
+# Copy the package.json and package-lock.json from the backend directory to the container
+COPY celestradepro/Backend/package*.json ./
+
+# Install backend dependencies
+RUN npm install --force
+
+# Copy the entire backend source code to the container
+COPY Backend .
+
+# Final stage to serve the Angular app and run the backend
 FROM node:16
-
-# Set the working directory in the container
-WORKDIR /app
 
 # Install a simple HTTP server to serve the Angular app
 RUN npm install -g http-server
 
+# Set the working directory for the frontend
+WORKDIR /app
+
 # Copy the built Angular app from the build stage to the container
-COPY --from=build /app/dist ./dist
+COPY --from=build-frontend /app/frontend/www ./frontend  
 
-# Copy the server.js file to the container
-COPY ./Backend/server.js ./Backend/server.js
+# Set the working directory for the backend
+WORKDIR /app/backend
 
-# Copy the package.json and package-lock.json for the backend server
-COPY ./Backend/package*.json ./Backend/
+# Copy the backend from the build stage to the container
+COPY --from=build-backend /app/backend .
 
-# Install dependencies for the backend server with legacy-peer-deps
-RUN cd ./Backend && npm install --legacy-peer-deps
+# Expose the ports your app and backend will listen on (e.g., 4200 for Angular, 3000 for backend)
+EXPOSE 4200 3000
 
-# Expose the port your Angular app will listen on (e.g., 4200)
-EXPOSE 4200
-
-# Start both the HTTP server to serve your Angular app and the Node.js server
-CMD ["sh", "-c", "node ./Backend/server.js & http-server -p 4200 dist"]
+# Start both the HTTP server to serve your Angular app and the backend server
+CMD ["sh", "-c", "http-server -p 4200 /app/frontend & npm start"]
