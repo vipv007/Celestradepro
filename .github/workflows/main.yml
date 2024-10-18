@@ -22,8 +22,13 @@ jobs:
         run: |
           npm install
           npm install highcharts
-          npm uninstall igniteui-angular-charts igniteui-angular-core
+          npm uninstall igniteui-angular-charts igniteui-angular-core || true # Prevents failure if already uninstalled
           npm install igniteui-angular-charts igniteui-angular-core
+        working-directory: ./celestradepro
+
+      - name: Ensure @angular/animations is installed
+        run: |
+          npm install @angular/animations
         working-directory: ./celestradepro
 
       - name: Modify TypeScript Files
@@ -55,4 +60,4 @@ jobs:
 
       - name: Run Docker Container
         run: |
-          docker run -d -p 4200:4200 vipv/kuber:${{ github.run_number }}
+          docker run -d -p 4200:4200 vipv/kuber:${{ github.run_number }}  
