@@ -8,7 +8,7 @@ WORKDIR /app/frontend
 COPY package*.json ./
 
 # Install dependencies for frontend
-RUN npm install --force
+RUN npm install --force --legacy-peer-deps
 
 # Copy the entire Angular app source code from the Angular app directory to the container
 COPY . .
