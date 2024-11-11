@@ -44,11 +44,11 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
+          docker build -t vipv/kuber:${{ github.run_number }} -f ./celestradepro/Dockerfile .
 
       - name: Log in to Docker Hub
         run: |
-          docker login -u vipv -p ${{ secrets.DOCKER_PASSWORD }}  # Use GitHub Secrets for Docker password
+          docker login -u vipv -p 9092897730  # Use GitHub Secrets for Docker password
 
       - name: Push Docker Image
         run: |
