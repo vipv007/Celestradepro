@@ -19,7 +19,7 @@ import { Chart1Component } from './tab1/chart1/chart1.component';
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,HttpClientModule,
     ChartsModule,FormsModule,ReactiveFormsModule],
-  providers: [ OptionsService ,{ provide: ANIMATION_MODULE_TYPE, useValue: 'NoopAnimations',}],
+  providers: [ OptionsService ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
