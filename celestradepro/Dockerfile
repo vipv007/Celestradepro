@@ -7,6 +7,9 @@ WORKDIR /app/frontend
 # Copy the package.json and package-lock.json from the Angular app directory to the container
 COPY package*.json ./
 
+# Clean npm cache
+RUN npm cache clean --force
+
 # Install dependencies for frontend
 RUN npm install --force --legacy-peer-deps
 
