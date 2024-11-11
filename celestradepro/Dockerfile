@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm cache clean --force
 
 # Install dependencies for frontend
-RUN npm install --force --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 
 # Copy the entire Angular app source code from the Angular app directory to the container
 COPY . .
