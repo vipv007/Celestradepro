@@ -32,7 +32,7 @@ COPY celestradepro/Backend/package*.json ./
 RUN npm install --force
 
 # Copy the entire backend source code to the container
-COPY Backend .
+COPY celestradepro/Backend .
 
 # Final stage to serve the Angular app and run the backend
 FROM node:16
