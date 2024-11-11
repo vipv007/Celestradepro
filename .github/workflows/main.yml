@@ -29,11 +29,6 @@ jobs:
           npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
 
-      # Step 4: Ensure Angular animations package is installed
-      - name: Ensure @angular/animations is installed
-        run: |
-          npm install @angular/animations
-        working-directory: ./celestradepro
 
       # Step 5: Modify TypeScript files (e.g., to avoid compilation errors or add fixes)
       - name: Modify TypeScript Files
@@ -46,8 +41,6 @@ jobs:
           export NODE_OPTIONS=--max_old_space_size=8192
           npm run build
         working-directory: ./celestradepro
-        env:
-          NG_BUILD_OPTIMIZATION: false
 
       # Step 7: Set up Docker Buildx for multi-platform builds (if needed)
       - name: Set up Docker Buildx
