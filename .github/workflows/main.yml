@@ -10,25 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Step 2: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 14
 
+      # Step 3: Install dependencies including @angular/animations
       - name: Install Dependencies
         run: |
           npm install
+          npm install @angular/animations  # Ensure @angular/animations is installed
           npm install highcharts
-          npm uninstall igniteui-angular-charts igniteui-angular-core
+          npm uninstall igniteui-angular-charts igniteui-angular-core || true  # Prevents failure if already uninstalled
           npm install igniteui-angular-charts igniteui-angular-core
         working-directory: ./celestradepro
 
+      # Step 4: Clean npm cache (if necessary)
+      - name: Clean npm cache
+        run: |
+          npm cache clean --force
+
+      # Step 5: Modify TypeScript files if necessary
       - name: Modify TypeScript Files
         run: |
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+
+      # Step 6: Build Angular app with increased memory
       - name: Build Angular App
         run: |
           export NODE_OPTIONS=--max_old_space_size=4096
@@ -37,19 +49,26 @@ jobs:
         env:
           NG_BUILD_OPTIMIZATION: false
 
+      # Step 7: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      # Step 8: Build Docker image
       - name: Build Docker Image
         run: |
           docker build -t vipv/kuber:${{ github.run_number }} -f ./Dockerfile .
-      
+
+      # Step 9: Log in to Docker Hub
       - name: Log in to Docker Hub
         run: |
-          docker login -u vipv -p 9092897730
+          docker login -u vipv -p ${{ secrets.DOCKER_PASSWORD }}  # Use GitHub Secrets for Docker password
+
+      # Step 10: Push Docker image to Docker Hub
       - name: Push Docker Image
         run: |
           docker push vipv/kuber:${{ github.run_number }}
+
+      # Step 11: Run Docker container
       - name: Run Docker Container
         run: |
           docker run -d -p 4200:4200 vipv/kuber:${{ github.run_number }}
