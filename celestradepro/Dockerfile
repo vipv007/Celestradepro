@@ -29,7 +29,7 @@ FROM node:16 AS build-backend
 WORKDIR /app/backend
 
 # Copy the package.json and package-lock.json from the backend directory to the container
-COPY celestradepro/Backend/package*.json ./
+COPY Backend/package*.json ./
 
 # Install backend dependencies
 RUN npm install --force
