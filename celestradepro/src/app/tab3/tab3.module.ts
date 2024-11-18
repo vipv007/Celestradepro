@@ -35,13 +35,14 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ChartsModule } from 'ng2-charts';
 import { EurusdComponent } from './eurusd/eurusd.component';
 import { AudusdComponent } from './audusd/audusd.component';
+import { ForexliveComponent } from './forexlive/forexlive.component';
 
 
 @NgModule({
     declarations: [Tab3Page, ForexchartComponent, CalenderComponent, MarkethourComponent ,InterestComponent,GainerComponent,
     FundamentalviewComponent, ForexcrossComponent, ScreenerComponent, NewsComponent, ForexchComponent,
     FmultichartComponent, EventModalComponent, EarningsComponent,GbpusdComponent,UsdgpyComponent,EurusdComponent,AudusdComponent
-    ,FxSentimentComponent],
+    ,FxSentimentComponent,ForexliveComponent],
     exports:[ForexchComponent],
     imports: [
         IonicModule,

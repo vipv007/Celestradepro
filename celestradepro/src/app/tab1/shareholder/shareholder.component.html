@@ -1,4 +1,4 @@
-<div *ngFor="let company of companies" class="company-container">
+<div *ngFor="let company of companies" class="company-container" [ngClass]="{ 'dark': isDarkMode }">
   <h4>{{ company }} Shareholders</h4>
   <div class="content-container">
     <div id="chart-container-{{ company }}" class="chart-container"></div>

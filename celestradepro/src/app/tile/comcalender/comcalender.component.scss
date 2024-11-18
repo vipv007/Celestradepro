@@ -36,3 +36,44 @@ td:nth-child(6) {
 button{
     margin-left: 5%;
 }
+
+/* Dark theme styles */
+:host-context(.dark) .s1 {
+    background-color: #37474F;
+    /* Dark background for container */
+    color: white;
+}
+
+:host-context(.dark) table {
+    background-color: #37474F;
+    /* Dark background for table */
+}
+
+:host-context(.dark) th,
+:host-context(.dark) td {
+    border: 1px solid #555;
+    /* Darker border */
+    color: white;
+}
+
+:host-context(.dark) th {
+    background-color: #37474F;
+    /* Darker header background */
+}
+
+:host-context(.dark) td:nth-child(6) {
+    color: #ff5252;
+    /* Red color for sixth column in dark theme */
+}
+
+:host-context(.dark) ion-button {
+    background-color: #455A64;
+    /* Dark button background */
+    color: white;
+}
+
+:host-context(.dark) input {
+    background-color: #455A64;
+    /* Dark button background */
+    color: white;
+}

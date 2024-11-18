@@ -293,7 +293,8 @@ const routes: Routes = [
   {
     path: 'otp-login',
     loadChildren: () => import('./otp-login/otp-login.module').then( m => m.OtpLoginPageModule)
-  },  {
+  },
+  {
     path: 'blog',
     loadChildren: () => import('./blog/blog.module').then( m => m.BlogPageModule)
   },

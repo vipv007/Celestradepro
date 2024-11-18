@@ -125,20 +125,20 @@
 
 <div *ngIf="selectTabs === 'missed'">
   <br>
-      <div class="tabs">
+      <div class="tabss">
         <button (click)="selectTab(1)" [class.active]="selectedTab === 1">CALL&PUTS</button>
        <button (click)="selectTab(3)" [class.active]="selectedTab === 3">OPENINTEREST</button>
         <button (click)="selectTab(4)" [class.active]="selectedTab === 4">VOLATILITY</button>
 
       </div>
       
-      <div class="tab-content" *ngIf="selectedTab === 1">
+      <div class="tab-contents" *ngIf="selectedTab === 1">
         <app-optionch></app-optionch> 
       </div>
-      <div class="tab-content" *ngIf="selectedTab === 3">
+      <div class="tab-contents" *ngIf="selectedTab === 3">
         <app-option-io></app-option-io>
       </div>
-       <div class="tab-content" *ngIf="selectedTab === 4">
+       <div class="tab-contents" *ngIf="selectedTab === 4">
         <app-volatility></app-volatility>      </div>
       
 </div>

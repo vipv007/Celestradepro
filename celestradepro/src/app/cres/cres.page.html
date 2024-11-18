@@ -1,14 +1,12 @@
-<div *ngFor="let stock of stocks">
-  <input type="radio" name="stockSymbol" [value]="stock.symbol" (change)="onSymbolChange($event)" /> {{ stock.symbol }}
-</div>
+<div class="chart-container">
+  <h2>Stock Chart</h2>
 
-<div *ngIf="selectedSymbol">
-  <igx-financial-chart
-  width="100%"
-  height="500px"
-  [dataSource]="stockData[selectedSymbol]"
-  chartType="Candle"
-  xAxisMode="Time"
-  yAxisMode="Numeric">
-</igx-financial-chart>
+  <!-- Buttons to select data type -->
+  <div class="button-group">
+    <button (click)="loadChartData('historical')" class="data-button">Load Historical Data</button>
+    <button (click)="loadChartData('live')" class="data-button">Load Live Data</button>
+  </div>
+
+  <!-- Highcharts container -->
+  <div id="chart-container" style="height: 600px; min-width: 600px;"></div>
 </div>

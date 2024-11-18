@@ -1,160 +1,299 @@
-#news {
-  margin-top: 15px;
-  color: blue;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  font-weight: bold;
-}
+// /* General Styles */
+// body {
+//   font-family: Arial, sans-serif;
+// }
 
-.form-control{
-  margin-left: 35px;
-  width: 350px;
-}
+// /* URL Input Section */
+// .url-input-section {
+//   margin-left: 35px;
+//   width: 350px;
+// }
 
-.small {
-  color: #413ef1;
-}
+// /* Search Bar */
+// .search-bar {
+//   display: flex;
+//   justify-content: flex-end;
+//   margin-bottom: 20px;
+// }
 
-/* Search Bar */
-.search-bar {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-}
+// .search-bar input {
+//   margin-right: 10px;
+//   width: 300px;
+//   background-color: #fff;
+//   /* Light theme default */
+//   color: #333;
+//   /* Dark text for light theme */
+//   border: 1px solid #ccc;
+//   /* Light border for light theme */
+// }
 
-.search-bar input {
-  margin-right: 10px;
-  width: 50px;
-}
+// /* Horizontal List Styles */
+// .horizontal-list {
+//   list-style-type: none;
+//   padding: 0;
+//   display: flex;
+//   gap: 25px;
+// }
 
-.horizontal-list {
-  list-style-type: none;
-  padding: 0;
-  display: flex;
-  gap: 15px; /* Reduced space between items */
-}
+// .checkbox-item {
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 10px;
+// }
 
-.checkbox-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
+// .checkbox-item input[type="checkbox"] {
+//   margin-right: 10px;
+// }
 
-.checkbox-item input[type="checkbox"] {
-  margin-right: 5px; /* Reduced space between checkbox and text */
-}
+// /* Card Styles */
+// .card {
+//   margin: 20px 5%;
+//   width: 95%;
+//   background-color: white;
+//   /* Light theme default */
+//   color: #333;
+//   /* Dark text for light theme */
+//   border: 1px solid #ddd;
+// }
 
-.table {
-  width: 100%; /* Make the table take the full width of its container */
-}
+// .card-header h2 {
+//   margin-bottom: 0;
+// }
 
-th, td {
-  text-align: left;
-}
+// .card-body {
+//   padding: 15px;
+// }
 
-th {
-  text-align: center;
-}
+// /* Table Styles */
+// .table {
+//   width: 100%;
+//   border-collapse: collapse;
+//   margin-top: 20px;
+//   background-color: white;
+//   /* Light theme default */
+// }
 
-.table-responsive {
-  overflow-x: auto; /* Ensure table is scrollable on smaller screens */
-}
+// th,
+// td {
+//   text-align: center;
+//   padding: 10px;
+//   border: 1px solid #f9f7f7;
+//   /* Light theme border */
+// }
 
-.pagination {
-  margin-top: 20px;
-}
+// th {
+//   background-color: wheat;
+//   /* Light theme header background */
+//   color: #333;
+//   /* Dark text color for headers */
+//   cursor: pointer;
+// }
 
-.page-item {
-  cursor: pointer;
-}
+// td {
+//   color: #333;
+//   /* Dark text color for data cells */
+// }
 
-.page-link {
-  color: #007bff;
-}
+// .table-responsive {
+//   overflow-x: auto;
+// }
 
-input {
-  width: calc(100% - 30px); /* Adjust input width to fit better */
-}
+// /* Pagination Styles */
+// .pagination {
+//   justify-content: center;
+//   margin-top: 20px;
+// }
 
-.card {
-  width: 100%; /* Make card take full width */
-}
-/* Responsive List and Input Section */
-.url-input-section {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+// .page-item {
+//   cursor: pointer;
+// }
 
-.input-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  width: 100%;
-  align-items: center;
-}
+// .page-link {
+//   color: #007bff;
+// }
 
-.horizontal-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  align-items: center;
-}
+// .page-item.disabled .page-link {
+//   color: #6c757d;
+//   cursor: not-allowed;
+// }
 
-.checkbox-item {
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-}
+// /* Chart Container */
+// .chart-container {
+//   max-width: 600px;
+//   margin: 40px auto;
+//   text-align: center;
+// }
 
-/* Input Field Styling */
-.form-control {
-  flex-grow: 1;
-  min-width: 200px;
-  padding: 8px 12px;
-  font-size: 16px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
+// /* News Link */
+// .news-link {
+//   text-decoration: none;
+//   color: black;
+// }
 
-.btn-primary {
-  padding: 8px 20px;
-  font-size: 16px;
-  border-radius: 4px;
-}
+// .news-link:hover {
+//   color: blue;
+// }
 
-/* Alerts */
-.alert {
-  width: 100%;
-  font-size: 14px;
-  padding: 10px;
-  border-radius: 4px;
-}
+// /* Summary Styles */
+// .small {
+//   color: #413ef1;
+// }
 
-/* Responsive Breakpoints */
-@media (max-width: 768px) {
-  .input-group {
-    flex-direction: column;
-    gap: 15px;
-  }
+// /* Input Styles */
+// .input {
+//   margin-left: 72%;
+//   width: 25%;
+// }
 
-  .horizontal-list {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+// /* Button Styles */
+// .btn-outline-primary {
+//   border-color: #007bff;
+//   color: #007bff;
+// }
 
-  .form-control, .btn-primary {
-    width: 100%;
-    font-size: 14px;
-  }
-}
+// .btn-outline-primary:hover {
+//   background-color: #007bff;
+//   color: #e0e0e0;
+//   /* Softer white for night-time visibility */
+// }
 
-@media (max-width: 576px) {
-  .form-control, .btn-primary {
-    width: 100%;
-    font-size: 14px;
-  }
-}
+// .btn-outline-danger {
+//   border-color: #dc3545;
+//   color: #dc3545;
+// }
+
+// .btn-outline-danger:hover {
+//   background-color: #dc3545;
+//   color: #e0e0e0;
+//   /* Softer white for night-time visibility */
+// }
+
+// .btn-outline-secondary {
+//   border-color: #6c757d;
+//   color: #6c757d;
+// }
+
+// .btn-outline-secondary:disabled {
+//   cursor: not-allowed;
+// }
+
+// /* Dark Theme Styles */
+// body[data-theme="dark"] {
+//   background-color: #37474F;
+//   /* Updated dark theme color */
+//   color: #e0e0e0;
+//   /* Softer white text for dark theme */
+// }
+
+// body[data-theme="dark"] .url-input-section,
+// body[data-theme="dark"] .search-bar input,
+// body[data-theme="dark"] .news-link {
+//   background-color: #37474F;
+//   /* Updated dark theme color */
+//   color: #e0e0e0;
+//   /* Softer white text for inputs and links */
+//   border-color: rgba(255, 255, 255, 0.2);
+//   /* Transparent light border for inputs */
+// }
+
+// body[data-theme="dark"] .horizontal-list,
+// body[data-theme="dark"] .checkbox-item {
+//   color: #e0e0e0;
+//   /* Softer white text for lists and checkboxes */
+// }
+
+// body[data-theme="dark"] .card {
+//   background-color: #37474F;
+//   /* Updated dark theme color for cards */
+//   color: #e0e0e0;
+//   /* Softer white text for cards */
+//   border-color: rgba(255, 255, 255, 0.2);
+//   /* Transparent light border for cards */
+// }
+
+// body[data-theme="dark"] .table {
+//   background-color: #37474F;
+//   /* Updated dark theme color for table */
+//   border-color: rgba(255, 255, 255, 0.2);
+//   /* Transparent light border for table */
+// }
+
+// body[data-theme="dark"] th {
+//   background-color: #37474F;
+//   /* Updated dark theme color for table headers */
+//   color: #e0e0e0;
+//   /* Softer white text for headers */
+//   border-color: rgba(255, 255, 255, 0.2);
+//   /* Transparent light border for headers */
+// }
+
+// body[data-theme="dark"] td {
+//   background-color: #37474F;
+//   /* Updated dark theme color for table data cells */
+//   color: #e0e0e0;
+//   /* Softer white text for table data */
+//   border-color: rgba(255, 255, 255, 0.2);
+//   /* Transparent light border for cells */
+// }
+
+// body[data-theme="dark"] .pagination,
+// body[data-theme="dark"] .page-link {
+//   color: #e0e0e0;
+//   /* Softer white text for pagination */
+// }
+
+// body[data-theme="dark"] .chart-container {
+//   background-color: #37474F;
+//   /* Updated dark theme color for chart container */
+// }
+
+// body[data-theme="dark"] .btn-outline-primary,
+// body[data-theme="dark"] .btn-outline-danger,
+// body[data-theme="dark"] .btn-outline-secondary {
+//   border-color: #e0e0e0;
+//   /* Softer white border for outline buttons */
+//   color: #e0e0e0;
+//   /* Softer white text for outline buttons */
+// }
+
+// body[data-theme="dark"] .btn-outline-primary:hover {
+//   background-color: #007bff;
+//   /* Primary button hover color in dark theme */
+//   color: #e0e0e0;
+//   /* Softer white text */
+// }
+
+// body[data-theme="dark"] .btn-outline-danger:hover {
+//   background-color: #dc3545;
+//   /* Danger button hover color in dark theme */
+//   color: #e0e0e0;
+//   /* Softer white text */
+// }
+
+// body[data-theme="dark"] .btn-outline-secondary:disabled {
+//   cursor: not-allowed;
+//   color: #6c757d;
+// }
+
+// .news1 {
+//   margin-left: 30px;
+//   display: flex;
+//   align-items: flex-start;
+//   border: none;
+//   margin-top: 20px;
+//   margin-bottom: 20px;
+
+
+// }
+
+// .news-content {
+//   margin-left: 10px;
+//   margin-left: 15px;
+// }
+
+// .n1 {
+//   display: flex;
+//   align-items: start;
+
+// }
+

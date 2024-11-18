@@ -183,6 +183,6 @@ export class Tab2Page implements OnInit, OnDestroy {
     this.clickedOptions = symbol;
     console.log('Clicked Options:', this.clickedOptions);
     this.selectTabs = 'missed';
-    this.router.navigate(['/tabs/tab2'], { queryParams: { symbol } });
+    this.router.navigate(['/celestradepro/Options'], { queryParams: { symbol } });
   }
 }

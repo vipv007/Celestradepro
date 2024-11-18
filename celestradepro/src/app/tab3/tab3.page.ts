@@ -7,6 +7,7 @@ import { FrxindexService } from '../services/frxindex.service';
 import { ChartOptions, ChartType } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import Chart from 'chart.js';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-tab3',
@@ -14,7 +15,11 @@ import Chart from 'chart.js';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page  {
-
+  selectedTabe: string = 'live';
+  setTabe(tab: string) {
+    this.selectedTabe = tab;
+  }
+  
   forexs: any[] = [];
   selectTabs = 'recent';
   sortOrder: string = ''; 
@@ -110,14 +115,21 @@ export class Tab3Page  {
   private technicals: any = {};
   topGainers: any;
   topLosers: any;
-  constructor(private forexService: ForexService, private router: Router,private gainerService: GainerService,
+  constructor(private forexService: ForexService, private router: Router,private gainerService: GainerService,private route: ActivatedRoute,
     private userService: UserService, private frxindexService: FrxindexService) {}
 
     
 
    ngOnInit(): void  {
 
-      this.email = this.userService.getEmail(); // Get the email from the service
+     this.route.queryParams.subscribe(params => {
+      if (params['segment'] === 'research') {
+        this.selectTabs = 'research'; // Change to the desired tab if necessary
+        this.activeContent = params['content'] || 'recent'; // Default to 'recent' if no content specified
+      }
+     });
+     
+    this.email = this.userService.getEmail(); // Get the email from the service
     if (this.email) {
       this.fetchWatchlist();
     } else {

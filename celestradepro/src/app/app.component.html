@@ -1,9 +1,14 @@
 <ion-app [class.dark]="isDarkMode">
-  <div style="position: fixed; top: 16px; right: 26px; z-index: 100; display: flex; align-items: center; gap: 5px;">
+  <div style="position: fixed; top: 1px; right: 26px; z-index: 100; display: flex; align-items: center; gap: 5px;">
+      <ion-buttons slot="end">
+      <ion-button class="custom-button"   [attr.title]="isConnected ? 'Database Connected' : 'Not connected'">
+      <ion-icon name="navigate-circle" [ngClass]="{'connected': isConnected, 'disconnected': !isConnected}"></ion-icon>
+      </ion-button>
+      </ion-buttons>
     <!-- Bind the icon dynamically based on the theme -->
     <ion-icon
       [name]="themeIcon"
-      color="primary"
+      
       style="font-size: 20px; cursor: pointer;"
       (click)="toggleTheme()">
     </ion-icon>
@@ -11,6 +16,8 @@
       <ion-button (click)="navigateToLandingPage()">
         <ion-icon name="home"></ion-icon>
       </ion-button>
+
+     
     </ion-buttons>
   
   </div>

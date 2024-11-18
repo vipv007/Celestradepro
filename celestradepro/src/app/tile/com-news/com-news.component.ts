@@ -3,6 +3,7 @@ import { Com_newsService } from '../../services/com_news.service';
 import { ChartType, ChartOptions } from 'chart.js';
 import { Label, SingleDataSet } from 'ng2-charts';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-com-news',
@@ -23,7 +24,7 @@ export class ComNewsComponent implements OnInit {
   currentSortOrder: string = 'asc'; // Default sorting order
   mainUrls: string[] = [];
   showPopup: boolean = false;
-
+   archivedArticlescom: any[] = [];
   manualUrl: string = '';
   summaryData: any = null;
   errorMessage: string = '';
@@ -52,10 +53,11 @@ export class ComNewsComponent implements OnInit {
       backgroundColor: ['#987D9A', '#EECEB9', '#B0BEC5'],
     },
   ];
-  constructor(private com_newsService: Com_newsService, private http: HttpClient) { }
+  constructor(private com_newsService: Com_newsService, private userService: UserService, private http: HttpClient) { }
 
   ngOnInit() {
     this.loadNews();
+    this.fetchArchivedArticles();
   }
 
   loadNews() {
@@ -219,13 +221,51 @@ export class ComNewsComponent implements OnInit {
     this.updatePagedNews();
   }
 
-  archiveArticle(article: any) {
-    this.com_newsService.archiveCom_news(article._id).subscribe(() => {
-      article.archive = true;
-      this.filterNews();
-      this.updatePagedNews();
-      this.prepareChartData();
+  // archiveArticle(article: any) {
+  //   this.com_newsService.archiveCom_news(article._id).subscribe(() => {
+  //     article.archive = true;
+  //     this.filterNews();
+  //     this.updatePagedNews();
+  //     this.prepareChartData();
+  //   });
+  // }
+
+   archiveArticle(article) {
+    const archivedArticlecom = {
+      id: article._id,
+      headline: article.headline,
+      summary: article.summary,
+      sentimentScore: article.sentimentScore,
+      sentiment: article.sentiment,
+      articleDateTime: article.articleDateTime,
+      imageUrl: article.imageUrl || 'defaultImage' // Fallback image if none provided
+    };
+
+    // Call the UserService method to archive the article for the user
+    this.userService.archiveArticlecom(this.userService.getEmail(), archivedArticlecom).subscribe(() => {
+      article.archive = true; // Mark the article as archived in the UI
+      this.filterNews(); // Call your method to filter the news
+      this.updatePagedNews(); // Call your method to update the paged news
+      
     });
+     
+    this.com_newsService.archiveCom_news(article._id).subscribe(() => {
+       article.archive = true;
+       
+    });
+  }
+
+  fetchArchivedArticles() {
+    const email = this.userService.getEmail(); // Get email from the UserService
+    this.userService.getArchivedArticlescom(email).subscribe(
+    (data) => {
+      console.log('Fetched data:', data); // Check the structure of the data
+    this.archivedArticlescom = data;
+    },
+    (error) => {
+      console.error('Error fetching archived articles:', error);
+    }
+  );
   }
 
   activeTotalPagesArray(): number[] {

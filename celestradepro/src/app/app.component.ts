@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from './services/user.service';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,10 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   isDarkMode = false; // Default to light theme
   themeIcon: string = 'sunny'; // Default icon for light theme
+  isConnected: boolean = false;
+  connectionMessage: string = 'Not Connected';
 
-  constructor(private userService: UserService,private router: Router) {}
+  constructor(private userService: UserService,private router: Router,private http: HttpClient) {}
 
   navigateToLandingPage()   
   {
@@ -20,6 +23,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.initializeTheme();
+     this.checkBackendConnection();
   }
 
   private initializeTheme() {
@@ -41,6 +45,7 @@ export class AppComponent implements OnInit {
   }
 
   toggleTheme() {
+     console.log('Toggling theme...'); 
     this.isDarkMode = !this.isDarkMode;
     this.updateIcon(); // Update icon after toggling theme
     this.applyTheme(this.isDarkMode);
@@ -64,5 +69,21 @@ export class AppComponent implements OnInit {
 
   private updateIcon() {
     this.themeIcon = this.isDarkMode ? 'moon' : 'sunny'; // Update icon based on the theme
+  }
+
+  checkBackendConnection() {
+    this.http.get('http://localhost:3000/api') // Replace with your backend health check endpoint
+      .subscribe({
+          next: () => {
+          this.isConnected = true;
+          this.connectionMessage = 'Connected';
+         
+        },
+        error: () => {
+          this.isConnected = false;
+          this.connectionMessage = 'Not Connected';
+          
+        }
+      });
   }
 }

@@ -1,4 +1,5 @@
 <!-- Search and All Sites Button -->
+ <div class="newsclass">
 <div class="search-bar">
   <input type="text" [(ngModel)]="searchQuery" (keyup)="applySearchFilter()" class="form-control mb-3" placeholder="Search news..." />
   <button (click)="togglePopup()" class="btn btn-primary mb-3">All sites</button>
@@ -42,13 +43,13 @@
 
 
 <!-- Active News Section -->
-<div class="card">
-  <div class="card-header">
+<div class="trend-stocks-card" >
+  <div  class="card card-header" >
     <h2 class="mb-0">Active News</h2>
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-bordered">
+      <table class="t">
         <thead>
           <tr>
             <th (click)="sortActiveNews('title')" class="sortable">
@@ -65,7 +66,7 @@
                 'desc': currentSortProperty === 'sentimentScore' && currentSortOrder === 'desc'
               }">{{ defaultSortSymbol('sentimentScore') }}</span>
             </th>
-            <th>SUMMARIZE</th>
+            <!-- <th>SUMMARIZE</th> -->
 
             <th (click)="sortActiveNews('articleDateTime')" class="sortable">
               <span>POSTED ON</span>
@@ -74,28 +75,33 @@
                 'desc': currentSortProperty === 'articleDateTime' && currentSortOrder === 'desc'
               }">{{ defaultSortSymbol('articleDateTime') }}</span>
             </th>
-            
-            
-            
-            
-            
-            
             <th>ACTION</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let article of pagedActiveNews">
-            <td><a href="{{ article.url }}" class="news-link">{{ article.headline }}</a></td>
-            <td>{{ article.sentimentScore }}<br />{{ article.sentiment }}</td>
             <td>
+              <div class="news1">
+              <img [src]="article.imageUrl|| defaultImage" alt="Article Image" width="170" height="130" style="margin-top: 40px; ">
+              <div class="news-content">
+                <h5><a href="{{ article.url }}" class="news-link">{{ article.headline }}</a></h5>
+                <span *ngIf="!article.showFullSummary">{{ article.summary.slice(0, 150) }}...</span>
+                <span *ngIf="article.showFullSummary">{{ article.summary }}</span>
+                <button (click)="toggleSummary(article)" class="btn btn-outline-primary mt-2">
+                  {{ article.showFullSummary ? 'Read less' : 'Read more' }}
+                </button>
+              </div></div>
+            </td>
+            <td > {{ article.sentimentScore }} {{ article.sentiment }}</td>
+            <!-- <td>
               <div *ngIf="!article.showFullSummary">{{ article.summary.slice(0, 150) }}...</div>
               <div *ngIf="article.showFullSummary">{{ article.summary }}</div>
               <b><h1 class="small">({{ getSiteName(article.url) }})</h1></b>
               <button (click)="toggleSummary(article)" class="btn btn-outline-primary mt-2">
                 {{ article.showFullSummary ? 'Read less' : 'Read more' }}
               </button>
-            </td>
-            <td>{{ article.articleDateTime }}</td>
+            </td> -->
+            <td>{{ article.articleDateTime }} </td>
             <td>
               <button *ngIf="!article.archive" (click)="archiveArticle(article)" class="btn btn-outline-danger">Archive</button>
               <button *ngIf="article.archive" disabled class="btn btn-outline-secondary">Archived</button>
@@ -131,33 +137,46 @@
 </div>
 
 <!-- Archived News Section -->
-<div class="card mt-4">
-  <div class="card-header">
+<div class=" trend-stocks-card">
+  <div class="card card-header">
     <h2 class="mb-0">Archived News</h2>
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-bordered">
+      <table class="t">
         <thead>
           <tr>
             <th>TITLE</th>
             <th>SENTIMENT SCORE</th>
-            <th>SUMMARIZE</th>
+            <!-- <th>SUMMARIZE</th> -->
             <th>POSTED ON</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let article of pagedArchivedNews">
-            <td><a href="{{ article.url }}" class="news-link">{{ article.headline }}</a></td>
-            <td>{{ article.sentimentScore }}<br />{{ article.sentiment }}</td>
+          <tr *ngFor="let article of archivedArticles">
             <td>
+              <div class="news1">
+                <img [src]="article.imageUrl|| defaultImage" alt="Article Image" width="170" height="130"
+                  style="margin-top: 40px; ">
+                <div class="news-content">
+                  <h5><a href="{{ article.url }}" class="news-link">{{ article.headline }}</a></h5>
+                  <span *ngIf="!article.showFullSummary">{{ article.summary.slice(0, 150) }}...</span>
+                  <span *ngIf="article.showFullSummary">{{ article.summary }}</span>
+                  <button (click)="toggleSummary(article)" class="btn btn-outline-primary mt-2">
+                    {{ article.showFullSummary ? 'Read less' : 'Read more' }}
+                  </button>
+                </div>
+              </div>
+            </td>
+            <td>{{ article.sentimentScore }}<br />{{ article.sentiment }}</td>
+            <!-- <td>
               <div *ngIf="!article.showFullSummary">{{ article.summary.slice(0, 150) }}...</div>
               <div *ngIf="article.showFullSummary">{{ article.summary }}</div>
               <b><h2 class="small">({{ getSiteName(article.url) }})</h2></b>
               <button (click)="toggleSummary(article)" class="btn btn-outline-primary mt-2">
                 {{ article.showFullSummary ? 'Read less' : 'Read more' }}
               </button>
-            </td>
+            </td> -->
             <td>{{ article.articleDateTime }}</td>
           </tr>
         </tbody>
@@ -203,3 +222,4 @@
     </canvas>
   </div>
 </div>
+ </div>

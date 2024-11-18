@@ -15,12 +15,14 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "www",
-            "allowedCommonJsDependencies": ["chart.js"],
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-
+            "allowedCommonJsDependencies": [
+              "ng2-charts",
+              "chart.js"
+           ],
             "assets": [
               {
                 "glob": "**/*",

@@ -1,10 +1,10 @@
 <div class="ion-padding">
 
-  <select id="Symbol" [(ngModel)]="Symbol" (change)="loadSymbolData(Symbol)" class="sele">
+  <button class="buys"><select id="Symbol" [(ngModel)]="Symbol" (change)="loadSymbolData(Symbol)" class="buys" style="border:  #3ced0b;" >
     <option value="GC=F">GC=F</option>
     <option value="SI=F">SI=F</option>
     <option value="CL=F">CL=F</option>
-  </select>
+  </select></button>
 
   <button expand="block" class="buys" (click)="showBox = !showBox">Order&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
     <button class="buys" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button><br>
@@ -128,19 +128,19 @@
     </ion-row>
   </ion-item> -->
 
-  <button (click)="toggleDarkMode()"> Dark Mode</button>
+  <!-- <button (click)="toggleDarkMode()"> Dark Mode</button> -->
 
   <div>
     <!-- Other template code -->
   <br>
-  <div class="chart-container" [ngClass]="{'dark-mode': isDarkMode}">
+  <div class="chart-container" [ngClass]="{'dark': isDarkMode}">
     <!-- Other template code -->
     <br>
     <igx-financial-chart
       [dataSource]="chartData"
       width="100%"
       height="500px"
-      class="financial-chart">
+       [ngClass]="{'dark': isDarkMode}">
     </igx-financial-chart>
 
     <!-- Other template code -->

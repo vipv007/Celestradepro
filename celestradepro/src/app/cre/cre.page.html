@@ -1,5 +1,19 @@
+<div class="container-fluid chart-container">
+  <h2 class="text-center">Commodity Chart</h2>
 
-<div class="tradingview-widget-container">
-  <div id="tradingview-widget"></div>
+  <!-- Commodity symbol dropdown -->
+  <div class="symbol-dropdown mb-3 text-center">
+    <select
+      class="form-select symbol-select"
+      [(ngModel)]="selectedCommoditySymbol"
+      (change)="loadChartData()"
+    >
+      <option *ngFor="let symbol of commoditySymbols" [value]="symbol">
+        {{ symbol }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Highcharts container for Commodity data -->
+  <div id="chart-container" class="chart-container"></div>
 </div>
-

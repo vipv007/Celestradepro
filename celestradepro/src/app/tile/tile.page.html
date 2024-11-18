@@ -33,8 +33,8 @@
       <div class="container-watchlist">
         <!-- Watchlist Section -->
         <div *ngIf="watchlist.length > 0" class="watchlist-container">
-          <div class="card watchlist-card">
-            <div class="card-header">
+          <div class="trend-stocks-card watchlist-card">
+            <div class="card-header card">
               <h3 class="text-center">Watchlist</h3>
             </div>
             <div class="card-body">
@@ -77,8 +77,8 @@
   
         <!-- Trend com Section -->
         <div *ngIf="email && availablecoms.length > 0" class="trend-coms-container">
-          <div class="card trend-coms-card">
-            <div class="card-header">
+          <div class="trend-stocks-card trend-coms-card">
+            <div class="card-header card ">
               <h3 class="text-center">Trend Futures</h3>
             </div>
             <div class="card-body">
@@ -131,8 +131,8 @@
         </div>
 
         <div *ngIf="!email && availablecoms.length > 0" class="trend-coms-container">
-          <div class="card trend-coms-card">
-            <div class="card-header">
+          <div class="trend-stocks-card trend-coms-card">
+            <div class="card-header card">
               <h3 class="text-center">Most Active Stocks</h3>
             </div>
             <div class="card-body">
@@ -197,7 +197,7 @@
     </div>
   
     <!-- Table for Gainers -->
-    <div *ngIf="viewGainer === 'table'" class=" card-body  card trend-forexs-card container-watchlist ">
+    <div *ngIf="viewGainer === 'table'" class=" card-body  trend-stocks-card trend-forexs-card container-watchlist ">
       <h4 class="text-center">Gainers Table</h4>
       <table class="trend-forexs-table">
         <thead>
@@ -242,7 +242,7 @@
     </div>
   
     <!-- Table for Losers -->
-    <div *ngIf="viewLoser === 'table'" class=" card-body  card trend-forexs-card container-watchlist">
+    <div *ngIf="viewLoser === 'table'" class=" card-body  trend-stocks-card trend-forexs-card container-watchlist">
       <h4 class="text-center">Losers Table</h4>
       <table class="trend-forexs-table">
         <thead>
@@ -301,7 +301,7 @@
             </canvas>
           </div>
           <!-- Table -->
-          <div *ngIf="displayMode === 'table'" class=" card-body  card trend-forexs-card container-watchlist">
+          <div *ngIf="displayMode === 'table'" class=" card-body  trend-stocks-card trend-forexs-card container-watchlist">
             <table class="trend-forexs-table">
               <thead>
                 <tr class="header-row">
@@ -337,7 +337,7 @@
             </canvas>
           </div>
           <!-- Table -->
-          <div *ngIf="displayMode === 'table'" class=" card-body  card trend-forexs-card  container-watchlist">
+          <div *ngIf="displayMode === 'table'" class=" card-body  trend-stocks-card trend-forexs-card  container-watchlist">
             <table class="trend-forexs-table">
               <thead>
                 <tr class="header-row">
@@ -373,7 +373,7 @@
             </canvas>
           </div>
           <!-- Table -->
-          <div *ngIf="displayMode === 'table'" class=" card-body  card trend-forexs-card container-watchlist ">
+          <div *ngIf="displayMode === 'table'" class=" card-body  trend-stocks-card trend-forexs-card container-watchlist ">
             <table class="trend-forexs-table">
               <thead>
                 <tr class="header-row">
@@ -401,9 +401,23 @@
   </div>
   
   <!-- Chart tab -->
-  <div *ngIf="selectTabs === 'missed'">
-    <app-commodity></app-commodity>
+  <div *ngIf="selectTabs === 'missed'" class="chart-container">
+    <div class="tab-buttons">
+      <button (click)="setTabe('live')" [class.active]="selectedTabe === 'live'">Live</button>
+      <button (click)="setTabe('historical')" [class.active]="selectedTabe === 'historical'">Historical</button>
+    </div>
+    <div *ngIf="selectedTabe === 'live'">
+      <app-com-livedata></app-com-livedata>
+    </div>
+    
+    <!-- Content for Historical Data -->
+    <div *ngIf="selectedTabe === 'historical'">
+      <app-commodity></app-commodity>
+     
+    </div>
+
   </div>
+  
 
   <!-- Tile tab -->
   <div *ngIf="selectTabs === 'contact'" class="grid-container">

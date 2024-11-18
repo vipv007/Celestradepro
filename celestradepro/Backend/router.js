@@ -51,7 +51,14 @@ router.post('/update-selected-sections', userController.updateSelectedSections);
 
 // Route for fetching user theme
 router.get('/user-theme/:email', userController.getUserTheme);
-
+router.post('/users/:email/archive', userController.archiveUserArticle);
+router.get('/archive/:email', userController.getArchivedArticles);
+router.post('/users/:email/archiveop', userController.archiveUserArticleop);
+router.get('/archiveop/:email', userController.getArchivedArticlesop);
+router.post('/users/:email/archivecom', userController.archiveUserArticlecom);
+router.get('/archivecom/:email', userController.getArchivedArticlescom);
+router.post('/users/:email/archivefox', userController.archiveUserArticlefox);
+router.get('/archivefox/:email', userController.getArchivedArticlesfox);
 router.post('/fnews/fx-summarize-url', fxSummarizeUrl);
 router.post('/comnews/com-summarize-url', comSummarizeUrl);
 router.post('/optionnews/summarize-url', opSummarizeUrl);

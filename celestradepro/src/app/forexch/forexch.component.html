@@ -1,16 +1,16 @@
 <div class="ion-padding">
   
-  <!--select id="symbol" [(ngModel)]="symbol" (change)="loadSymbolData(symbol)" class="sele">
+  <!--button class="buys"><select id="symbol" [(ngModel)]="symbol" (change)="loadSymbolData(symbol)" class="buys" style="border:  #3ced0b;">
     <option value="EURUSD">EURUSD</option>
     <option value="GBPUSD">GBPUSD</option>
     <option value="USDJPY">USDJPY</option>
     <option value="AUDUSD">AUDUSD</option>
     <option value="USDCHF">USDCHF</option>
     <option value="USDCAD">USDCAD</option>
-  </select-->
+  </select></button-->
 
-  <button expand="block" class="buy" (click)="showBox = !showBox">{{ this.symbol }}&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
-  <button class="buy" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button>
+  <button expand="block" class="buys" (click)="showBox = !showBox">{{ this.symbol }}&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
+  <button class="buys" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button>
   <div class="adj">
   <div class="box" *ngIf="showBox">
   
@@ -108,20 +108,15 @@
           </div> 
 
 
-          <div [ngClass]="selectedTheme">
-            <br>
-            <div class="theme-toggle">
-              <label class="switch">
-                <input type="checkbox" (change)="onThemeToggle($event)">
-                <span class="slider round"></span>
-              </label>
-              <span>{{ selectedTheme === 'light' ? 'Light Theme' : 'Dark Theme' }}</span>
-            </div>
-            <div class="chart-container">
+          <br>          
+          <!-- <button (click)="toggleDarkMode()"> Dark Mode</button> -->
+          <div>
+          <br>
+            <div class="chart-container" [ngClass]="{'dark': isDarkMode}">
               <igx-financial-chart
                 [dataSource]="chartData"
                 width="100%"
-                height="500px">
+                height="500px"  [ngClass]="{'dark': isDarkMode}">
               </igx-financial-chart>
             </div>
           </div>

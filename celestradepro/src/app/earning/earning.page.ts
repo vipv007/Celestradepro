@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./earning.page.scss'],
 })
 export class EarningPage implements OnInit {
+  filterTerm: string; // Declare the variable
+  earn: any[]; // or appropriate type
   
   constructor() { }
 

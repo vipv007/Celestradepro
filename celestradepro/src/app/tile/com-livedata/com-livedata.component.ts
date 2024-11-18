@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subscription, interval } from 'rxjs';
 
-
-interface StockData {
+interface CommodityData {
   date: Date;
   open: number;
   high: number;
@@ -13,16 +12,16 @@ interface StockData {
 }
 
 @Component({
-  selector: 'app-stockmarket',
-  templateUrl: './stockmarket.component.html',
-  styleUrls: ['./stockmarket.component.scss'],
+  selector: 'app-com-livedata',
+  templateUrl: './com-livedata.component.html',
+  styleUrls: ['./com-livedata.component.scss'],
 })
-export class StockmarketComponent implements OnInit, OnDestroy {
-
-  chartData: StockData[] = [];
+export class ComLivedataComponent implements OnInit, OnDestroy {
+  chartData: CommodityData[] = [];
   dataSubscription: Subscription;
-  selectedCommoditySymbol: string = '^NSEI'; // Default symbol for Nifty 50
-  readonly baseUrl = 'http://localhost:5000/stock/live/^NSEI'; // Nifty 50 symbol URL
+  selectedCommoditySymbol: string = 'GC=F'; // Default commodity symbol
+  readonly baseUrl = 'http://localhost:5000/commodity';
+  commoditySymbols: string[] = ['GC=F', 'CL=F', 'SI=F', 'HG=F'];
   yAxisMin: number = 0;
   yAxisMax: number = 0;
 
@@ -56,19 +55,19 @@ export class StockmarketComponent implements OnInit, OnDestroy {
     this.fetchLiveData();
   }
 
-  // Fetch live data for Nifty 50
+  // Fetch live data for the selected commodity symbol
   private fetchLiveData(): void {
-    this.http.get<any>(`${this.baseUrl}`, {
+    this.http.get<any>(`${this.baseUrl}/live/${this.selectedCommoditySymbol}`, {
       headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
     }).subscribe(
       data => this.processData(data),
-      error => console.error('Error fetching live Nifty 50 data', error)
+      error => console.error('Error fetching live commodity data', error)
     );
   }
 
-  // Process the fetched Nifty 50 data and update chartData
+  // Process the fetched commodity data and update chartData
   private processData(data: any): void {
-    const formattedData: StockData[] = [];
+    const formattedData: CommodityData[] = [];
 
     // Convert API response data into format expected by igx-financial-chart
     Object.keys(data.Open).forEach(timestamp => {
@@ -84,7 +83,7 @@ export class StockmarketComponent implements OnInit, OnDestroy {
     });
 
     this.chartData = formattedData;
-
+    
     // Update y-axis range based on the data range
     this.yAxisMin = Math.min(...formattedData.map(d => d.low));
     this.yAxisMax = Math.max(...formattedData.map(d => d.high));

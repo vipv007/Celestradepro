@@ -24,7 +24,7 @@
 
     <!-- Settings Dropdown -->
     <div class="settings-dropdown" [ngClass]="{ 'open': isSettingsOpen }">
-      <h3>Customize Sections</h3>
+      <h4>Customize Sections</h4>
       <form>
         <div *ngFor="let section of sections">
           <ion-checkbox [(ngModel)]="section.visible" [ngModelOptions]="{ standalone: true }" (ionChange)="saveSectionPreferences()"></ion-checkbox>
@@ -66,7 +66,8 @@
 
   <!-- Display news articles from NewsService -->
   <div *ngFor="let article of topSentiments | slice:0:1" class="news1">
-    <img [src]="article.imageUrl" alt="Article Image"  width="150" height="150" (error)="onImageError(article)" (load)="onImageLoad(article)">
+    <img [src]="article.imageUrl || defaultImage" alt="Article Image" width="150" height="100"
+      (error)="article.imageUrl = defaultImage" (load)="onImageLoad(article)">
     <div class="news-content">
       <h5><a href="{{ article.url }}" class="news-link">{{ article.headline }}</a></h5>
       <span *ngIf="!article.showMore">{{ article.summary.slice(0, 150) }}...</span>
@@ -74,11 +75,12 @@
       <button (click)="toggleShowMore(article)" class="btn btn-outline-primary mt-2">
         {{ article.showMore ? 'Read less' : 'Read more' }}
       </button>
-      <hr>
+      
     </div>
+    
   </div>
 </div>
-
+<hr>
 <!-- Option News Section -->
 <div class="option-news-container">
   <div class="news-header">
@@ -89,7 +91,7 @@
 
   <!-- Display news articles from OptionnewsService -->
   <div *ngFor="let optionArticle of optionNews | slice:0:1" class="news1">
-    <img [src]="optionArticle.imageUrl" alt="Article Image"  width="150" height="150" (error)="onImageError(optionArticle)" (load)="onImageLoad(optionArticle)">
+    <img [src]="optionArticle.imageUrl|| defaultImage" alt="Article Image"  width="150" height="100" (error)="onImageError(optionArticle)" (load)="onImageLoad(optionArticle)">
     <div class="news-content">
       <h5><a href="{{ optionArticle.url }}" class="news-link">{{ optionArticle.headline }}</a></h5>
       <span *ngIf="!optionArticle.showMore">{{ optionArticle.summary.slice(0, 150) }}...</span>
@@ -97,10 +99,12 @@
       <button (click)="toggleShowMore(optionArticle)" class="btn btn-outline-primary mt-2">
         {{ optionArticle.showMore ? 'Read less' : 'Read more' }}
       </button>
-      <hr>
+      
     </div>
+      
   </div>
 </div>
+<hr>
 
 <!-- Commodity News Section -->
 <div class="commodity-news-container">
@@ -111,8 +115,8 @@
   </div>
 
   <!-- Display a single news article from ComNewsService -->
-  <div *ngIf="commodityNews.length > 0" class="news-item">
-    <img [src]="commodityNews[0].imageUrl" alt="Article Image"  width="150" height="150" (error)="onImageError(commodityNews[0])" (load)="onImageLoad(commodityNews[0])">
+  <div *ngIf="commodityNews.length > 0" class="news1">
+    <img [src]="commodityNews[0].imageUrl|| defaultImage" alt="Article Image"  width="150" height="100" (error)="onImageError(commodityNews[0])" (load)="onImageLoad(commodityNews[0])">
     <div class="news-content">
       <h5><a href="{{ commodityNews[0].url }}" class="news-link">{{ commodityNews[0].headline }}</a></h5>
       <span *ngIf="!commodityNews[0].showMore">{{ commodityNews[0].summary.slice(0, 150) }}...</span>
@@ -120,7 +124,7 @@
       <button (click)="toggleShowMore(commodityNews[0])" class="btn btn-outline-primary mt-2">
         {{ commodityNews[0].showMore ? 'Read less' : 'Read more' }}
       </button>
-      <hr>
+     
     </div>
   </div>
 </div>
@@ -141,6 +145,7 @@
         </div>
         
       </div>
+      
 
       <div *ngIf="isSectionVisible('Top Gainers')" class="side-section">
         <h3 (click)="navigateToGainer()">
@@ -197,30 +202,46 @@
     </div>
 
     <div class="forex-container">
-      <div *ngIf="isSectionVisible('Ecalendar')" class="ecalendar"></div>
-      <div class="calender">
-        <h3 (click)="navigateToCalender()">
-          Forex Economic Calendar <b> &gt;&gt; </b>
-        </h3>
+      <div *ngIf="isSectionVisible('Ecalendar')" class="ecalendar">
+       <div class="calender">
+        <h3 (click)="navigateToCalender()"> Forex Economic Calendar</h3>
         <iframe src="https://widget.myfxbook.com/widget/calendar.html?lang=en&impacts=0,1,2,3&symbols=AUD,CAD,CHF,CNY,EUR,GBP,JPY,NZD,USD"></iframe>
+       </div>
       </div>
     
-      <div *ngIf="isSectionVisible('Fx Hours')" class="fxmarket"></div>
-      <div class="market">
-        <h3>Forex Market Hours</h3>
+      <div *ngIf="isSectionVisible('Fx Hours')" class="fxmarket">
+      <div class="calender">
+        <h3 (click)="navigateToMarkethours()">Forex Market Hours</h3>
         <iframe src="https://widget.myfxbook.com/widget/market-hours.html"></iframe>
       </div>
+      </div>
+
+
+      <div *ngIf="isSectionVisible('Earning calendar')" class="ecalendar">
+      <div class="calender">
+        <h3> Earning Calendar</h3>
+        <iframe src="https://tradingeconomics.com/earnings-calendar"></iframe>
+      </div>
+      </div>
+      
+
+      <div *ngIf="isSectionVisible('Stock Economic Calender')" class="ecalendar">
+        <div class="calender">
+         <h3>Futures Economic Calender</h3>
+         <iframe src="https://www.moneycontrol.com/economic-calendar"></iframe>
+       </div>
+      </div>
     </div>
-    
+   
   
     
     <div *ngIf="isSectionVisible('Trending stocks')" class="Trending stocks">
       <div class="table-layout">
         <div class="table-container">
-          <h2><a href="/celestradepro/Stocks">Stocks</a></h2>
-          <table class="stock-table">
+          <h2 class="text-center" href="/celestradepro/Stocks">Stocks</h2>
+          <table class="trend-forexs-table">
             <thead>
-              <tr>
+              <tr >
                 <th>Symbol</th>
                 <th>Open</th>
                 <th>High</th>
@@ -243,7 +264,7 @@
         </div>
       
         <div class="table-container">
-          <h2><a href="/celestradepro/Forex">Forex</a></h2>
+          <h2 class="text-center" href="/celestradepro/Forex">Forex</h2>
           <table class="stock-table">
             <thead>
               <tr>
@@ -271,11 +292,11 @@
         </div>
       
         <div class="table-container">
-          <h2><a href="/celestradepro/Futures">Commodities</a></h2>
+          <h2 class="text-center" href="/celestradepro/Futures">Commodities</h2>
           <table class="commodity-table">
-            <thead>
+            <thead> 
               <tr>
-                <th>Symbol</th>
+                <th>Symbol</th> 
                 <th>Open</th>
                 <th>High</th>
                 <th>Low</th>

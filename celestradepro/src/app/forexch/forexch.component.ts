@@ -42,6 +42,8 @@ export class ForexchComponent implements OnInit {
   marketDepthData: any;
   chartData: any[];
   selectedTheme = 'light';
+   isDarkMode = false; // Initial state
+
 
   constructor(
     private forexService: ForexService,
@@ -227,6 +229,9 @@ export class ForexchComponent implements OnInit {
   getTotalOrder(marketDepth: any[], side: string): number {
     return marketDepth.reduce((total, item) => total + (side === 'sell' ? item.sell_quantity : 0), 0);
   }
-
+  
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode; 
+  }
 
 }

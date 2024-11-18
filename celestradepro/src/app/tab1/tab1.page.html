@@ -19,11 +19,24 @@
   </ion-segment>
 
   <div *ngIf="selectTabs === 'missed'" class="chart-container">
-    <app-analysis></app-analysis>
+    <div class="tab-buttons">
+      <button (click)="setTabe('live')" [class.active]="selectedTabe === 'live'">Live</button>
+      <button (click)="setTabe('historical')" [class.active]="selectedTabe === 'historical'">Historical</button>
+    </div>
+    <div *ngIf="selectedTabe === 'live'">
+      <app-stockmarket></app-stockmarket>
+    </div>
+    
+    <!-- Content for Historical Data -->
+    <div *ngIf="selectedTabe === 'historical'">
+      <app-analysis></app-analysis>
+     
+    </div>
+
   </div>
 
-  <div *ngIf="selectTabs === 'recent'">
-    <div class="tab">
+  <div *ngIf="selectTabs === 'recent'" >
+    <div class="tab" >
       <button class="tablinks" (click)="openTab($event, 'watchlist')">Watchlist</button>
       <button class="tablinks" (click)="openTab($event, 'gainer')">Top Gainer</button>
       <button class="tablinks" (click)="openTab($event, 'loser')">Top Loser</button>
@@ -31,17 +44,17 @@
     </div>
 
  
-      <div id="watchlist" class="tabcontent" style="display: block;">
-        <div class="container-watchlist">
+      <div id="watchlist" class="tabcontent" style="display: block;" >
+        <div class="container-watchlist" [ngClass]="{'dark': isDarkMode}">
           <!-- Watchlist Section -->
-          <div *ngIf="watchlist.length > 0" class="watchlist-container">
-            <div class="card watchlist-card">
-              <div class="card-header">
+          <div *ngIf="watchlist.length > 0" class="watchlist-container" >
+            <div class="trend-stocks-card watchlist-card">
+              <div class="card-header card">
                 <h3 class="text-center">Watchlist</h3>
               </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="watchlist-table">
+              <div class="card-body"  >
+                <div class="table-responsive" [class.dark]="isDarkMode">
+                  <table class="watchlist-table" >
                     <thead>
                       <tr>
                         <th>Symbol</th>
@@ -53,7 +66,7 @@
                         <th>Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody [ngClass]="{'dark': isDarkMode}">
                       <tr *ngFor="let stock of watchlist">
                         <td (click)="setClickedStock(stock.symbol)">{{ stock.symbol }}</td>
                         <td>{{ stock.open.toFixed(2) }}</td>
@@ -76,17 +89,17 @@
       
           <!-- Trend Stocks Section -->
           <div *ngIf="email && unstoredStocks.length > 0" class="trend-stocks-container">
-            <div class="card trend-stocks-card">
-              <div class="card-header">
+            <div class=" trend-stocks-card">
+              <div class="card-header card">
                 <h3 class="text-center">Trend Stocks</h3>
               </div>
-              <div class="card-body">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Filter by Symbol" [(ngModel)]="filterText"
+              <div class="card-body" [class.dark]="isDarkMode">
+                <div class="form-group" >
+                  <input type="text" class="form-control" placeholder="Filter by Symbol" [(ngModel)]="filterText" 
                     (input)="filterUnstoredStocks()" />
                 </div>
-                <div class="table-responsive">
-                  <table class="trend-stocks-table">
+                <div class="table-responsive" [class.dark]="isDarkMode">
+                  <table class="watchlist-table">
                     <thead>
                       <tr>
                         <th>Symbol</th>
@@ -123,13 +136,13 @@
       
           <!-- Most Active Stocks Section -->
           <div *ngIf="!email && unstoredStocks.length > 0" class="trend-stocks-container">
-            <div class="card trend-stocks-card">
-              <div class="card-header">
+            <div class="trend-stocks-card trend-stocks-card">
+              <div class="card-header card">
                 <h3 class="text-center">Most Active Stocks</h3>
               </div>
               <div class="card-body">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Filter by Symbol" [(ngModel)]="filterText"
+                <div class="form-group" >
+                  <input type="text" class="form-control" placeholder="Filter by Symbol" [(ngModel)]="filterText" 
                     (input)="filterUnstoredStocks()" />
                 </div>
                 <div class="table-responsive">
@@ -171,24 +184,27 @@
       <div id="gainer" class="tabcontent">
 
           <div>
-            <!-- Radio buttons to toggle between chart and table -->
+            <!-- Radio buttons to toggle between chart and  table -->
             <label>
-              <input type="radio" name="toggle" [(ngModel)]="viewGainer" value="chart"> Chart
+              <input type="radio" name="toggleGainer" [(ngModel)]="viewGainer" value="chart"> Chart
             </label>
             <label>
-              <input type="radio" name="toggle" [(ngModel)]="viewGainer" value="table"> Table
+              <input type="radio" name="toggleGainer" [(ngModel)]="viewGainer" value="table"> Table
             </label>
           </div>
 
            <!-- Chart for Gainers -->
     <div *ngIf="viewGainer === 'chart'" style="width: 800px; height: 400px; background-color: black; margin-left: 25%; color: white;">
       <canvas baseChart [datasets]="gainerChartData" [labels]="gainerChartLabels" [chartType]="'horizontalBar'"
-        [options]="barChartOptions">
+        [options]="barChartOptions" [ngClass]="{'dark': isDarkMode}">
       </canvas>
     </div>
 
           <!-- Show table if displayMode is 'table' -->
-          <div *ngIf="viewGainer === 'table'" class="card-body  card trend-forexs-card container-watchlist">
+          <div *ngIf="viewGainer === 'table'" class="card-body  trend-stocks-card trend-forexs-card container-watchlist">
+            <div class="card-header card">
+              <h3 class="text-center">Gainers</h3>
+            </div>
             <table class="responsive-table">
               <thead>
                 <tr class="header-row">
@@ -233,9 +249,11 @@
         [options]="barChartOptions">
       </canvas>
     </div>
-    <div *ngIf="viewLoser === 'table'" class="card-body  card trend-forexs-card container-watchlist">
+    <div *ngIf="viewLoser === 'table'" class="card-body trend-stocks-card trend-forexs-card container-watchlist">
 
-
+        <div class="card-header card">
+          <h3 class="text-center">Losers</h3>
+        </div>
         <table class="responsive-table">
           <thead>
             <tr class="header-row">
@@ -272,9 +290,9 @@
   </div>
 
   <div *ngIf="selectTabs === 'contacts'">
-    <div class="container">
+    <div class="container" [class.dark]="isDarkMode">
       <!-- Sidebar with Details Menu -->
-      <div class="sidebar">
+      <div class="sidebar" >
         <details (toggle)="showContent('NEWS', $event)">
           <summary [class.active]="activeContent === 'NEWS'">NEWS</summary>
         </details>

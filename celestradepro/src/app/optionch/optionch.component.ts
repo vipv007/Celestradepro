@@ -39,7 +39,7 @@ optionData: any;
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.selectedSymbol = params['symbol'];
+      this.selectedSymbol = params.symbol;
       console.log('Selected symbol from query params:', this.selectedSymbol);
       this.loadChartData();
       this.fetchMarketDepthData();

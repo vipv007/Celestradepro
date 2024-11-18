@@ -38,8 +38,11 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+
+
  
-.checkbox-container {
+.checkbox-container { 
   display: flex;
   flex-wrap: wrap;
   width: 70%;
@@ -57,6 +60,12 @@
   height: 100%;
 }
 
+
+.dark .sidebar {
+  background-color: #2c3e50;
+  color: white;
+  /* Text color for dark mode */
+}
 .sidebar {
   // flex: 1;
   max-width: 500px;
@@ -65,12 +74,13 @@
   padding: 10px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
+  color: rgb(94, 10, 190);
 }
 
 .content-area {
   flex: 3;
   padding: 20px;
-  background-color: #ffffff;
+ // background-color: #ffffff;
   overflow-y: auto;
   max-height: 100vh;
 }
@@ -78,7 +88,7 @@
 summary {
   margin-left: 30px;
   margin-top: 10px;
-  color: rgb(94, 10, 190);
+ // color: rgb(94, 10, 190);
   font-weight: bold;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
@@ -205,7 +215,11 @@ ion-segment {
      
   }
 }
-
+.dark .tab {
+  button{
+  color: white;
+  } 
+}
 ion-button {
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: medium;
@@ -275,7 +289,7 @@ ion-card-title {
 .footer-row {
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: medium;
-  background-color: rgb(216, 223, 223);
+ // background-color: rgb(216, 223, 223);
 }
 
 h4 {
@@ -303,9 +317,7 @@ ion-searchbar {
   border-radius: 3px;
 }
 
-#c5 {
-  background-color: rgb(204, 212, 212);
-}
+
 
 .red {
   margin-left: 70px;
@@ -314,7 +326,7 @@ ion-searchbar {
 .tab {
   overflow: hidden;
   border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  //background-color: #f1f1f1;
 }
 
 /* Style the buttons that are used to open the tab content */
@@ -418,7 +430,7 @@ select {
 
 .header-row {
   font-weight: bold;
-  background-color: #f8f8f8;
+ // background-color: #f8f8f8;
   border-bottom: 2px solid #ccc;
   text-align: center;
 }
@@ -433,7 +445,7 @@ small {
 /* Global Styles */
 body {
   font-family: Georgia, 'Times New Roman', Times, serif;
-  background-color: #f4f6f9;
+ // background-color: #f4f6f9;
   color: #333;
   margin: 0;
   padding: 0;
@@ -452,18 +464,12 @@ body {
   height: 100%;
 }
 
-.sidebar {
-  max-width: 300px;
-  background-color: #c4f3e9;
-  padding: 10px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-}
+
 
 .content-area {
   flex: 1;
   padding: 20px;
-  background-color: #ffffff;
+  //background-color: #ffffff;
   overflow-y: auto;
   max-height: 100vh;
 }
@@ -476,6 +482,12 @@ ion-header {
 /* Styling for Forms */
 .form-group {
   margin-bottom: 20px;
+}
+
+.dark .form-control {
+  background-color: #37474F;
+  color: white;
+ 
 }
 
 .form-control {
@@ -546,30 +558,22 @@ td {
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-th {
-  background-color: #f2f2f2;
-}
+// th {
+//   //background-color: #f2f2f2;
+// }
 
 
 
-.table-hover tbody tr:hover {
-  background-color: #f1f1f1;
-}
+// .table-hover tbody tr:hover {
+//   background-color: #f1f1f1;
+// }
 
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: #f9f9f9;
-}
+// .table-striped tbody tr:nth-of-type(odd) {
+//   background-color: #f9f9f9;
+// }
 
 /* Summary and Segment Styles */
-summary {
-  margin: 10px 0 10px 30px;
-  color: rgb(94, 10, 190);
-  font-weight: bold;
-}
 
-summary.active {
-  color: #FF5733;
-}
 
 ion-segment-button {
   --color: #FF5733;
@@ -579,7 +583,7 @@ ion-segment-button {
 .tab {
   overflow: hidden;
   border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  //background-color: #f1f1f1;
 }
 
 .tab button {
@@ -620,16 +624,23 @@ ion-segment-button {
 //   text-align: center;
 // }
 
-.card {
+.trend-stocks-card {
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  background-color: #fff;
+ // background-color: #fff;
 }
 
+.table-responsive{
+  text-align: center;
+}
+
+
+
+
 .card-header {
-  background-color: #c9def5;
+ // background-color: #c9def5;
   color: #fff;
   border-radius: 8px 8px 0 0;
   padding: 5px;
@@ -689,7 +700,7 @@ select {
 .tabs-content {
 
   padding: 10px;
-  background-color: #f8f9fa;
+ // background-color: #f8f9fa;
   /* Light background for better contrast */
 }
 
@@ -719,20 +730,29 @@ select {
 .watchlist-table th {
   background-color: #343a40;
   color: white;
+ 
+
 }
 
-.watchlist-table td {
-  background-color: #ffffff;
+.dark .watchlist-table th {
+  background-color: #37474F;
+  color: white;
+
 }
 
-.watchlist-table tr:hover {
-  background-color: #f1f1f1;
-}
+
+// .watchlist-table td {
+//   background-color: #ffffff;
+// }
+
+// .watchlist-table tr:hover {
+//   background-color: #f1f1f1;
+// }
 
 .watchlist-tab {
   padding: 20px;
   /* Add padding around the table */
-  background-color: #ffffff;
+ // background-color: #ffffff;
   border-radius: 8px;
 }
 
@@ -743,7 +763,7 @@ select {
 
 :host {
   display: block;
-  background-color: #f1f4f5;
+ // background-color: #f1f4f5;
   padding: 20px;
   border-radius: 10px;
   box-sizing: border-box;
@@ -846,4 +866,497 @@ button:hover {
   //   max-width: 100%;
   //   margin: 0 auto;
   // }
+}
+
+.ion-padding{
+  ion-header {
+      height: 13%;
+    }
+  
+  
+    h2 {
+      margin-left: 20px;
+    }
+  
+    ion-card-title {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: medium;
+      font-weight: bolder;
+    }
+  
+    #container {
+      text-align: center;
+  
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  
+    ion-card-content {
+      height: 400px;
+      width: 600px;
+  
+    }
+  
+    #container strong {
+      font-size: 20px;
+      line-height: 26px;
+    }
+  
+    #container p {
+      font-size: 16px;
+      line-height: 22px;
+  
+      color: #8c8c8c;
+  
+      margin: 0;
+    }
+  
+    #container a {
+      text-decoration: none;
+    }
+  
+    ion-content {
+      --background: rgba(144, 190, 243, 0.53);
+    }
+  
+    .bg {
+  
+      font-family: Times New Roman !important;
+      font-size: 1.1em;
+    }
+  
+    td {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-weight: bolder;
+      font-weight: bold;
+  
+    }
+  
+    th {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-weight: bolder;
+      font-weight: bold;
+  
+    }
+
+        tbody>tr>td {
+          font-size: 13px;
+        }
+    
+        .coulmn_head {
+          position: relative;
+        }
+    
+        th {
+    
+          color: rgb(17, 16, 16);
+    
+    
+        }
+    
+        .sell {
+          margin-right: 20px;
+        }
+
+                .input-item {
+                  --padding-start: 0;
+                  margin-bottom: 10px;
+                  background-color: white;
+        
+                }
+        
+                .input-label {
+                  font-size: 16px;
+                }
+        
+                .input-field {
+                  font-size: 16px;
+                }
+        
+        
+                .buy-button,
+                .cancel-button {
+                  font-size: 15px;
+                  height: 50px;
+                  width: 70px;
+                  padding: 2px;
+                  padding: 5px 10px;
+        
+        
+                }
+        
+                .dns {
+                  margin-left: 1080px;
+                  padding: 2px;
+                }
+        
+                h3 {
+                  color: white
+                }
+        
+                input {
+                  width: 80px;
+                  background-color: #c6cac5;
+                  margin-bottom: -19px;
+                }
+        
+                pre {
+                  color: white
+                }
+        
+                /* Add this CSS to your stylesheet */
+                ion-item .select-text-ion-item-inner {
+                  border: none;
+                  /* Remove border from select options */
+                }
+        
+                .sto {
+                  margin-left: 3%;
+                  width: 33%;
+                  height: 270px;
+                  border: 2px solid gray;
+                  padding: 10px;
+        
+                }
+        
+                .adj {
+                  display: flex;
+                }
+        
+                .box {
+                  width: 21%;
+                  height: 270px;
+                  background-color: #b7b9b6;
+                }
+        
+        
+        
+                .buy {
+                  margin-bottom: -12px;
+                  clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 70%, 70% 100%, 0 100%);
+                  padding-bottom: 20px;
+                }
+        
+                .sell {
+                  margin-bottom: -3px;
+                  clip-path: polygon(0% 15%, 0 0, 15% 0%, 85% 0%, 100% 0, 100% 15%, 100% 85%, 100% 100%, 85% 100%, 33% 100%, 33% 70%, 0 70%);
+                  padding-bottom: 20px;
+                  margin-right: 20px;
+        
+                }
+        
+                .m1 {
+                  margin-left: 40%;
+                  width: 80px;
+                }
+        
+                .ms {
+                  height: 25px;
+                  margin-top: 28%;
+                  margin-left: 0%;
+                }
+        
+                .ask {
+                  font-size: 15px;
+                  height: 30px;
+                  width: 70px;
+                  padding: -2px;
+                  text-decoration: none;
+                  display: inline-block;
+                  background-color: #FFEAA7;
+                  margin: 6px 4px;
+                  margin-top: -18px;
+                  cursor: pointer;
+                  box-shadow: #f05851;
+        
+                }
+        
+                .asks {
+        
+                  font-size: 16px;
+                  height: 30px;
+                  width: 120px;
+                  padding: 2px;
+                  background-color: #B3FFAE;
+        
+                  margin-top: -68px;
+        
+        
+                  text-decoration: none;
+                  display: inline-block;
+        
+                  margin: 4px 2px;
+                  cursor: pointer;
+                }
+        
+                .ask {
+                  background-color: #9e9796;
+                  /* Customize background color for Ask buttons */
+                  color: #fff;
+                  /* Text color */
+                }
+        
+                .asks {
+                  background-color: #949795;
+                  /* Customize background color for Asks buttons */
+                  color: #fff;
+                  /* Text color */
+                }
+        
+                input {
+                  background-color: #edefed;
+                  width: 48px;
+                  text-decoration: none;
+                }
+        
+                pre {
+                  color: white
+                }
+        
+                ion-card {
+                  width: 100px;
+                  height: 100px;
+                  text-align: center;
+                  color: white;
+                  font-family: Georgia, 'Times New Roman', Times, serif;
+                  font-weight: bold;
+                  font-size: larger;
+                }
+        
+                button,
+                input {
+                  margin: 2px;
+                }
+        
+                th {
+                  background-color: #E63F1E;
+                  color: white;
+                  width: 10%;
+                  margin-left: 100px;
+                  font-size: 15px;
+                }
+        
+                td {
+                  color: black;
+                }
+        
+                .buys {
+                  background-color:#4CAF50;
+                }
+        
+                /* Light Mode */
+                .financial-chart {
+                  background-color: #171616c3;
+                }
+        
+                /* Dark Mode */
+                .dark-mode .financial-chart {
+                  background-color: white;
+                  /* Set background color to white */
+                  /* Dark mode styles */
+                }
+        
+                .sele {
+                  margin-right: 0%;
+                  background-color: #f2f2f2;
+                  border: 1px solid #f2f2f2;
+                }
+
+            small {
+              font-weight: bolder;
+              font-weight: bold;
+              font-size: 15px;
+              text-align: center;
+              font-family: Georgia, 'Times New Roman', Times, serif;
+              color: white;
+    
+            }
+}
+
+
+.newsclass{
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+}
+
+
+/* URL Input Section */
+.url-input-section {
+  margin-left: 35px;
+  width: 350px;
+}
+
+/* Search Bar */
+.search-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+
+
+
+/* Horizontal List Styles */
+.horizontal-list {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  gap: 25px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+
+
+th,
+td {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #f9f7f7;
+}
+
+
+/* Responsive Table */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Pagination Styles */
+.pagination {
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-item {
+  cursor: pointer;
+}
+
+.page-link {
+  color: #007bff;
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Chart Container */
+.chart-container {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+/* News Link */
+
+
+.news-link:hover {
+  color: blue;
+}
+
+/* Summary Styles */
+.small {
+  color: #413ef1;
+}
+
+/* Input Styles */
+.input {
+  margin-left: 72%;
+  width: 25%;
+}
+
+/* Button Styles */
+.btn-outline-primary {
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #e0e0e0;
+}
+
+.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: #e0e0e0;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:disabled {
+  cursor: not-allowed;
+}
+
+/* News Section */
+.news1 {
+  margin-left: 30px;
+  display: flex;
+  align-items: flex-start;
+  border: none;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.news-content {
+  margin-left: 15px;
+}
+
+.n1 {
+  display: flex;
+  align-items: start;
+}
+}
+
+.search-bar input {
+  margin-right: 10px;
+  width: 300px;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.dark .search-bar input {
+  background-color: #37474F;
+  color: white;
+}
+
+.dark .t th {
+  background-color: #37474F;
+  color: white;
+}
+
+.t th {
+  background-color: wheat;
+  color: #333;
+  cursor: pointer;
+
+}
+
+.dark .news-link{
+  color: white;
+}
+
+.news-link {
+  text-decoration: none;
+  color: black;
 }

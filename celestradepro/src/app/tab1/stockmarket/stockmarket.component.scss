@@ -1,0 +1,37 @@
+.chart-container {
+    text-align: center;
+  }
+  
+  h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .data-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .data-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  .data-button:active {
+    transform: scale(0.95);
+  }
+  

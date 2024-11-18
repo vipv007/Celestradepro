@@ -35,7 +35,7 @@ export class AnalysisComponent implements OnInit {
   displayMarketDepth = false;
   mk: any;
   chartData: any[] = [];
-  isDarkMode = false; // Initial state
+  isDarkMode = true; // Initial state
 
 
 
@@ -53,7 +53,9 @@ export class AnalysisComponent implements OnInit {
 
     await alert.present();
   }
-
+  navigateToCres(): void {
+    this.router.navigate(['/cres']);
+  }
 
   openLoginForm() {
     this.modalOpen = true;
@@ -224,7 +226,7 @@ export class AnalysisComponent implements OnInit {
 
    // Function to toggle dark mode
   toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
+    this.isDarkMode = !this.isDarkMode; 
   }
 
 }

@@ -18,6 +18,11 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./tile.page.scss'],
 })
 export class TilePage implements OnInit {
+
+  selectedTabe: string = 'live'; // Default to "Live" tab
+  setTabe(tab: string) {
+    this.selectedTabe = tab;
+  }
   selectedTab = 1;
   coms: any[] = [];
    

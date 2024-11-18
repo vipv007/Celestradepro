@@ -17,6 +17,11 @@ import { Color, Label } from 'ng2-charts';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+  selectedTabe: string = 'live'; // Default to "Live" tab
+  setTabe(tab: string) {
+    this.selectedTabe = tab;
+  }
+
   stocks: any[] = [];
   private destroy$ = new Subject(); 
   technicals: any[] = [];
@@ -29,7 +34,7 @@ export class Tab1Page {
   currentIndex = 0;
   sortOrder: string = ''; 
   searchTerm: string = '';
-  clickedStock = '';
+  clickedStock = ''; 
  
   selectedStock: any;
   option = '';

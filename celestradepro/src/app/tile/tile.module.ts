@@ -23,6 +23,7 @@ import { ComtechnicalComponent } from './comtechnical/comtechnical.component';
 //import { BillPage } from '../bill/bill.page';
 import { CompriPage } from '../compri/compri.page';
 import { CompriceComponent } from './comprice/comprice.component';
+import { ComLivedataComponent } from './com-livedata/com-livedata.component';
 import { ChartsModule } from 'ng2-charts';
 
 
@@ -31,7 +32,7 @@ import { ChartsModule } from 'ng2-charts';
     ComNewsComponent,
     Ribbon1Component, ProfileComponent, CommodityComponent, ComcalenderComponent,CommodityGainerComponent,
     ComChartComponent, MarketheatComponent, CommarketComponent, ScreenerComponent, ComprofComponent,ComtechnicalComponent,
-    CompriPage,CompriceComponent ],
+    CompriPage,CompriceComponent,ComLivedataComponent ],
 
 
 

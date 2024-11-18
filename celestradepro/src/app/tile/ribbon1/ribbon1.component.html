@@ -1,10 +1,10 @@
 <div [ngClass]="{'hidden': !showWidget}">
-  <button (click)="toggleWidget()"><b>x</b></button>
+  <ion-icon name="close-outline" (click)="toggleWidget()"></ion-icon>
   <div>
     <div #tradingview class="tradingview-widget-container"></div>
   </div>
 </div>
 
 <div *ngIf="!showWidget">
-  <button (click)="toggleWidget()"><b>+</b></button>
+  <ion-icon name="add-outline" (click)="toggleWidget()"></ion-icon>
 </div>

@@ -6,7 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/api'; // Your backend URL
+  private apiUrl = 'http://celescontainerwebapp-server.mongo.cosmos.azure.com:3000/api'; // Your backend URL
   private email: string | null = null;
   private isLoggedInSubject = new BehaviorSubject<boolean>(false); // To track login status
   private loginExpirationDays = 2; // Set the number of days before automatic logout
@@ -106,5 +106,46 @@ export class UserService {
     localStorage.removeItem('userEmail'); // Remove email from localStorage
     localStorage.removeItem('loginTimestamp'); // Remove login timestamp
     this.isLoggedInSubject.next(false); // Mark user as logged out
+  }
+
+  // userService.js
+    archiveArticle(email: string, archivedArticle: any): Observable<any> {
+        // Assuming you have an endpoint to handle archiving for users
+        return this.http.post(`${this.apiUrl}/users/${email}/archive`, archivedArticle);
+    }
+
+    getArchivedArticles(email: string): Observable<any> {
+      return this.http.get(`${this.apiUrl}/archive/${email}`);
+      
+  }
+  
+   archiveArticleop(email: string, archivedArticleop: any): Observable<any> {
+        // Assuming you have an endpoint to handle archiving for users
+        return this.http.post(`${this.apiUrl}/users/${email}/archiveop`, archivedArticleop);
+  }
+  
+  getArchivedArticlesop(email: string): Observable<any> {
+      return this.http.get(`${this.apiUrl}/archiveop/${email}`);
+      
+  }
+
+  archiveArticlecom(email: string, archivedArticlecom: any): Observable<any> {
+        // Assuming you have an endpoint to handle archiving for users
+        return this.http.post(`${this.apiUrl}/users/${email}/archivecom`, archivedArticlecom);
+  }
+  
+  getArchivedArticlescom(email: string): Observable<any> {
+      return this.http.get(`${this.apiUrl}/archivecom/${email}`);
+      
+  }
+
+  archiveArticlefox(email: string, archivedArticlefox: any): Observable<any> {
+        // Assuming you have an endpoint to handle archiving for users
+        return this.http.post(`${this.apiUrl}/users/${email}/archivefox`, archivedArticlefox);
+  }
+  
+  getArchivedArticlesfox(email: string): Observable<any> {
+      return this.http.get(`${this.apiUrl}/archivefox/${email}`);
+      
   }
 }

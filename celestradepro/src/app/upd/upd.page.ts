@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-upd',
@@ -9,12 +9,20 @@ import { Component, OnInit } from '@angular/core';
 
 export class UpdPage implements OnInit {
 
- 
+  vegForm: FormGroup;
 
-  constructor( ) { }
+  constructor(private fb: FormBuilder) {
+    this.vegForm = this.fb.group({
+      // Define your form controls here
+    });
+  }
+
+
   ngOnInit() { }
 
-  
+  onSubmit() {
+    // Handle form submission
+  }
   
 
  }

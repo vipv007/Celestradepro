@@ -3,6 +3,7 @@ import { ForexnewsService } from '../../services/forexnews.service';
 import { ChartType, ChartOptions } from 'chart.js';
 import { Label, SingleDataSet } from 'ng2-charts';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-news',
@@ -14,10 +15,10 @@ export class NewsComponent implements OnInit {
   news: any[] = [];
   activeNews: any[] = [];
   archivedNews: any[] = [];
-
+  defaultImage: string = '../../assets/g4.jpg';
   currentSortProperty: string = 'title'; // Default sorting property
   currentSortOrder: string = 'asc'; // Default sorting order
-
+  
   pagedActiveNews: any[] = [];
   pagedArchivedNews: any[] = [];
   activeCurrentPage: number = 1;
@@ -25,7 +26,7 @@ export class NewsComponent implements OnInit {
   itemsPerPage: number = 10;
    mainUrls: { name: string, selected: boolean }[] = []; // Updated type
   showPopup: boolean = false;
-
+   archivedArticlesfox: any[] = [];
   manualUrl: string = '';
   summaryData: any = null;
   errorMessage: string = '';
@@ -52,10 +53,15 @@ export class NewsComponent implements OnInit {
     },
   ];
 
-  constructor(private forexnewsService: ForexnewsService, private http: HttpClient) {}
+  constructor(private forexnewsService: ForexnewsService,private userService: UserService, private http: HttpClient) {}
 
   ngOnInit() {
     this.loadNews();
+    this.fetchArchivedArticles();
+  }
+  
+   onImageError(article: any) {
+    article.imageUrl = this.defaultImage;
   }
 
   fxSummarizeUrl() {
@@ -191,13 +197,51 @@ export class NewsComponent implements OnInit {
     this.updatePagedNews();
   }
 
+  // archiveArticle(article) {
+  //   this.forexnewsService.archiveNews(article._id).subscribe(() => {
+  //     article.archive = true;
+  //     this.filterNews();
+  //     this.updatePagedNews();
+  //     this.prepareChartData();
+  //   });
+  // }
+
   archiveArticle(article) {
-    this.forexnewsService.archiveNews(article._id).subscribe(() => {
-      article.archive = true;
-      this.filterNews();
-      this.updatePagedNews();
-      this.prepareChartData();
+    const archivedArticlefox = {
+      id: article._id,
+      headline: article.headline,
+      summary: article.summary,
+      sentimentScore: article.sentimentScore,
+      sentiment: article.sentiment,
+      articleDateTime: article.articleDateTime,
+      imageUrl: article.imageUrl || this.defaultImage // Fallback image if none provided
+    };
+
+    // Call the UserService method to archive the article for the user
+    this.userService.archiveArticlefox(this.userService.getEmail(), archivedArticlefox).subscribe(() => {
+      article.archive = true; // Mark the article as archived in the UI
+      this.filterNews(); // Call your method to filter the news
+      this.updatePagedNews(); // Call your method to update the paged news
+       this.prepareChartData();
     });
+
+    this.forexnewsService.archiveNews(article._id).subscribe(() => {
+       article.archive = true;
+       
+    });
+  }
+
+  fetchArchivedArticles() {
+    const email = this.userService.getEmail(); // Get email from the UserService
+    this.userService.getArchivedArticlesfox(email).subscribe(
+    (data) => {
+      console.log('Fetched data:', data); // Check the structure of the data
+    this.archivedArticlesfox = data;
+    },
+    (error) => {
+      console.error('Error fetching archived articles:', error);
+    }
+  );
   }
 
   activePageRange(): number[] {

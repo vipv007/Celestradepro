@@ -128,20 +128,24 @@
 }
 
 /* Different background colors for heatmap cells */
-.heatmap-cell:nth-child(2n) {
+.heatmap-cell:nth-child(1n) {
     background-color: #fff3cd; /* Light yellow */
 }
 
-.heatmap-cell:nth-child(3n) {
+.heatmap-cell:nth-child(2n) {
     background-color: #d4edda; /* Light green */
 }
 
-.heatmap-cell:nth-child(4n) {
+.heatmap-cell:nth-child(3n) {
     background-color: #d1ecf1; /* Light blue */
 }
 
-.heatmap-cell:nth-child(5n) {
+.heatmap-cell:nth-child(4n) {
     background-color: #f8d7da; /* Light pink */
+}
+.heatmap-cell:nth-child(5n) {
+    background-color: #f1b3b3;
+    /* Light pink */
 }
 
 /* Media query for smaller screens */
@@ -160,4 +164,16 @@
     .heatmap-cell {
         padding: 15px;
     }
+}
+
+:host-context(.dark) .heatmap-container {
+    background-color: #37474F;
+    /* Dark background for container */
+    // color: white;
+}
+
+:host-context(.dark) .heatmap-cell .heatmap {
+    background-color: #37474F;
+    /* Dark background for table */
+    color: #444;
 }

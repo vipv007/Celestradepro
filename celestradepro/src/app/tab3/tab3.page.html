@@ -18,8 +18,19 @@
     </ion-segment-button>
   </ion-segment>
 
-  <div *ngIf="selectTabs === 'missed'">
-    <app-forexch></app-forexch>
+  <div *ngIf="selectTabs === 'missed'" class="chart-container">
+    <div class="tab-buttons">
+      <button (click)="setTabe('live')" [class.active]="selectedTabe === 'live'">Live</button>
+      <button (click)="setTabe('historical')" [class.active]="selectedTabe === 'historical'">Historical</button>
+    </div>
+    <div *ngIf="selectedTabe === 'live'">
+      <app-forexlive></app-forexlive>
+    </div>
+    <!-- Content for Historical Data -->
+    <div *ngIf="selectedTabe === 'historical'">
+      <app-forexch></app-forexch>
+    </div>
+   
   </div>
 
   
@@ -36,8 +47,8 @@
       <div class="container-watchlist">
         <!-- Watchlist Section -->
         <div *ngIf="watchlist.length > 0" class="watchlist-container">
-          <div class="card watchlist-card">
-            <div class="card-header">
+          <div class="trend-stocks-card watchlist-card">
+            <div class="card-header card ">
               <h3 class="text-center">Watchlist</h3>
             </div>
             <div class="card-body">
@@ -79,8 +90,8 @@
     
         <!-- Trend Forex Section -->
         <div *ngIf="email && availableforexs.length > 0" class="trend-forexs-container">
-          <div class="card trend-forexs-card">
-            <div class="card-header">
+          <div class="trend-stocks-card trend-forexs-card">
+            <div class="card-header card">
               <h3 class="text-center">Trend Forex</h3>
             </div>
             <div class="card-body">
@@ -200,8 +211,10 @@
     </div>
   
     <!-- Table for Gainers -->
-    <div *ngIf="viewGainer === 'table'" class=" card-body  card trend-forexs-card container-watchlist ">
-      <h4 class="text-center">Gainer Table</h4>
+    <div *ngIf="viewGainer === 'table'" class=" card-body  trend-stocks-card trend-forexs-card container-watchlist ">
+    <div class="card-header card">
+      <h3 class="text-center">Gainers</h3>
+    </div>
       <table class="trend-forexs-table">
         <thead>
           <tr class="header-row">
@@ -246,8 +259,10 @@
     </div>
   
     <!-- Table for Losers -->
-    <div *ngIf="viewLoser === 'table'" class=" card-body  card trend-forexs-card container-watchlist ">
-      <h4 class="text-center">Loser Table</h4>
+    <div *ngIf="viewLoser === 'table'" class=" card-body  trend-stocks-card trend-forexs-card container-watchlist ">
+      <div class="card-header card">
+        <h3 class="text-center">Losers</h3>
+      </div>
       <table class="trend-forexs-table">
         <thead>
           <tr class="header-row">

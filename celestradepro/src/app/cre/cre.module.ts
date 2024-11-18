@@ -7,6 +7,7 @@ import { CrePageRoutingModule } from './cre-routing.module';
 
 import { CrePage } from './cre.page';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
+    HighchartsChartModule,
     CrePageRoutingModule
   ],
   declarations: [CrePage]

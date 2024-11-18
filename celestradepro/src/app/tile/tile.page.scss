@@ -693,80 +693,80 @@
 
 // }
 /* Tab content styles */
-.tabcontent {
-    padding: 20px;
-  }
+// .tabcontent {
+//     padding: 20px;
+//   }
   
-  /* Tabs button style */
-  .tabss .style {
-    padding: 10px 20px;
-    margin-right: 5px;
-    cursor: pointer;
-    background-color: #f1f1f1;
-    border: none;
-    outline: none;
-  }
+//   /* Tabs button style */
+//   .tabss .style {
+//     padding: 10px 20px;
+//     margin-right: 5px;
+//     cursor: pointer;
+//     background-color: #f1f1f1;
+//     border: none;
+//     outline: none;
+//   }
   
-  .tabss .style.active {
-    background-color: #4CAF50; /* Active tab color */
-    color: white;
-  }
+//   .tabss .style.active {
+//     background-color: #4CAF50; /* Active tab color */
+//     color: white;
+//   }
   
-  /* Table style */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
+//   /* Table style */
+//   table {
+//     width: 100%;
+//     border-collapse: collapse;
+//     margin-top: 20px;
+//   }
   
-  table th, table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
+//   table th, table td {
+//     padding: 12px;
+//     text-align: left;
+//     border-bottom: 1px solid #ddd;
+//   }
   
-  table th {
-    background-color:#333;
-    color: white;
-  }
+//   table th {
+//     background-color:#333;
+//     color: white;
+//   }
   
-  .header-row th {
-    background-color: #333;
-    color: #fff;
-  }
+//   .header-row th {
+//     background-color: #333;
+//     color: #fff;
+//   }
   
-  /* Chart container styles */
-  canvas {
-    width: 100% !important;
-    height: auto !important;
-  }
+//   /* Chart container styles */
+//   canvas {
+//     width: 100% !important;
+//     height: auto !important;
+//   }
   
-  .card-body {
-    padding: 15px;
-  }
+//   .card-body {
+//     padding: 15px;
+//   }
   
-  .trend-forexs-card {
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
+//   .trend-forexs-card {
+//     background: #f8f9fa;
+//     border: 1px solid #ddd;
+//     border-radius: 5px;
+//   }
   
-  .trend-forexs-table {
-    width: 100%;
-    margin-top: 15px;
-    border-collapse: collapse;
-  }
+//   .trend-forexs-table {
+//     width: 100%;
+//     margin-top: 15px;
+//     border-collapse: collapse;
+//   }
   
-  .trend-forexs-table th, .trend-forexs-table td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-  }
+//   .trend-forexs-table th, .trend-forexs-table td {
+//     padding: 10px;
+//     text-align: center;
+//     border-bottom: 1px solid #ddd;
+//   }
   
-  /* Optional responsive behavior */
-  @media screen and (max-width: 768px) {
-    table, canvas {
-      width: 100%;
-    }
-  }
+//   /* Optional responsive behavior */
+//   @media screen and (max-width: 768px) {
+//     table, canvas {
+//       width: 100%;
+//     }
+//   }
   

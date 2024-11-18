@@ -1,15 +1,17 @@
 <div class="ion-padding">
   
-  <!--select id="symbol" [(ngModel)]="symbol" (change)="loadSymbolData(symbol)" class="sele">
+ <button class="buys"> <select id="symbol" [(ngModel)]="symbol" (change)="loadSymbolData(symbol)" class="buys" style="border:  #3ced0b;">
     <option value="AAPL">AAPL</option>
     <option value="GOOGL">GOOGL</option>
     <option value="AMZN">AMZN</option>
     <option value="MSFT">MSFT</option>
-  </select-->
+ </select></button>
 
 
-  <button  class="buy" (click)="showBox = !showBox">{{ this.symbol }}&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
-    <button class="buy" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button>
+  <button  class="buys" (click)="showBox = !showBox">{{ this.symbol }}&nbsp;<ion-icon name="contract-outline"></ion-icon></button>
+    <button class="buys" (click)="showButton = !showButton">Depth<ion-icon name="contract-outline"></ion-icon></button>
+    <!-- <button class="buys" (click)="navigateToCres()">Live Data <ion-icon name="contract-outline"></ion-icon></button> -->
+
     <div class="adj">
         <div class="box" *ngIf="showBox">
            
@@ -157,10 +159,15 @@
     
   <br>
   
-      <button (click)="toggleDarkMode()"> Dark Mode</button>
-    <div class="chart-container" [ngClass]="{'dark-mode': isDarkMode}">
+      <!-- <button (click)="toggleTheme()"> Dark Mode</button> -->
+      <!-- <button (click)="toggleDarkMode()"> Dark Mode</button> -->
+
+  <div>
+    <!-- Other template code -->
+  <br>
+  <div class="chart-container" [ngClass]="{'dark': isDarkMode}">
       <br>
-      <igx-financial-chart [dataSource]="chartData" chartType="Candle" height="500px" width="100%">
+      <igx-financial-chart [dataSource]="chartData" chartType="Candle" height="500px" width="100%"  [ngClass]="{'dark': isDarkMode}">
       </igx-financial-chart>
     </div>
     

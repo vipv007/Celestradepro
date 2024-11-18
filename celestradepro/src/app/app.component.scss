@@ -65,3 +65,29 @@ img{
     background-color: aqua;
     border-top-right-radius: 0pc;
 }
+
+.dark .sidebar {
+    background-color: #2c3e50;
+    /* Dark background */
+    color: white;
+}
+
+.light .sidebar {
+    background-color: #c4f3e9;
+    /* Light background */
+    color: black;
+}
+
+ion-icon.connected {
+    color: #53A57D;
+}
+
+ion-icon.disconnected {
+   color: #CC313D;
+}
+
+.custom-button {
+    margin-right: 5px;
+    font-size: 20px;
+    //cursor: pointer;
+}

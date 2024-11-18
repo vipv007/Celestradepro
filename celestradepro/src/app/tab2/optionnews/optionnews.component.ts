@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OptionnewsService } from '../../services/optionnews.service';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-optionnews',
@@ -23,15 +24,17 @@ export class OptionnewsComponent implements OnInit {
   activeCurrentPage: number = 1;
   archivedCurrentPage: number = 1;
   itemsPerPage: number = 10;
+   archivedArticlesop: any[] = [];
   currentSortProperty: string = 'title';
   currentSortOrder: string = 'asc';
   mainUrls: { name: string, selected: boolean }[] = []; // Updated type
   showPopup: boolean = false;
-
-  constructor(private optionnewsService: OptionnewsService,private http: HttpClient) { }
+  defaultImage: string = '../../../assets/g4.jpg';
+  constructor(private optionnewsService: OptionnewsService, private userService: UserService,private http: HttpClient) { }
 
   ngOnInit() {
     this.loadNews();
+    this.fetchArchivedArticles();
   }
 
   loadNews() {
@@ -47,6 +50,10 @@ export class OptionnewsComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+ 
+  onImageError(article: any) {
+    article.imageUrl = this.defaultImage;
   }
 
   populateMainUrls() {
@@ -167,11 +174,41 @@ export class OptionnewsComponent implements OnInit {
   }
 
   archiveArticle(article) {
-    this.optionnewsService.archiveOptionnews(article._id).subscribe(() => {
-      article.archive = true;
-      this.filterNews();
-      this.updatePagedNews();
+    const archivedArticleop = {
+      id: article._id,
+      headline: article.headline,
+      summary: article.summary,
+      sentimentScore: article.sentimentScore,
+      sentiment: article.sentiment,
+      articleDateTime: article.articleDateTime,
+      imageUrl: article.imageUrl || 'defaultImage' // Fallback image if none provided
+    };
+
+    // Call the UserService method to archive the article for the user
+    this.userService.archiveArticleop(this.userService.getEmail(), archivedArticleop).subscribe(() => {
+      article.archive = true; // Mark the article as archived in the UI
+      this.filterNews(); // Call your method to filter the news
+      this.updatePagedNews(); // Call your method to update the paged news
+      
     });
+
+    this.optionnewsService.archiveOptionnews(article._id).subscribe(() => {
+       article.archive = true;
+       
+    });
+  }
+
+  fetchArchivedArticles() {
+    const email = this.userService.getEmail(); // Get email from the UserService
+    this.userService.getArchivedArticlesop(email).subscribe(
+    (data) => {
+      console.log('Fetched data:', data); // Check the structure of the data
+    this.archivedArticlesop = data;
+    },
+    (error) => {
+      console.error('Error fetching archived articles:', error);
+    }
+  );
   }
 
   activeTotalPagesArray(): number[] {

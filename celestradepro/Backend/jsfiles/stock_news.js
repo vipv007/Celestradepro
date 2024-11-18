@@ -5,7 +5,7 @@ const cheerio = require("cheerio");
 const Sentiment = require("sentiment");
 
 // MongoDB connection URL and Database Name
-const MONGODB_URI = "mongodb://127.0.0.1/";
+const MONGODB_URI = "mongodb://172.27.240.1:27017/";
 const DB_NAME = "FinanceDB";
 
 // Google API Key

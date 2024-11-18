@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NewsService } from '../../services/news.service';
+import { UserService } from '../../services/user.service';
 import { ChartType, ChartOptions } from 'chart.js';
 import { Label, SingleDataSet } from 'ng2-charts';
 import { HttpClient } from '@angular/common/http';
@@ -14,10 +15,10 @@ export class ChartsComponent implements OnInit {
   news: any[] = [];
   activeNews: any[] = [];
   archivedNews: any[] = [];
-
+  defaultImage: string = '../../../assets/g4.jpg';
   currentSortProperty: string = 'title';
   currentSortOrder: string = 'asc';
-
+  archivedArticles: any[] = [];
   pagedActiveNews: any[] = [];
   pagedArchivedNews: any[] = [];
   activeCurrentPage: number = 1;
@@ -48,11 +49,17 @@ export class ChartsComponent implements OnInit {
   public pieChartPlugins = [];
   pieChartColors: { backgroundColor: string[]; }[];
 
-  constructor(private newsService: NewsService, private http: HttpClient) { }
+  constructor(private newsService: NewsService,private userService: UserService, private http: HttpClient) { }
 
   ngOnInit() {
     this.loadNews();
+     this.fetchArchivedArticles();
   }
+
+  onImageError(article: any) {
+    article.imageUrl = this.defaultImage;
+  }
+
 
   summarizeManualUrl() {
     if (!this.manualUrl) {
@@ -197,16 +204,8 @@ export class ChartsComponent implements OnInit {
     this.archivedCurrentPage = pageNumber;
     this.updatePagedNews();
   }
-
-  archiveArticle(article) {
-    this.newsService.archiveNews(article._id).subscribe(() => {
-      article.archive = true;
-      this.filterNews();
-      this.updatePagedNews();
-      this.prepareChartData();
-    });
-  }
-
+  
+   
   activePageRange(): number[] {
     const numPagesToShow = 5;
     const currentPage = this.activeCurrentPage;
@@ -378,5 +377,41 @@ export class ChartsComponent implements OnInit {
     console.log('Positive Count:', positiveCount, 'Negative Count:', negativeCount); // Debug log
   }
 
+  fetchArchivedArticles() {
+    const email = this.userService.getEmail(); // Get email from the UserService
+    this.userService.getArchivedArticles(email).subscribe(
+      (data) => {
+        this.archivedArticles = data; // Store the fetched articles
+      },
+      (error) => {
+        console.error('Error fetching archived articles:', error);
+      }
+    );
+  }
+
+  archiveArticle(article) {
+    const archivedArticle = {
+      id: article._id,
+      headline: article.headline,
+      summary: article.summary,
+      sentimentScore: article.sentimentScore,
+      sentiment: article.sentiment,
+      articleDateTime: article.articleDateTime,
+      imageUrl: article.imageUrl || 'defaultImage' // Fallback image if none provided
+    };
+
+    // Call the UserService method to archive the article for the user
+    this.userService.archiveArticle(this.userService.getEmail(), archivedArticle).subscribe(() => {
+      article.archive = true; // Mark the article as archived in the UI
+      this.filterNews(); // Call your method to filter the news
+      this.updatePagedNews(); // Call your method to update the paged news
+      this.prepareChartData(); // Call your method to prepare chart data
+    });
+
+    this.newsService.archiveNews(article._id).subscribe(() => {
+       article.archive = true;
+       
+    });
+  }
  
 }

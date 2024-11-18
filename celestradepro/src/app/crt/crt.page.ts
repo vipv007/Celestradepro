@@ -9,6 +9,7 @@ import { StockService } from '../services/stock.service';
 import { ForexService } from '../services/forex.service';
 import { CommodityService } from '../services/commodity.service';
 
+
 @Component({
   selector: 'app-crt',
   templateUrl: './crt.page.html',
@@ -27,13 +28,14 @@ export class CrtPage implements OnInit {
   commodities: any[] = []; 
   forexData: any[] = [];  // Store all Forex data here
   selectedForexStocks: any[] = [];  // To store and display only two Forex items
-
+   defaultImage: string = 'assets/g2.jpg';
   isLoginOpen = false;
   isLoggedIn = false;
   email: string = '';
   isDarkMode: boolean = false;
   isSettingsOpen = false;
-
+  articles = []; // Array to hold articles
+  daysSinceArticle = [];
   selectTabs: string = 'recent'; // Default tab value
   activeContent: string = ''; // Default active content
 
@@ -46,6 +48,8 @@ export class CrtPage implements OnInit {
     { name: 'Trending stocks', visible: true },
     { name: 'Ecalendar', visible: true },
     { name: 'Fx Hours', visible: true },
+    { name: 'Earning calendar', visible: true },
+    { name: 'Stock Economic Calender', visible: true },
   ];
 
   sections = [...this.allSections];
@@ -70,6 +74,7 @@ export class CrtPage implements OnInit {
     this.loadCommodityNews();
     this.getForexData();
     this.loadCommodities();
+    this.loadArticles();
     
     // Load all stocks and select the first two for display
     this.stockService.getAllStocks().subscribe((response: any[]) => {
@@ -78,6 +83,37 @@ export class CrtPage implements OnInit {
     });
 
     
+  }
+
+    loadArticles(): void {
+    this.newsService.getTopSentimentScores().subscribe(data => {
+      this.articles = data;
+
+      // Calculate days since each article's dateTime
+      this.daysSinceArticle = this.articles.map(article => {
+        const articleDateTime = this.convertToDate(article.articleDateTime);
+        return this.calculateDaysSince(articleDateTime);
+      });
+    });
+  }
+
+  convertToDate(dateTimeString: string): Date {
+    // Convert the string "26/8/2024, 7:08:00 pm" into a Date object
+    const [datePart, timePart] = dateTimeString.split(', ');
+    const [day, month, year] = datePart.split('/').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  calculateDaysSince(articleDate: Date): number {
+    const currentDate = new Date();
+    const timeDifference = currentDate.getTime() - articleDate.getTime();
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    return daysDifference;
+  }
+
+
+  onImageError(article: any) {
+    article.imageUrl = this.defaultImage;
   }
 
   loadCommodities() {
@@ -266,5 +302,13 @@ getForexData() {
 
   navigateToCalender() {
     this.router.navigate(['/celestradepro/Forex'], { queryParams: { segment: 'research', content: 'ECONOMIC CALENDAR' } });
+  }
+
+  navigateToMarkethours() {
+    this.router.navigate(['/celestradepro/Forex'], { queryParams: { segment: 'research', content: 'FOREX MARKET HOURS' } });
+  }
+
+  toggleShowMore(article) {
+    article.showMore = !article.showMore;
   }
 }

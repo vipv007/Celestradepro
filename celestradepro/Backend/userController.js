@@ -1,6 +1,6 @@
 const User = require('./userModel');
 
-const allSections = ['Top Market News', 'Top Stories', 'Top Gainers', 'Top Losers', 'Most Events','Trending stocks','Ecalendar','Fx Hours']; // Define all possible sections
+const allSections = ['Top Market News', 'Top Stories', 'Top Gainers', 'Top Losers', 'Most Events','Trending stocks','Ecalendar','Fx Hours','Earning calendar','Stock Economic Calender']; // Define all possible sections
 
 exports.loginOrFetchUser = async (req, res) => {
   const { email } = req.body;
@@ -235,3 +235,170 @@ exports.updateUserTheme = async (req, res) => {
         res.status(500).json({ message: 'Error updating user theme', error });
     }
 };
+
+exports.archiveUserArticle = async (req, res) => {
+    const { email } = req.params;
+    const archivedArticle = req.body;
+
+    try {
+        const user = await User.findOneAndUpdate(
+            { email: email },
+            { $push: { archivedArticles: archivedArticle } },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error('Error archiving article in user collection:', error);
+        return res.status(500).json({ message: 'Error archiving article in user collection', error: error.message });
+    }
+};
+
+// Controller to get archived articles for a user
+exports.getArchivedArticles = async (req, res) => {
+    const email = req.params.email; // Get email from parameters
+
+    try {
+        // Assuming you have a User model where archived articles are stored
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user.archivedArticles); // Return archived articles
+    } catch (error) {
+        console.error('Error fetching archived articles:', error);
+        return res.status(500).json({ message: 'Error fetching archived articles', error: error.message });
+    }
+};
+
+exports.archiveUserArticleop = async (req, res) => {
+    const { email } = req.params;
+    const archivedArticleop = req.body;
+
+    try {
+        const user = await User.findOneAndUpdate(
+            { email: email },
+            { $push: { archivedArticlesop: archivedArticleop } },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error('Error archiving article in user collection:', error);
+        return res.status(500).json({ message: 'Error archiving article in user collection', error: error.message });
+    }
+};
+
+// Controller to get archived articles for a user
+exports.getArchivedArticlesop = async (req, res) => {
+    const email = req.params.email; // Get email from parameters
+
+    try {
+        // Assuming you have a User model where archived articles are stored
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user.archivedArticlesop); // Return archived articles
+    } catch (error) {
+        console.error('Error fetching archived articles:', error);
+        return res.status(500).json({ message: 'Error fetching archived articles', error: error.message });
+    }
+};
+
+exports.archiveUserArticlecom = async (req, res) => {
+    const { email } = req.params;
+    const archivedArticlecom = req.body;
+
+    try {
+        const user = await User.findOneAndUpdate(
+            { email: email },
+            { $push: { archivedArticlescom: archivedArticlecom } },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error('Error archiving article in user collection:', error);
+        return res.status(500).json({ message: 'Error archiving article in user collection', error: error.message });
+    }
+};
+
+// Controller to get archived articles for a user
+exports.getArchivedArticlescom = async (req, res) => {
+    const email = req.params.email; // Get email from parameters
+
+    try {
+        
+        // Assuming you have a User model where archived articles are stored
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user.archivedArticlescom); // Return archived articles
+    } catch (error) {
+        console.error('Error fetching archived articles:', error);
+        return res.status(500).json({ message: 'Error fetching archived articles', error: error.message });
+    }
+};
+
+exports.archiveUserArticlefox = async (req, res) => {
+    const { email } = req.params;
+    const archivedArticlefox = req.body;
+
+    try {
+        const user = await User.findOneAndUpdate(
+            { email: email },
+            { $push: { archivedArticlesfox: archivedArticlefox } },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error('Error archiving article in user collection:', error);
+        return res.status(500).json({ message: 'Error archiving article in user collection', error: error.message });
+    }
+};
+
+// Controller to get archived articles for a user
+exports.getArchivedArticlesfox = async (req, res) => {
+    const email = req.params.email; // Get email from parameters
+
+    try {
+        
+        // Assuming you have a User model where archived articles are stored
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(user.archivedArticlesfox); // Return archived articles
+    } catch (error) {
+        console.error('Error fetching archived articles:', error);
+        return res.status(500).json({ message: 'Error fetching archived articles', error: error.message });
+    }
+};
+

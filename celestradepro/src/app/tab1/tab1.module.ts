@@ -39,7 +39,7 @@ import { InsiderComponent } from './insider/insider.component';
     declarations: [Tab1Page, ChartsComponent, RibbonComponent, Chart1Component, EarningComponent,FundamendalComponent,DividendComponent,
         AnalysisComponent, ProfileComponent, MetricsComponent, MultichartComponent, WidgetchartComponent, AnalystockComponent,
         ShareholderComponent,InsiderComponent,
-        TechanalysisComponent, ScreenerComponent,HeatmapComponent, StockmarketComponent,  TechnicalAnalysisComponent,SectorComponent],
+        TechanalysisComponent, ScreenerComponent,HeatmapComponent, StockmarketComponent,  TechnicalAnalysisComponent,SectorComponent,],
 
 
     imports: [
