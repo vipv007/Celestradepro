@@ -8,9 +8,6 @@ COPY package*.json ./
 # Clean npm cache
 RUN npm cache clean --force
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
-
 COPY . .
 
 # Set memory limit for Node.js to prevent heap out of memory errors
