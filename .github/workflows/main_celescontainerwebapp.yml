@@ -59,4 +59,4 @@ jobs:
           app-name: 'CelesContainerWebApp'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B92DBC5596B04ECAB44AF7897C0C9945 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B5B3537DACD64F3DA1FDA322B4D97ADE }}
