@@ -29,9 +29,9 @@ jobs:
         working-directory: ./celestradepro
 
       # Step 4: Build the Angular project
-      - name: Build the Angular project
-        run: npm run build --if-present
-        working-directory: ./celestradepro
+      # - name: Build the Angular project
+      #   run: npm run build --if-present
+      #   working-directory: ./celestradepro
 
       # Step 5: Zip the application for deployment
       - name: Zip the application
