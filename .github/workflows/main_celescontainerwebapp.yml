@@ -1,37 +1,45 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Node.js app to Azure Web App - CelesContainerWebApp
+name: Deploy to Azure Web App
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # Step 1: Checkout the code
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js version
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
-      - name: npm install, build, and test
+      # Step 3: Clean npm cache and install dependencies
+      - name: Clean cache and install dependencies
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm cache clean --force
+          npm install --legacy-peer-deps
+          npm install webpack webpack-cli --save-dev --legacy-peer-deps
+        working-directory: ./celestradepro
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+      # Step 4: Build the Angular project
+      # - name: Build the Angular project
+      #   run: npm run build --if-present
+      #   working-directory: ./celestradepro
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+      # Step 5: Zip the application for deployment
+      - name: Zip the application
+        run: zip -r release.zip ./celestradepro
+
+      # Step 6: Upload the artifact for deployment
+      - name: Upload the artifact for deployment
+        uses: actions/upload-artifact@v3
         with:
           name: node-app
           path: release.zip
@@ -39,24 +47,27 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+      # Step 1: Download the artifact
+      - name: Download the artifact
+        uses: actions/download-artifact@v3
         with:
           name: node-app
 
-      - name: Unzip artifact for deployment
+      # Step 2: Unzip the artifact
+      - name: Unzip the artifact
         run: unzip release.zip
-      
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
+
+      # Step 3: Set Cosmos DB connection string (Environment variables)
+      - name: Set Cosmos DB connection string
+        run: |
+          echo "COSMOSDB_CONNECTION_STRING=${{ secrets.COSMOSDB_CONNECTION_STRING }}" >> .env
+          echo "COSMOS_DB_NAME=${{ secrets.COSMOS_DB_NAME }}" >> .env
+
+      # Step 4: Deploy to Azure Web App
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
-          package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_27CFC3B4B3DE46009B03B57CA527BF71 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EA540B6EFD640D89D465639D713F193 }}
