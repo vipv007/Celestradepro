@@ -10,22 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository
       - uses: actions/checkout@v3
 
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
-      - name: Install dependencies
+      # Step 3: Install dependencies and build the project
+      - name: Install dependencies and build
         run: |
           npm install
           npm run build --if-present
-        working-directory: ./Celestradepro
 
+      # Step 4: Zip the application for deployment
       - name: Zip the application
         run: zip -r release.zip .
 
+      # Step 5: Upload the artifact for deployment
       - name: Upload the artifact for deployment
         uses: actions/upload-artifact@v3
         with:
@@ -37,19 +41,23 @@ jobs:
     needs: build
 
     steps:
-      - name: Download the artifact from the build job
+      # Step 1: Download the artifact from the build job
+      - name: Download the artifact
         uses: actions/download-artifact@v3
         with:
           name: node-app
 
+      # Step 2: Unzip the artifact
       - name: Unzip the artifact
         run: unzip release.zip
 
-      - name: Set Cosmos DB Connection String
+      # Step 3: Set Cosmos DB connection string from secrets
+      - name: Set Cosmos DB connection string
         run: |
           echo "COSMOSDB_CONNECTION_STRING=${{ secrets.COSMOSDB_CONNECTION_STRING }}" >> .env
           echo "COSMOS_DB_NAME=${{ secrets.COSMOS_DB_NAME }}" >> .env
 
+      # Step 4: Deploy to Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
