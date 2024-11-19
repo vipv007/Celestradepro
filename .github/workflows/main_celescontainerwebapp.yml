@@ -19,18 +19,23 @@ jobs:
         with:
           node-version: '18.x'
 
-      # Step 3: Install dependencies and build the project
-      - name: Install dependencies and build
+      # Step 3: Install dependencies and webpack
+      - name: Install dependencies
         run: |
           npm install --legacy-peer-deps
-          npm run build --if-present
+          npm install webpack webpack-cli --save-dev
         working-directory: ./celestradepro
 
-      # Step 4: Zip the application for deployment
+      # Step 4: Build the Angular project
+      - name: Build the Angular project
+        run: npm run build --if-present
+        working-directory: ./celestradepro
+
+      # Step 5: Zip the application for deployment
       - name: Zip the application
         run: zip -r release.zip ./celestradepro
 
-      # Step 5: Upload the artifact for deployment
+      # Step 6: Upload the artifact for deployment
       - name: Upload the artifact for deployment
         uses: actions/upload-artifact@v3
         with:
