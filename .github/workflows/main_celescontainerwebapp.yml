@@ -10,41 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
-      - uses: actions/checkout@v3
+      # Step 1: Checkout the code
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js environment
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
+      # Step 3: Clean npm cache and install dependencies
+      - name: Clean cache and install dependencies
         run: |
           npm cache clean --force
           npm install --legacy-peer-deps
-          npm install highcharts --save
           npm install webpack webpack-cli --save-dev --legacy-peer-deps
         working-directory: ./celestradepro
 
-      # Step 4: Verify highcharts installation
-      - name: Verify Highcharts Installation
-        run: |
-          ls -la ./celestradepro/node_modules/highcharts
+      # Step 4: Build the Angular project
+      - name: Build the Angular project
+        run: npm run build --if-present
         working-directory: ./celestradepro
 
-      # Step 5: Build the project
-      - name: Build the project
-        run: |
-          npm run build --if-present
-        working-directory: ./celestradepro
-
-      # Step 6: Zip the application for deployment
+      # Step 5: Zip the application for deployment
       - name: Zip the application
         run: zip -r release.zip ./celestradepro
 
-      # Step 7: Upload the artifact for deployment
+      # Step 6: Upload the artifact for deployment
       - name: Upload the artifact for deployment
         uses: actions/upload-artifact@v3
         with:
@@ -56,7 +49,7 @@ jobs:
     needs: build
 
     steps:
-      # Step 1: Download the artifact from the build job
+      # Step 1: Download the artifact
       - name: Download the artifact
         uses: actions/download-artifact@v3
         with:
@@ -66,7 +59,7 @@ jobs:
       - name: Unzip the artifact
         run: unzip release.zip
 
-      # Step 3: Set Cosmos DB connection string from secrets
+      # Step 3: Set Cosmos DB connection string (Environment variables)
       - name: Set Cosmos DB connection string
         run: |
           echo "COSMOSDB_CONNECTION_STRING=${{ secrets.COSMOSDB_CONNECTION_STRING }}" >> .env
