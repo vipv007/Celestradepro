@@ -65,7 +65,7 @@ jobs:
           echo "COSMOSDB_CONNECTION_STRING=${{ secrets.COSMOSDB_CONNECTION_STRING }}" >> .env
           echo "COSMOS_DB_NAME=${{ secrets.COSMOS_DB_NAME }}" >> .env
 
-      # Step 4: Deploy to Azure Web App
+       # Step 4: Deploy to Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
