@@ -1,4 +1,4 @@
-name: Build and Deploy Node.js App to Azure Web App
+name: Build and deploy Node.js app to Azure Web App - CelesContainerWebApp
 
 on:
   push:
@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout Repository
-      - name: Checkout Repository
+      # Step 1: Checkout the code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       # Step 2: Set up Node.js environment
@@ -21,51 +21,45 @@ jobs:
         with:
           node-version: '18.x'
 
-      # Step 3: Clean cache and install dependencies
-      - name: Clean cache and install dependencies
-        run: |
-          npm cache clean --force
-          npm install --legacy-peer-deps
-          npm install highcharts
-          npm install webpack webpack-cli --save-dev --legacy-peer-deps
+      # Step 3: Install dependencies with --legacy-peer-deps
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
         working-directory: ./celestradepro
 
-
-      # Step 4: Build the Angular project
-      - name: Build the Angular project
-        run: npm run build --if-present
+      # Step 4: Build the application
+      - name: Build application
+        run: npm run build
         working-directory: ./celestradepro
 
-      # Step 5: Zip the application for deployment
-      - name: Zip the application for deployment
-        run: zip -r release.zip ./celestradepro
+      # Step 5: Package the build for deployment
+      - name: Package the build
+        run: zip -r release.zip ./*
+        working-directory: ./celestradepro
 
-      # Step 6: Upload artifact for deployment
-      - name: Upload artifact for deployment
+      # Step 6: Upload the artifact for deployment
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: node-app
-          path: release.zip
+          name: app-build
+          path: ./celestradepro/release.zip
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    environment:
+      name: Production
 
     steps:
-      # Step 1: Download the artifact from the build job
-      - name: Download artifact
+      # Step 1: Download the build artifact
+      - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: node-app
+          name: app-build
 
-      # Step 2: Unzip the artifact
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-
-      # Step 3: Deploy to Azure Web App
-      - name: Deploy to Azure Web App
+      # Step 2: Deploy to Azure App Service
+      - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
-          package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: ./release.zip
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EA540B6EFD640D89D465639D713F193 }}
