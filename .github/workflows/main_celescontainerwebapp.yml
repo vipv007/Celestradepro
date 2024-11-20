@@ -61,7 +61,6 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
       
-      # Step 3: Deploy to Azure Web App (without specifying a slot)
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -69,3 +68,4 @@ jobs:
           app-name: 'CelesContainerWebApp'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9127EF055B004F42A8F8E6C4FB23CF42 }}
+
