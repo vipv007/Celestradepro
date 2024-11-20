@@ -10,17 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
-      # Step 3: Clean npm cache and install dependencies
       - name: Clean cache and install dependencies
         run: |
           npm cache clean --force
@@ -28,16 +25,13 @@ jobs:
           npm install webpack webpack-cli --save-dev --legacy-peer-deps
         working-directory: ./celestradepro
 
-      # Step 4: Build the Angular project
-      # - name: Build the Angular project
-      #   run: npm run build --if-present
-      #   working-directory: ./celestradepro
+      - name: Build the Angular project
+        run: npm run build --if-present
+        working-directory: ./celestradepro
 
-      # Step 5: Zip the application for deployment
       - name: Zip the application
-        run: zip -r release.zip ./celestradepro
+        run: zip -r release.zip ./celestradepro/dist
 
-      # Step 6: Upload the artifact for deployment
       - name: Upload the artifact for deployment
         uses: actions/upload-artifact@v3
         with:
@@ -49,25 +43,17 @@ jobs:
     needs: build
 
     steps:
-      # Step 1: Download the artifact
       - name: Download the artifact
         uses: actions/download-artifact@v3
         with:
           name: node-app
 
-      # Step 2: Unzip the artifact
       - name: Unzip the artifact
         run: unzip release.zip
 
-      # Step 3: Set Cosmos DB connection string (Environment variables)
-      - name: Set Cosmos DB connection string
-        run: |
-          echo "COSMOSDB_CONNECTION_STRING=${{ secrets.COSMOSDB_CONNECTION_STRING }}" >> .env
-          echo "COSMOS_DB_NAME=${{ secrets.COSMOS_DB_NAME }}" >> .env
-
-       # Step 4: Deploy to Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EA540B6EFD640D89D465639D713F193 }}
+          package: release.zip
