@@ -26,8 +26,10 @@ jobs:
         run: |
           npm cache clean --force
           npm install --legacy-peer-deps
+          npm install highcharts
           npm install webpack webpack-cli --save-dev --legacy-peer-deps
         working-directory: ./celestradepro
+
 
       # Step 4: Build the Angular project
       - name: Build the Angular project
