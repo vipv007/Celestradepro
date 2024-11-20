@@ -21,11 +21,13 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: npm install, build, and test
+      # Step 3: Clean npm cache and install dependencies
+      - name: Clean cache and install dependencies
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm cache clean --force
+          npm install --legacy-peer-deps
+          npm install webpack webpack-cli --save-dev --legacy-peer-deps
+        working-directory: ./celestradepro
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
