@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy Node.js app to Azure Web App - CelesContainerWebApp
 
 on:
@@ -11,57 +14,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js environment
-      - name: Set up Node.js
+      - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
+      - name: npm install, build, and test
         run: |
-          npm install --legacy-peer-deps
-          npm install webpack webpack-cli --save-dev
-        working-directory: ./celestradepro
+          npm install
+          npm run build --if-present
+          npm run test --if-present
 
-      # Step 4: Build the application
-      - name: Build application
-        run: npm run build
-        working-directory: ./celestradepro
+      - name: Zip artifact for deployment
+        run: zip release.zip ./* -r
 
-      # Step 5: Package the build for deployment
-      - name: Package the build
-        run: zip -r release.zip ./*
-        working-directory: ./celestradepro
-
-      # Step 6: Upload the artifact for deployment
-      - name: Upload build artifact
+      - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: app-build
-          path: ./celestradepro/release.zip
+          name: node-app
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: Production
-
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    
     steps:
-      # Step 1: Download the build artifact
-      - name: Download build artifact
+      - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: app-build
+          name: node-app
 
-      # Step 2: Deploy to Azure App Service
-      - name: Deploy to Azure App Service
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
+      
+      - name: 'Deploy to Azure Web App'
+        id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
-          package: ./release.zip
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EA540B6EFD640D89D465639D713F193 }}
+          slot-name: 'Production'
+          package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6B8F137BE10B44B9AD5D62600BE80937 }}
