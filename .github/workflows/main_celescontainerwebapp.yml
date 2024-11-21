@@ -46,27 +46,26 @@ jobs:
           name: angular-app
           path: celestradepro/www
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'staging'
+    deploy:
+        runs-on: ubuntu-latest
+        needs: build
+        environment:
+          name: 'Production'
+          url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-    steps:
-      # Download the frontend build artifact
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: angular-app
-          path: www
+        steps:
+          - name: Download artifact from build job
+            uses: actions/download-artifact@v3
+            with:
+              name: angular-app
 
-      # Deploy to Azure Web App
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'CelesContainerWebApp' # Match the app name from Azure
-          slot-name: 'staging'            # Match the staging slot name
-          package: www                    # Path to built Angular app
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }} # Azure publish profile secret
-          resource-group: 'celesbricks'  # Add this if you have specific requirements
+          - name: Unzip artifact for deployment
+            run: unzip release.zip
+
+          - name: 'Deploy to Azure Web App'
+            uses: azure/webapps-deploy@v2
+            id: deploy-to-webapp
+            with:
+              app-name: 'CelesContainerWebApp'
+              slot-name: 'Production'
+              publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EA540B6EFD640D89D465639D713F193}
