@@ -64,6 +64,11 @@ jobs:
       name: 'Production'
 
     steps:
+      # Ensure deployment slot exists
+      - name: Create deployment slot if it doesn't exist
+        run: |
+          az webapp deployment slot create --name CelesContainerWebApp --resource-group celesbricks --slot Production || echo "Slot already exists."
+
       # Download the frontend build artifact
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
