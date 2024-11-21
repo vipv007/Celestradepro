@@ -64,11 +64,6 @@ jobs:
       name: 'Production'
 
     steps:
-      # Ensure deployment slot exists
-      - name: Create deployment slot if it doesn't exist
-        run: |
-          az webapp deployment slot create --name CelesContainerWebApp --resource-group celesbricks --slot Production || echo "Slot already exists."
-
       # Download the frontend build artifact
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
@@ -86,6 +81,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
+          slot-name: 'staging'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EA540B6EFD640D89D465639D713F193 }}
