@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: 'staging'
 
     steps:
       # Download the frontend build artifact
