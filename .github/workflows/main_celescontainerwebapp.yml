@@ -39,30 +39,29 @@ jobs:
           export NODE_OPTIONS="--max-old-space-size=4096" # 4GB of memory
           ng build 
 
-      # Upload the built Angular app as an artifact for deployment
-      - name: Upload frontend artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: angular-app
-          path: celestradepro/www
-
       # Install backend dependencies
       - name: Install backend dependencies
-        working-directory: ./celestradepro
+        working-directory: ./celestradepro/Backend
         run: |
           npm install -f
           npm install mongoose -f
 
-      # Start backend server (for debugging locally)
-      - name: Start backend server
-        working-directory: ./celestradepro/Backend
+      # Package frontend and backend together
+      - name: Prepare deployment package
         run: |
-          node server.js &
-        env:
-          AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@"
-          DB_NAME: 'test'
-          PORT: 3000
-          
+          mkdir deployment_package
+          cp -r celestradepro/www deployment_package/frontend
+          cp -r celestradepro/Backend/* deployment_package/backend
+          cp celestradepro/package.json deployment_package/
+          cp celestradepro/server.js deployment_package/
+
+      # Upload deployment package as an artifact
+      - name: Upload deployment package
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-package
+          path: deployment_package/
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -70,16 +69,16 @@ jobs:
       name: 'staging'
 
     steps:
-      # Download the frontend build artifact
-      - name: Download artifact from build job
+      # Download deployment package
+      - name: Download deployment package
         uses: actions/download-artifact@v4
         with:
-          name: angular-app
-          path: www
+          name: deployment-package
+          path: deployment_package/
 
-      # List files in the dist directory (for troubleshooting)
-      - name: List files in the dist directory
-        run: ls -R www
+      # List files in deployment package (for troubleshooting)
+      - name: List files in deployment package
+        run: ls -R deployment_package/
 
       # Deploy to Azure Web App (staging slot)
       - name: Deploy to Azure Web App
@@ -88,5 +87,5 @@ jobs:
         with:
           app-name: 'CelesContainerWebApp' # The Azure App Service name
           slot-name: 'staging'            # The slot name for deployment
-          package: www                    # Path to the built app
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }} # Secret containing the publish profile for the staging slot
+          package: deployment_package/   # Path to the combined deployment package
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }} # Secret for staging slot
