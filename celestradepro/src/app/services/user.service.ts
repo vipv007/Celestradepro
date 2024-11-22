@@ -6,7 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://celescontainerwebapp-server.mongo.cosmos.azure.com:3000/api'; // Your backend URL
+  private apiUrl = 'https://celescontainerwebapp-server.mongo.cosmos.azure.com:3000/api'; // Your backend URL
   private email: string | null = null;
   private isLoggedInSubject = new BehaviorSubject<boolean>(false); // To track login status
   private loginExpirationDays = 2; // Set the number of days before automatic logout
