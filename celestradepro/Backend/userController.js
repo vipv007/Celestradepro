@@ -2,10 +2,10 @@ const User = require('./userModel');
 
 const allSections = ['Top Market News', 'Top Stories', 'Top Gainers', 'Top Losers', 'Most Events','Trending stocks','Ecalendar','Fx Hours','Earning calendar','Stock Economic Calender']; // Define all possible sections
 
+
 exports.loginOrFetchUser = async (req, res) => {
   const { email } = req.body;
 
-  // Add debug statements to check the request body
   console.log('Received request body:', req.body);
 
   if (!email) {
@@ -17,26 +17,13 @@ exports.loginOrFetchUser = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      // Create a new user with all sections selected by default
       user = new User({
         email,
-        selectedSections: allSections,
+        selectedSections: [], // Default: no sections selected
       });
       await user.save();
-    } else {
-      // Check if the user has any sections selected
-      if (!user.selectedSections || user.selectedSections.length === 0) {
-        // If no sections are selected, set all sections as default
-        user.selectedSections = allSections;
-        await user.save();
-      } else {
-        // Ensure that user.selectedSections contains only valid sections
-        user.selectedSections = user.selectedSections.filter(section => allSections.includes(section));
-        await user.save();
-      }
     }
 
-    // Return the updated user data
     res.status(200).json(user);
   } catch (error) {
     console.error('Error logging in or fetching user:', error);
@@ -47,26 +34,34 @@ exports.loginOrFetchUser = async (req, res) => {
 
 
 
+
 // Function to update user selected sections
 exports.updateSelectedSections = async (req, res) => {
-  const { email, sections } = req.body;
+  const { email, selectedSections } = req.body;
+
+  if (!email || !selectedSections) {
+    return res.status(400).json({ message: 'Email and selected sections are required.' });
+  }
 
   try {
+    // Find the user by email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found.' });
     }
 
-    // Update the selected sections
-    user.selectedSections = sections;
+    // Update the selectedSections field
+    user.selectedSections = selectedSections;
     await user.save();
 
-    res.status(200).json({ message: 'Selected sections updated successfully' });
+    res.status(200).json({ message: 'Selected sections updated successfully.', user });
   } catch (error) {
     console.error('Error updating selected sections:', error);
-    res.status(500).json({ message: 'Error updating selected sections', error });
+    res.status(500).json({ message: 'Internal server error', error });
   }
 };
+
+
 
 
 

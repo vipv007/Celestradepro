@@ -23,15 +23,20 @@
     <div class="home"><h3>Home</h3></div>
 
     <!-- Settings Dropdown -->
-    <div class="settings-dropdown" [ngClass]="{ 'open': isSettingsOpen }">
-      <h4>Customize Sections</h4>
-      <form>
-        <div *ngFor="let section of sections">
-          <ion-checkbox [(ngModel)]="section.visible" [ngModelOptions]="{ standalone: true }" (ionChange)="saveSectionPreferences()"></ion-checkbox>
-          <ion-label>{{ section.name }}</ion-label>
-        </div>
-      </form>
-    </div>
+  <div class="settings-dropdown" [ngClass]="{ 'open': isSettingsOpen }">
+    <h4>Customize Sections</h4>
+    <form>
+      <div *ngFor="let section of sections">
+        <ion-checkbox [(ngModel)]="section.visible" [ngModelOptions]="{ standalone: true }" (ionChange)="onSectionChange()">
+        </ion-checkbox>
+        <ion-label>{{ section.name }}</ion-label>
+      </div>
+
+    </form>
+  </div>
+
+
+
 
     <!-- Login Dropdown -->
     <div class="login-dropdown" [ngClass]="{ 'open': isLoginOpen }">
@@ -80,7 +85,7 @@
     
   </div>
 </div>
-<hr>
+<hr> 
 <!-- Option News Section -->
 <div class="option-news-container">
   <div class="news-header">

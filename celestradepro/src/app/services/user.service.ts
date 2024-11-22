@@ -80,15 +80,14 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/update-user-theme`, { email, theme });
   }
 
-  // Fetch user data
-  getUserData(email: string): Observable<any> {
+    getUserData(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { email });
   }
 
-  // Method to update selected sections in the backend
-  updateSelectedSections(email: string, sections: string[]): Observable<any> {
-    return this.http.post(`${this.apiUrl}/update-selected-sections`, { email, sections });
-  }
+  updateSelectedSections(email: string, selectedSections: string[]): Observable<any> {
+  return this.http.post(`${this.apiUrl}/update-selected-sections`, { email, selectedSections });
+}
+
 
   // Get login state as an observable
   isLoggedIn(): Observable<boolean> {

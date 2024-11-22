@@ -24,6 +24,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const mongoUrl = 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@';
 const dbName = 'test';
+// const mongoUrl = 'mongodb://127.0.0.1:27017';
 
 // Debugging environment variables
 console.log('MongoDB Connection String:', process.env.AZURE_COSMOS_CONNECTIONSTRING);

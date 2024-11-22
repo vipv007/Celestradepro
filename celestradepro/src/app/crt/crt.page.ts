@@ -41,12 +41,12 @@ export class CrtPage implements OnInit {
 
   allSections = [
     { name: 'Top Market News', visible: true },
-    { name: 'Top Stories', visible: true },
-    { name: 'Top Gainers', visible: true },
-    { name: 'Top Losers', visible: true },
-    { name: 'Most Events', visible: true },
-    { name: 'Trending stocks', visible: true },
-    { name: 'Ecalendar', visible: true },
+    { name: 'Top Stories', visible: false },
+    { name: 'Top Gainers', visible: false },
+    { name: 'Top Losers', visible: false },
+    { name: 'Most Events', visible: false },
+    { name: 'Trending stocks', visible: false },
+    { name: 'Ecalendar', visible: false },
     { name: 'Fx Hours', visible: true },
     { name: 'Earning calendar', visible: true },
     { name: 'Stock Economic Calender', visible: true },
@@ -164,39 +164,38 @@ getForexData() {
     }
   }
 
-  loadUserPreferences() {
-    this.userService.getUserData(this.email).subscribe(
-      (user: any) => {
-        if (user && user.selectedSections) {
-          this.sections = this.allSections.map(section => ({
-            ...section,
-            visible: user.selectedSections.includes(section.name)
-          }));
-        } else {
-          this.sections = [...this.allSections];
-          this.saveSectionPreferences();
-        }
-      },
-      (error) => {
-        console.error('Error fetching user data:', error);
+ loadUserPreferences() {
+    this.userService.getUserData(this.email).subscribe((user: any) => {
+      if (user && user.selectedSections) {
+        this.sections.forEach((section) => {
+          section.visible = user.selectedSections.includes(section.name);
+        });
       }
-    );
+    });
   }
 
-  saveSectionPreferences() {
-    const visibleSections = this.sections
-      .filter(section => section.visible)
-      .map(section => section.name);
+  saveSelectedSections() {
+  // Get the names of the currently selected sections
+  const selectedSections = this.sections
+    .filter(section => section.visible) // Only include selected (checked) sections
+    .map(section => section.name);     // Extract section names
 
-    this.userService.updateSelectedSections(this.email, visibleSections).subscribe(
-      (response: any) => {
-        console.log('Selected sections saved successfully');
-      },
-      (error) => {
-        console.error('Error saving selected sections:', error);
-      }
-    );
-  }
+  // Send the updated list of selected sections to the backend
+  this.userService.updateSelectedSections(this.email, selectedSections).subscribe(
+    (response) => {
+      console.log('Selected sections updated successfully:', response);
+    },
+    (error) => {
+      console.error('Error updating selected sections:', error);
+    }
+  );
+}
+
+  onSectionChange() {
+  this.saveSelectedSections();
+}
+
+
   onImageLoad(event: Event): void {
     console.log("Image loaded:", event);
     // You can perform any additional actions here
@@ -236,7 +235,7 @@ getForexData() {
     this.isLoginOpen = false;
     this.userService.setEmail('');
     this.sections = [...this.allSections];
-    this.saveSectionPreferences();
+    this.saveSelectedSections();
   }
 
   // Theme management
