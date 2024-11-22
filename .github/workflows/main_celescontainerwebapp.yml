@@ -25,15 +25,14 @@ jobs:
         working-directory: ./celestradepro
         run: |
           npm install -g @angular/cli
-          npm install
-          ng build --output-path=dist
+          npm install --legacy-peer-deps
+          ng build --output-path=www
 
       # Install backend dependencies
       - name: Install backend dependencies
         working-directory: ./celestradepro/Backend
         run: |
-          npm install
-          npm install mongoose
+          npm install --legacy-peer-deps
 
       # Package frontend and backend together
       - name: Package frontend and backend
@@ -46,8 +45,8 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'CelesContainerWebApp'  # Your Azure Web App name
-          slot-name: 'staging'              # Deployment slot (if applicable)
+          app-name: 'CelesContainerWebApp'
+          slot-name: 'staging'              # Use if you have slots configured
           package: packaged-app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
