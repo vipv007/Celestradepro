@@ -11,84 +11,75 @@ jobs:
 
     steps:
       # Checkout the code
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       # Set up Node.js
-      - name: Set up Node.js
+      - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
-      # Install dependencies for backend and frontend
-      - name: Install dependencies for backend and frontend
+      # Install Angular CLI and frontend dependencies
+      - name: Install Angular CLI and frontend dependencies
         run: |
-          npm install -g @angular/cli
           cd celestradepro
+          npm install -g @angular/cli
           npm install -f
-          cd celestradepro/backend
-          npm install
-
+          npm install ws@latest @types/ws@latest -f
       # Modify TypeScript Files
       - name: Modify TypeScript Files
         run: |
-          cd celestradepro
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-
       # Build Angular app
       - name: Build Angular app
         working-directory: ./celestradepro
         run: |
-          export NODE_OPTIONS="--max-old-space-size=4096" # Allocate 4GB memory
-          ng build --base-href /
-
-      # Copy Angular build output to backend public folder
-      - name: Move Angular build to backend
-        run: |
-          mv celestradepro/dist/celestradepro backend/public
-
-      # Package the entire backend (with Angular)
-      - name: Prepare deployment package
-        working-directory: ./celestradepro/backend
-        run: |
-          zip -r ../deploy-package.zip .
-
-      # Upload the deployment package as an artifact
-      - name: Upload deployment package
+          export NODE_OPTIONS="--max-old-space-size=4096" # 4GB of memory
+          ng build 
+      # Upload the built Angular app as an artifact
+      - name: Upload frontend artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: deploy-package
-          path: deploy-package.zip
+          name: angular-app
+          path: celestradepro/www
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'staging'  # Ensure this matches your Azure slot name
+      name: 'staging'  # Make sure this is the correct slot name
 
     steps:
-      # Download the deployment package
-      - name: Download deployment package
+      # Download the frontend build artifact
+      - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: deploy-package
-          path: deploy-package.zip
+          name: angular-app
+          path: www
 
       # Deploy to Azure Web App
-      - name: Deploy to Azure Web App using OneDeploy
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'CelesContainerWebApp'   # Exact name of your Azure Web App
-          slot-name: 'staging'              # Slot name must match Azure
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}  # Publish profile for your Azure app
-          package: deploy-package.zip       # Deploy full backend + frontend package
-          deploy-type: 'zip'                # Ensures full replacement of files
-          resource-group: 'celesbricks'     # Must match the Azure resource group
+          app-name: 'CelesContainerWebApp'  # This should be the exact name of your app
+          slot-name: 'staging'             # This must match the slot name exactly in Azure
+          package: www                     # Path to the built Angular app
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}  # Ensure the profile is for the staging slot
+          resource-group: 'celesbricks'    # This must match the resource group in Azure
 
-      # Optional: Restart Azure App Service
-      - name: Restart Azure App Service
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az webapp restart --name CelesContainerWebApp --resource-group celesbricks
+                # Install backend dependencies
+      - name: Install backend dependencies
+        working-directory: ./celestradepro
+        run: |
+          npm install -f
+          npm install mongoose -f
+      # Start backend server (for debugging locally)
+      - name: Start backend server
+        working-directory: ./celestradepro/Backend
+        run: |
+          node server.js &
+        env:
+          AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@"
+          DB_NAME: 'test'
+          PORT: 3000
