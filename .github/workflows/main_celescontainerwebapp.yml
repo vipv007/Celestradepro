@@ -26,7 +26,7 @@ jobs:
           npm install -g @angular/cli
           cd celestradepro
           npm install -f
-          cd backend
+          cd celestradepro/backend
           npm install
 
       # Modify TypeScript Files
