@@ -49,7 +49,7 @@ jobs:
 
       # Package the entire backend (with Angular)
       - name: Prepare deployment package
-        working-directory: ./backend
+        working-directory: ./celestradepro/backend
         run: |
           zip -r ../deploy-package.zip .
 
