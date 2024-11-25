@@ -1,0 +1,8 @@
+{
+    "/api/*": {
+      "target": "https://celescontainerwebapp-server.mongo.cosmos.azure.com/api/store-email",
+      "secure": false,
+      "changeOrigin": true,
+      "pathRewrite": { "^/api": "" }
+    }
+  }
