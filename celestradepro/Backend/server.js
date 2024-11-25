@@ -7,6 +7,7 @@ const { MongoClient } = require('mongodb');
 const http = require('http');
 const socketIO = require('socket.io');
 
+
 // Import routes and controllers
 const router = require('./router');
 // const newsRoutes = require('./newsRoutes');
@@ -41,7 +42,21 @@ mongoose
 
 // Middleware setup
 app.use(bodyParser.json());
+
+
+const cors = require('cors');
+const express = require('express');
+
+
+app.use(cors({
+  origin: 'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// Alternatively, allow all origins (not recommended for production)
 app.use(cors());
+
 
 // WebSocket setup
 const server = http.createServer(app);
