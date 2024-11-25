@@ -12,7 +12,7 @@ const router = express.Router();
 // const trendsController = require('./trendsController');
 // const CommodityController = require('./CommodityController');
 // const earningController = require('./earningController');
-// const newsController = require('./newsController');
+const newsController = require('./newsController');
 // const ratioController = require('./ratioController');
 // const vixController = require('./vixController');
 // const screenerController = require('./screenerController');
@@ -75,7 +75,7 @@ router.post('/remove-from-watchlist', userController.removeFromWatchlist );
 router.get('/watchlist/:email', userController.getWatchlist);
 
 // router.get('/top10-sentiment-news', newsController.getTopNewsBySentiment);
-// router.get('/', newsController.getAllNews);
+router.get('/', newsController.getAllNews);
 // router.put('/:id/archive', newsController.archiveNews);
 // router.put('/:id/restore', newsController.restoreNews);
 // router.get('/interests', interestController.getAllInterests);

@@ -3,17 +3,32 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const { MongoClient } = require('mongodb');
 const http = require('http');
 const socketIO = require('socket.io');
 
 // Import routes and controllers
 const router = require('./router');
+// const newsRoutes = require('./newsRoutes');
+// const fnewsRoutes = require('./fnewsRoutes');
+// const com_newsRoutes = require('./com_newsRoutes');
+// const comProfRouter = require('./comProfRouter');
+// const optionnewsRoutes = require('./optionnewsRoutes');
+// const commodityController = require('./comvolController');
+// const movingAverageController = require('./movavgController');
+// const { fetchData, fetchAvailableDates } = require('./peggerController');
+// const { comSummarizeUrl } = require('./comsummarizer');
 
 // Initialize Express app and server settings
 const app = express();
-const port = process.env.PORT || 443;
+const port = process.env.PORT || 3000;
 const mongoUrl = 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@';
 const dbName = 'test';
+// const mongoUrl = 'mongodb://127.0.0.1:27017';
+
+// Debugging environment variables
+console.log('MongoDB Connection String:', process.env.AZURE_COSMOS_CONNECTIONSTRING);
+console.log('Database Name:', process.env.DB_NAME);
 
 // MongoDB connection
 mongoose
@@ -26,19 +41,7 @@ mongoose
 
 // Middleware setup
 app.use(bodyParser.json());
-
-// CORS Configuration
-app.use(
-  cors({
-    origin: 'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net', // Allow the staging origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Specify allowed HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
-    credentials: true, // Allow cookies if needed
-  })
-);
-
-// Handle preflight requests globally
-app.options('*', cors());
+app.use(cors());
 
 // WebSocket setup
 const server = http.createServer(app);
@@ -46,7 +49,7 @@ const io = socketIO(server);
 
 io.on('connection', (socket) => {
   console.log('New client connected');
-  
+
   const collection = mongoose.connection.collection('Live_Datas');
   const changeStream = collection.watch();
 
@@ -64,12 +67,24 @@ io.on('connection', (socket) => {
 
 // API Routes
 app.use('/api', router);
+// Uncomment routes below as needed
+// app.use('/api/news', newsRoutes);
+// app.use('/api/fnews', fnewsRoutes);
+// app.use('/api/com_news', com_newsRoutes);
+// app.use('/com-prof', comProfRouter);
+// app.use('/api/optionnews', optionnewsRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error('Error:', err.message);
-  res.status(500).json({ error: err.message });
-});
+// Data fetching routes
+// app.get('/api/data', fetchData);
+// app.get('/api/data/dates', fetchAvailableDates);
+// app.post('/comnews/com-summarize-url', comSummarizeUrl);
+
+// Commodity-related routes
+// app.get('/api/commodities', commodityController.getAllCommodities);
+// app.get('/api/moving-averages/:commodity', movingAverageController.getMovingAverages);
+
+// Custom logic for main functionality
+require('./main')(app, MongoClient, mongoUrl, dbName); // Pass app, MongoClient, and DB settings to main logic
 
 // Start the server
 server.listen(port, () => console.log(`Server is listening on port ${port}`));

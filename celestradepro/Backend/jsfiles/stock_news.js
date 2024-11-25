@@ -5,8 +5,8 @@ const cheerio = require("cheerio");
 const Sentiment = require("sentiment");
 
 // MongoDB connection URL and Database Name
-const MONGODB_URI = "mongodb://172.27.240.1:27017/";
-const DB_NAME = "FinanceDB";
+const MONGODB_URI = "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@";
+const DB_NAME = "test";
 
 // Google API Key
 const API_KEY = "AIzaSyBzfYWVF3kbttQfwzzWKBhPQtZe6teGSZU"; // Replace with your actual Google API Key
