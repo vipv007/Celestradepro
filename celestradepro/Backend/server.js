@@ -22,7 +22,7 @@ const router = require('./router');
 
 // Initialize Express app and server settings
 const app = express();
-const port = 443;
+const port = 8080;
 const mongoUrl = 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@';
 const dbName = 'test';
 // const mongoUrl = 'mongodb://127.0.0.1:27017';
@@ -47,15 +47,10 @@ app.use(bodyParser.json());
 const cors = require('cors');
 const express = require('express');
 
-
 app.use(cors({
-  origin: 'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net',
+  origin: 'https://celescontainerwebapp.azurewebsites.net', // Replace with your frontend's actual URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
-// Alternatively, allow all origins (not recommended for production)
-app.use(cors());
 
 
 // WebSocket setup
