@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class NewsService {
 
-  private baseUrl = 'https://celescontainerwebapp-server.mongo.cosmos.azure.com:3000/api/news';
+  private baseUrl = 'https://celescontainerwebapp-server.mongo.cosmos.azure.com:443/api/news';
 
   constructor(private http: HttpClient) { }
 
