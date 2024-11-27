@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-build
-          path: celestradepro/dist  # Ensure this is correct
+          path: celestradepro/www  # Ensure this is correct
 
   deploy:
     runs-on: ubuntu-latest
