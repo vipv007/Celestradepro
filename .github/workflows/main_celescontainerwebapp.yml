@@ -26,39 +26,33 @@ jobs:
           npm install -g @angular/cli
           npm install -f
           npm install ws@latest @types/ws@latest -f
+
       # Modify TypeScript Files (workaround for specific issues)
       - name: Modify TypeScript Files
         run: |
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+
       # Build Angular app
       - name: Build Angular app
         working-directory: ./celestradepro
         run: |
           export NODE_OPTIONS="--max-old-space-size=4096" # 4GB of memory
           ng build 
-      # Upload the built Angular app as an artifact for deployment
-      - name: Upload frontend artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: angular-app
-          path: celestradepro/www
 
       # Install backend dependencies
       - name: Install backend dependencies
-        working-directory: ./celestradepro
+        working-directory: ./celestradepro/Backend
         run: |
           npm install -f
           npm install mongoose -f
-      # Start backend server (for debugging locally)
-      - name: Start backend server
-        working-directory: ./celestradepro/Backend
-        run: |
-          node server.js &
-        env:
-          AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@"
-          DB_NAME: 'test'
-          PORT: 8080
-          
+
+      # Upload the built Angular and backend app as artifacts for deployment
+      - name: Upload frontend and backend artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-build
+          path: celestradepro
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -66,23 +60,23 @@ jobs:
       name: 'staging'
 
     steps:
-      # Download the frontend build artifact
-      - name: Download artifact from build job
+      # Download the frontend and backend build artifacts
+      - name: Download artifacts from build job
         uses: actions/download-artifact@v4
         with:
-          name: angular-app
-          path: www
+          name: app-build
+          path: app
 
-      # List files in the dist directory (for troubleshooting)
-      - name: List files in the dist directory
-        run: ls -R www
+      # List files for verification
+      - name: List files in the app directory
+        run: ls -R app
 
-      # Deploy to Azure Web App (staging slot)
+      # Deploy both frontend and backend to Azure Web App (staging slot)
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'CelesContainerWebApp' # The Azure App Service name
-          slot-name: 'staging'            # The slot name for deployment
-          package: www                    # Path to the built app
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }} # Secret containing the publish profile for the staging slot
+          app-name: 'CelesContainerWebApp'
+          slot-name: 'staging'
+          package: app/celestradepro  # Deploy both Angular and Backend from the root directory
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}  # Azure publish profile

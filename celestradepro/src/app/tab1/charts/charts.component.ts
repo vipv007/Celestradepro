@@ -72,7 +72,7 @@ export class ChartsComponent implements OnInit {
     this.summaryData = null;
     this.contentUnavailable = false;
 
-    this.http.post('https://celescontainerwebapp-server.mongo.cosmos.azure.com:443/api/news/summarize-url', { url: this.manualUrl.trim() })
+    this.http.post('https://celescontainerwebapp-server.mongo.cosmos.azure.com/api/news/summarize-url', { url: this.manualUrl.trim() })
       .subscribe(
         (response: any) => {
           this.loading = false;

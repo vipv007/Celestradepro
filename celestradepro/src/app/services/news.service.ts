@@ -20,6 +20,6 @@ export class NewsService {
   }
 
   getTopSentimentScores(): Observable<any[]> {
-    return this.http.get<any[]>(`https://celescontainerwebapp-staging.azurewebsites.net:443/api/top10-sentiment-news`);
+    return this.http.get<any[]>(`https://celescontainerwebapp-staging.azurewebsites.net/api/top10-sentiment-news`);
   }
 }
