@@ -43,7 +43,7 @@ mongoose
 app.use(bodyParser.json());
 app.use(cors({
   origin: [
-    'https://celescontainerwebapp-staging.azurewebsites.net',
+    'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net',
     'https://celescontainerwebapp.azurewebsites.net',
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
