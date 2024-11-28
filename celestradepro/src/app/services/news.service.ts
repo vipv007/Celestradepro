@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class NewsService {
 
-  private baseUrl = 'https://celescontainerwebapp-staging.azurewebsites.net/api';
+  private baseUrl = 'https://27.60.165.94/api';
 
   constructor(private http: HttpClient) { }
 
@@ -20,6 +20,6 @@ export class NewsService {
   }
 
   getTopSentimentScores(): Observable<any[]> {
-    return this.http.get<any[]>(`https://celescontainerwebapp-staging.azurewebsites.net/api/top10-sentiment-news`);
+    return this.http.get<any[]>(`https://27.60.165.94/api/top10-sentiment-news`);
   }
 }
