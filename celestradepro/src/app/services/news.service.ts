@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class NewsService {
 
-  private baseUrl = 'https://20.118.138.147/api';
+  private baseUrl = 'https://finance.celespro.com/api';
 
   constructor(private http: HttpClient) { }
 
@@ -20,6 +20,6 @@ export class NewsService {
   }
 
   getTopSentimentScores(): Observable<any[]> {
-    return this.http.get<any[]>(`https://20.118.138.147/api/top10-sentiment-news`);
+    return this.http.get<any[]>(`https://finance.celespro.com/api/top10-sentiment-news`);
   }
 }

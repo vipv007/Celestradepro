@@ -6,7 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://20.118.138.147/api'; // Your backend URL
+  private apiUrl = 'https://finance.celespro.com/api'; // Your backend URL
   private email: string | null = null;
   private isLoggedInSubject = new BehaviorSubject<boolean>(false); // To track login status
   private loginExpirationDays = 2; // Set the number of days before automatic logout
