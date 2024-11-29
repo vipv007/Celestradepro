@@ -22,9 +22,9 @@ const router = require('./router');
 
 // Initialize Express app
 const app = express();
-const port = process.env.PORT || 8080; // Use environment variable for flexibility
-const mongoUrl = process.env.AZURE_COSMOS_CONNECTIONSTRING || 'mongodb://127.0.0.1:27017'; 
-const dbName = process.env.DB_NAME || 'test'; 
+const port = process.env.PORT || 8181; // Use environment variable for flexibility
+const mongoUrl = process.env.AZURE_COSMOS_CONNECTIONSTRING || 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false'; 
+const dbName = process.env.DB_NAME || 'FinanceDB'; 
 
 // Log environment variables for debugging
 console.log('MongoDB Connection String:', mongoUrl);
@@ -43,6 +43,7 @@ mongoose
 app.use(bodyParser.json());
 app.use(cors({
   origin: [
+    'https://finance.celespro.com',
     'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net',
     'https://celescontainerwebapp.azurewebsites.net',
   ],
