@@ -24,34 +24,24 @@ jobs:
         run: |
           cd celestradepro
           npm install -g @angular/cli
-          npm install -f
-          npm install ws@latest @types/ws@latest -f
+          npm install
 
-      # Modify TypeScript Files (if needed)
-      - name: Modify TypeScript Files
-        run: |
-          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-
-      # Build Angular app
+      # Build Angular app with output path set to 'www'
       - name: Build Angular app
         working-directory: ./celestradepro
-        run: |
-          export NODE_OPTIONS="--max-old-space-size=4096"
-          ng build
+        run: ng build --configuration production --output-path=Backend/www
 
       # Install backend dependencies
       - name: Install backend dependencies
         working-directory: ./celestradepro/Backend
-        run: |
-          npm install -f
-          npm install mongoose -f
+        run: npm install
 
-      # Upload the built Angular and backend app as artifacts for deployment
-      - name: Upload frontend and backend artifacts
+      # Upload the backend with built frontend as an artifact
+      - name: Upload combined app as an artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-build
-          path: celestradepro/www  # Ensure this is correct
+          name: combined-app
+          path: ./celestradepro/Backend
 
   deploy:
     runs-on: ubuntu-latest
@@ -60,22 +50,18 @@ jobs:
       name: 'staging'
 
     steps:
-      # Download the frontend and backend build artifacts
-      - name: Download artifacts from build job
+      # Download the combined frontend and backend artifact
+      - name: Download combined app artifact
         uses: actions/download-artifact@v4
         with:
-          name: app-build
-          path: www
+          name: combined-app
+          path: ./
 
-      # List files for verification
-      - name: List files in the app directory
-        run: ls -R www
-
-      # Deploy both frontend and backend to Azure Web App (staging slot)
+      # Deploy the combined backend and frontend to Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
           slot-name: 'staging'
-          package: www
+          package: ./Backend
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}

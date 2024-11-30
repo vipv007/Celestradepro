@@ -5,7 +5,7 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "node --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng serve & node server.js ",
+    "start": "node --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng serve",
     "build": "ng build",
     "test": "jest --config jest.config.cjs",
     "lint": "ng lint",

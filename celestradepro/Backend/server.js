@@ -22,13 +22,21 @@ const router = require('./router');
 
 // Initialize Express app
 const app = express();
-const port = process.env.PORT || 8181; // Use environment variable for flexibility
+const port = process.env.PORT || 3000; // Use environment variable for flexibility
 const mongoUrl = process.env.AZURE_COSMOS_CONNECTIONSTRING || 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false'; 
 const dbName = process.env.DB_NAME || 'FinanceDB'; 
 
 // Log environment variables for debugging
 console.log('MongoDB Connection String:', mongoUrl);
 console.log('Database Name:', dbName);
+
+// Serve static files from Angular's www folder
+app.use(express.static(path.join(__dirname, 'www')));
+
+// Fallback to Angular's index.html for unknown routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'www', 'index.html'));
+});
 
 // MongoDB connection
 mongoose
