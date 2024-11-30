@@ -24,24 +24,27 @@ jobs:
         run: |
           cd celestradepro
           npm install -g @angular/cli
-          npm install
+          npm install --legacy-peer-deps
+          npm install ws@latest @types/ws@latest --legacy-peer-deps
 
-      # Build Angular app with output path set to 'www'
+      # Modify TypeScript Files (if needed)
+      - name: Modify TypeScript Files
+        run: |
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+
+      # Build Angular app
       - name: Build Angular app
         working-directory: ./celestradepro
-        run: ng build --configuration production --output-path=Backend/www
+        run: |
+          export NODE_OPTIONS="--max-old-space-size=4096"
+          ng build --output-path=Backend/www
 
       # Install backend dependencies
       - name: Install backend dependencies
         working-directory: ./celestradepro/Backend
-        run: npm install
-
-      # Upload the backend with built frontend as an artifact
-      - name: Upload combined app as an artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: combined-app
-          path: ./celestradepro/Backend
+        run: |
+          npm install --legacy-peer-deps
+          npm install mongoose --legacy-peer-deps
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,18 +53,11 @@ jobs:
       name: 'staging'
 
     steps:
-      # Download the combined frontend and backend artifact
-      - name: Download combined app artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: combined-app
-          path: ./
-
-      # Deploy the combined backend and frontend to Azure Web App
+      # Deploy frontend and backend to Azure Web App (staging slot)
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
           slot-name: 'staging'
-          package: ./Backend
+          package: celestradepro/Backend
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
