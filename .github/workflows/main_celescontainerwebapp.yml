@@ -84,7 +84,7 @@ jobs:
       # Ensure backend runs on Azure after deployment (background process)
       - name: Ensure backend starts after deployment
         run: |
-          cd .celestradepro/Backend
+          cd ./celestradepro/Backend
           npm install
           npm install mongoose
 
