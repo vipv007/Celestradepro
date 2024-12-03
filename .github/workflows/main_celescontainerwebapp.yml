@@ -11,7 +11,8 @@ jobs:
 
     steps:
       # Checkout the code
-      - uses: actions/checkout@v4
+      - name: Checkout the code
+        uses: actions/checkout@v4
 
       # Set up Node.js
       - name: Set up Node.js version
@@ -57,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'staging'
+      name: 'production'
 
     steps:
       # Download the frontend and backend build artifacts
@@ -71,20 +72,32 @@ jobs:
       - name: List files in the app directory
         run: ls -R www
 
-      # Deploy both frontend and backend to Azure Web App (staging slot)
+      # Deploy both frontend and backend to Azure Web App (production slot)
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'staging'
+          slot-name: 'production'
           package: www  # Deploy both Angular and Backend from the root directory
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}  # Azure publish profile
 
-      # Ensure backend runs on Azure after deployment (background process)
+      # Ensure backend starts after deployment
       - name: Ensure backend starts after deployment
         run: |
-          cd ./celestradepro/Backend
+          echo "Checking directory structure..."
+          ls -R . # List all files to confirm directory structure
+          
+          # Check if Backend folder exists and navigate to it
+          if [ -d "./celestradepro/Backend" ]; then
+            echo "Backend directory found!"
+            cd ./celestradepro/Backend
+          else
+            echo "Backend directory not found! Please verify your project structure."
+            exit 1
+          fi
+
+          # Install dependencies
           npm install
           npm install mongoose
 
