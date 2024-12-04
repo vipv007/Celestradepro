@@ -22,7 +22,7 @@ jobs:
       # Install Angular CLI and frontend dependencies
       - name: Install Angular CLI and frontend dependencies
         run: |
-          cd Celestradepro/celestradepro
+          cd celestradepro
           npm install -g @angular/cli
           npm install -f
           npm install ws@latest @types/ws@latest -f
@@ -30,12 +30,12 @@ jobs:
       # Modify TypeScript Files for compatibility
       - name: Modify TypeScript Files
         run: |
-          cd Celestradepro/celestradepro
+          cd celestradepro
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
       # Build Angular app
       - name: Build Angular app
-        working-directory: ./Celestradepro/celestradepro
+        working-directory: ./celestradepro
         run: |
           export NODE_OPTIONS="--max-old-space-size=4096"
           ng build --output-path=www
@@ -45,11 +45,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: angular-app
-          path: Celestradepro/celestradepro/www
+          path: celestradepro/www
 
       # Install backend dependencies
       - name: Install backend dependencies
-        working-directory: ./Celestradepro/celestradepro/Backend
+        working-directory: ./celestradepro/Backend
         run: |
           npm install -f
           npm install mongoose -f
@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-app
-          path: Celestradepro/celestradepro/Backend
+          path: celestradepro/Backend
 
   deploy:
     runs-on: ubuntu-latest
