@@ -8,26 +8,34 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      # Ensure backend starts properly on Azure (use npm start)
-      - name: Ensure backend starts after deployment
-        run: |
-          echo "Listing files to verify folder structure:"
-          ls -R .  # List files in the root of the deployed app
 
-          # Check if Backend folder exists and navigate to it
-          if [ -d "./Backend" ]; then
-            echo "Backend directory found!"
-            cd ./Backend
+    steps:
+      # Checkout the code
+      - uses: actions/checkout@v4
+
+ 
+
+      # Ensure backend starts after deployment
+      - name: Start backend server
+        run: |
+          echo "Verifying backend directory structure..."
+          ls -R .
+
+          if [ -d "./www/Backend" ]; then
+            cd ./www/Backend
           else
-            echo "Backend directory not found! Please verify your deployment structure."
+            echo "Backend directory not found! Exiting..."
             exit 1
           fi
 
-          # Install backend dependencies
+          # Install dependencies
           npm install
           npm install mongoose
 
           # Start backend server
           echo "Starting backend server..."
-          npm start &  # Use npm start to run the backend server
+          nohup npm start &  # Keep backend running in the background
+        env:
+          AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false"
+          DB_NAME: 'test'
+          PORT: 443
