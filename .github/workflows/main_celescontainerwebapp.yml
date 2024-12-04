@@ -27,10 +27,12 @@ jobs:
           npm install -f
           npm install ws@latest @types/ws@latest -f
 
+      # Modify TypeScript Files for compatibility
       - name: Modify TypeScript Files
         run: |
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
+      # Build Angular app
       - name: Build Angular app
         working-directory: ./celestradepro
         run: |
@@ -44,13 +46,14 @@ jobs:
           name: angular-app
           path: celestradepro/www
 
-      # Install backend dependencies and upload backend artifact
+      # Install backend dependencies
       - name: Install backend dependencies
         working-directory: ./celestradepro/Backend
         run: |
           npm install -f
           npm install mongoose -f
 
+      # Upload backend artifact for deployment job
       - name: Upload backend artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -89,16 +92,26 @@ jobs:
           app-name: 'CelesContainerWebApp'
           slot-name: 'staging'
           package: www
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE}}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+
+      # Deploy backend to Azure Web App (make sure your backend app is correctly set up for Azure)
+      - name: Deploy backend to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'CelesBackendWebApp'
+          slot-name: 'staging'
+          package: ./Backend
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
       # Start backend server
       - name: Start backend server
         working-directory: ./Backend
         run: |
+          echo "Starting backend server..."
           npm install
           npm install mongoose
-          echo "Starting backend server..."
-          nohup node server.js &  # Keeps the backend running in the background
+          nohup node server.js > server.log 2>&1 & # Keeps the backend running in the background
+          tail -f server.log  # Optionally, tail logs for debugging
         env:
           AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false"
           DB_NAME: 'test'
