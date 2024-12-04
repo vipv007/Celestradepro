@@ -22,7 +22,7 @@ jobs:
       # Install Angular CLI and frontend dependencies
       - name: Install Angular CLI and frontend dependencies
         run: |
-          cd Celestradepro
+          cd celestradepro
           npm install -g @angular/cli
           npm install -f
           npm install ws@latest @types/ws@latest -f
@@ -34,7 +34,7 @@ jobs:
 
       # Build Angular app
       - name: Build Angular app
-        working-directory: ./Celestradepro
+        working-directory: ./celestradepro
         run: |
           export NODE_OPTIONS="--max-old-space-size=4096"
           ng build --output-path=www
@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: angular-app
-          path: Celestradepro/www
+          path: celestradepro/www
 
       # Install backend dependencies
       - name: Install backend dependencies
