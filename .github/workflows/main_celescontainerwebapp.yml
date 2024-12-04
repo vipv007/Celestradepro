@@ -8,29 +8,26 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       # Ensure backend starts properly on Azure (use npm start)
-- name: Ensure backend starts after deployment
-  run: |
-    echo "Listing files to verify folder structure:"
-    ls -R .  # List files in the root of the deployed app
+      - name: Ensure backend starts after deployment
+        run: |
+          echo "Listing files to verify folder structure:"
+          ls -R .  # List files in the root of the deployed app
 
-    # Check if Backend folder exists and navigate to it
-    if [ -d "./Backend" ]; then
-      echo "Backend directory found!"
-      cd ./Backend
-    else
-      echo "Backend directory not found! Please verify your deployment structure."
-      exit 1
-    fi
+          # Check if Backend folder exists and navigate to it
+          if [ -d "./Backend" ]; then
+            echo "Backend directory found!"
+            cd ./Backend
+          else
+            echo "Backend directory not found! Please verify your deployment structure."
+            exit 1
+          fi
 
-    # Install backend dependencies
-    npm install
-    npm install mongoose
+          # Install backend dependencies
+          npm install
+          npm install mongoose
 
-    # Start backend server
-    echo "Starting backend server..."
-    npm start &  # Use npm start to run the backend server
-
-
+          # Start backend server
+          echo "Starting backend server..."
+          npm start &  # Use npm start to run the backend server
