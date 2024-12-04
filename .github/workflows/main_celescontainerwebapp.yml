@@ -15,26 +15,18 @@ jobs:
 
  
 
-      # Ensure backend starts after deployment
+ # Start backend server
       - name: Start backend server
         run: |
-          echo "Verifying backend directory structure..."
-          ls -R .
+          echo "Verifying Backend folder..."
+          ls -R Backend
 
-          if [ -d "./www/Backend" ]; then
-            cd ./www/Backend
-          else
-            echo "Backend directory not found! Exiting..."
-            exit 1
-          fi
-
-          # Install dependencies
+          cd Backend
           npm install
           npm install mongoose
 
-          # Start backend server
           echo "Starting backend server..."
-          nohup npm start &  # Keep backend running in the background
+          nohup node server.js &  # Keep backend running in the background
         env:
           AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false"
           DB_NAME: 'test'
