@@ -13,20 +13,92 @@ jobs:
       # Checkout the code
       - uses: actions/checkout@v4
 
- 
+      # Set up Node.js
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
 
- # Start backend server
-      - name: Start backend server
+      # Install Angular CLI and frontend dependencies
+      - name: Install Angular CLI and frontend dependencies
         run: |
-          echo "Verifying Backend folder..."
-          ls -R ../Backend
+          cd celestradepro
+          npm install -g @angular/cli
+          npm install -f
+          npm install ws@latest @types/ws@latest -f
 
-          cd Backend
+      - name: Modify TypeScript Files
+        run: |
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+
+      - name: Build Angular app
+        working-directory: ./celestradepro
+        run: |
+          export NODE_OPTIONS="--max-old-space-size=4096"
+          ng build --output-path=www
+
+      # Upload frontend artifact for deployment
+      - name: Upload frontend artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-app
+          path: celestradepro/www
+
+      # Install backend dependencies and upload backend artifact
+      - name: Install backend dependencies
+        working-directory: ./celestradepro/Backend
+        run: |
+          npm install -f
+          npm install mongoose -f
+
+      - name: Upload backend artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-app
+          path: celestradepro/Backend
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+
+    steps:
+      # Download frontend artifact
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: angular-app
+          path: www
+
+      # Download backend artifact
+      - name: Download backend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-app
+          path: Backend
+
+      # List files to verify structure
+      - name: List files in deployment directory
+        run: ls -R .
+
+      # Deploy Angular app to Azure Web App
+      - name: Deploy Angular to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'CelesContainerWebApp'
+          slot-name: 'Production'
+          package: www
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EA540B6EFD640D89D465639D713F193 }}
+
+      # Start backend server
+      - name: Start backend server
+        working-directory: ./Backend
+        run: |
           npm install
           npm install mongoose
-
           echo "Starting backend server..."
-          nohup node server.js &  # Keep backend running in the background
+          nohup node server.js &  # Keeps the backend running in the background
         env:
           AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false"
           DB_NAME: 'test'
