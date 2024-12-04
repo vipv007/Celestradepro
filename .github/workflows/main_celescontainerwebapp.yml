@@ -19,7 +19,7 @@ jobs:
       - name: Start backend server
         run: |
           echo "Verifying Backend folder..."
-          ls -R Backend
+          ls -R ../Backend
 
           cd Backend
           npm install
