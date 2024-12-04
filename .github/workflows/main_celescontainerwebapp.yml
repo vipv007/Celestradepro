@@ -84,11 +84,22 @@ jobs:
       # Ensure backend starts properly on Azure (use npm start)
       - name: Ensure backend starts after deployment
         run: |
-          # Install backend dependencies
-          cd ./www/Backend  # Update path according to where Backend is in your deployed app
+          echo "Checking directory structure..."
+          ls -R . # List all files to confirm directory structure
+          
+          # Check if Backend folder exists and navigate to it
+          if [ -d "./celestradepro/Backend" ]; then
+            echo "Backend directory found!"
+            cd ./celestradepro/Backend
+          else
+            echo "Backend directory not found! Please verify your project structure."
+            exit 1
+          fi
+
+          # Install backend dependencies if needed
           npm install
           npm install mongoose
 
-          # Start backend using the npm start script
+          # Start backend using npm start script
           echo "Starting backend server..."
-          npm start &  # Use npm start instead of nohup
+          npm start &  # Use npm start to start the backend server
