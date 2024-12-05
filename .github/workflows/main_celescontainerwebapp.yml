@@ -1,4 +1,4 @@
-name: Build and Deploy Angular & Node.js App to Azure Web App - Celestradepro
+name: Build and deploy Angular app with Node backend to Azure Web App - celestradepro
 
 on:
   push:
@@ -10,17 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the code
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # Checkout the code
+      - uses: actions/checkout@v4
 
-      # 2. Set up Node.js
-      - name: Set up Node.js
+      # Set up Node.js
+      - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
-      # 3. Install Angular CLI and Frontend Dependencies
+      # Install Angular CLI and frontend dependencies
       - name: Install Angular CLI and frontend dependencies
         run: |
           cd Celestradepro
@@ -28,35 +27,36 @@ jobs:
           npm install -f
           npm install ws@latest @types/ws@latest -f
 
-      # 4. Modify TypeScript Files for Compatibility
+      # Modify TypeScript Files for compatibility
       - name: Modify TypeScript Files
         run: |
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
-      # 5. Build Angular Application
+      # Build Angular app
       - name: Build Angular app
         working-directory: ./Celestradepro
         run: |
           export NODE_OPTIONS="--max-old-space-size=4096"
           ng build --output-path=www
 
-      # 6. Upload Frontend Artifact
-      - name: Upload Angular artifact
+      # Upload frontend artifact for deployment
+      - name: Upload frontend artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: angular-app
           path: Celestradepro/www
 
-      # 7. Install Backend Dependencies
+      # Install backend dependencies
       - name: Install backend dependencies
         working-directory: ./Celestradepro/celestradepro/Backend
         run: |
           npm install -f
           npm install mongoose -f
-          npm install socket.io -f  # Ensure socket.io is installed
+          # Temporarily commented out socket.io installation
+          # npm install socket.io -f
 
-      # 8. Upload Backend Artifact
-      - name: Upload backend artifact
+      # Upload backend artifact for deployment job
+      - name: Upload backend artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: backend-app
@@ -69,26 +69,26 @@ jobs:
       name: 'staging'
 
     steps:
-      # 1. Download Frontend Artifact
-      - name: Download Angular artifact
+      # Download frontend artifact
+      - name: Download frontend artifact
         uses: actions/download-artifact@v4
         with:
           name: angular-app
           path: www
 
-      # 2. Download Backend Artifact
+      # Download backend artifact
       - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-app
           path: Backend
 
-      # 3. List Files in Deployment Directory (for debugging)
-      - name: List deployment directory files
+      # List files in deployment directory
+      - name: List files in deployment directory
         run: ls -R .
 
-      # 4. Deploy Angular to Azure Web App
-      - name: Deploy Angular app to Azure Web App
+      # Deploy Angular app to Azure Web App
+      - name: Deploy Angular to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
@@ -96,24 +96,26 @@ jobs:
           package: www
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
-      # 5. Deploy Backend to Azure Web App
-      - name: Deploy Backend app to Azure Web App
+      # Deploy backend to Azure Web App (make sure your backend app is correctly set up for Azure)
+      - name: Deploy backend to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesBackendWebApp'
           slot-name: 'staging'
-          package: Backend
+          package: ./Backend
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
-      # 6. Start Backend Server
-      - name: Start Backend Server
+      # Start backend server
+      - name: Start backend server
         working-directory: ./Backend
         run: |
           echo "Starting backend server..."
           npm install
-          npm install mongoose socket.io
-          nohup node server.js > server.log 2>&1 &  # Run backend in the background
-          tail -f server.log  # Stream logs for debugging
+          npm install mongoose
+          # Uncomment the next line after you install socket.io
+          # npm install socket.io
+          nohup node server.js > server.log 2>&1 & # Keeps the backend running in the background
+          tail -f server.log  # Optionally, tail logs for debugging
         env:
           AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false"
           DB_NAME: 'test'
