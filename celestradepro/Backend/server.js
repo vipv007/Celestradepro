@@ -1,12 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
 const http = require('http');
-const socketIO = require('socket.io');
+// const socketIO = require('socket.io');  // Commented out temporarily
 
 // Import routes and controllers
 const router = require('./router');
@@ -23,72 +22,64 @@ const router = require('./router');
 
 // Initialize Express app
 const app = express();
-const port = process.env.PORT || 443;
-const mongoUrl =
-  process.env.AZURE_COSMOS_CONNECTIONSTRING ||
-  'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false';
-const dbName = process.env.DB_NAME || 'test';
+const port = process.env.PORT || 443; // Use environment variable for flexibility
+const mongoUrl = process.env.AZURE_COSMOS_CONNECTIONSTRING || 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false'; 
+const dbName = process.env.DB_NAME || 'test'; 
 
 // Log environment variables for debugging
-console.log('🔗 MongoDB Connection String:', mongoUrl);
-console.log('📂 Database Name:', dbName);
+console.log('MongoDB Connection String:', mongoUrl);
+console.log('Database Name:', dbName);
 
 // Serve static files from Angular's www folder
-app.use(express.static(path.join(__dirname, '../www')));
-
-// Middleware setup
-app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: [
-      'https://finance.celespro.com',
-      'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net',
-      'https://celescontainerwebapp.azurewebsites.net',
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-  })
-);
+app.use(express.static(path.join(__dirname, 'www')));
 
 // Fallback to Angular's index.html for unknown routes
 app.get('*', (req, res) => {
-  console.log('🌐 Serving Angular frontend for route:', req.url);
-  res.sendFile(path.join(__dirname, '../www/index.html'));
+  res.sendFile(path.join(__dirname, 'www', 'index.html'));
 });
 
 // MongoDB connection
-console.log('🛠️ Connecting to MongoDB...');
 mongoose
-  .connect(mongoUrl, {
-    dbName: dbName,
+  .connect(`${mongoUrl}/${dbName}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('✅ MongoDB connected successfully to:', dbName))
-  .catch((error) => console.error('❌ MongoDB connection error:', error));
+  .then(() => console.log(`Connected to MongoDB: ${dbName}`))
+  .catch((error) => console.error('MongoDB connection error:', error));
 
-// WebSocket setup
-const server = http.createServer(app);
-const io = socketIO(server);
+// Middleware setup
+app.use(bodyParser.json());
+app.use(cors({
+  origin: [
+    'https://finance.celespro.com',
+    'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net',
+    'https://celescontainerwebapp.azurewebsites.net',
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
 
-io.on('connection', (socket) => {
-  console.log('🔌 New client connected');
+// WebSocket setup (commented out temporarily)
+// const server = http.createServer(app);
+// const io = socketIO(server);
 
-  const collection = mongoose.connection.collection('Live_Datas');
-  const changeStream = collection.watch();
+// io.on('connection', (socket) => {
+//   console.log('New client connected');
 
-  changeStream.on('change', (change) => {
-    if (change.operationType === 'insert') {
-      const newPrice = change.fullDocument;
-      console.log('📈 New price update:', newPrice);
-      socket.emit('priceUpdate', newPrice);
-    }
-  });
+//   const collection = mongoose.connection.collection('Live_Datas');
+//   const changeStream = collection.watch();
 
-  socket.on('disconnect', () => {
-    console.log('🔌 Client disconnected');
-  });
-});
+//   changeStream.on('change', (change) => {
+//     if (change.operationType === 'insert') {
+//       const newPrice = change.fullDocument;
+//       socket.emit('priceUpdate', newPrice);
+//     }
+//   });
+
+//   socket.on('disconnect', () => {
+//     console.log('Client disconnected');
+//   });
+// });
 
 // API Routes
 app.use('/api', router);
@@ -112,20 +103,18 @@ app.use('/api', router);
 require('./main')(app, MongoClient, mongoUrl, dbName);
 
 // Server start
-server.listen(port, () => {
-  console.log(`🚀 Server is listening on port ${port}`);
-  console.log('🌐 Frontend at `/` and backend API at `/api`');
-});
+// server.listen(port, () => console.log(`Server is listening on port ${port}`));
+app.listen(port, () => console.log(`Server is listening on port ${port}`));
 
-// Database connection logic (optional for native MongoDB usage)
+// Database connection logic (optional if using native MongoDB for certain features)
 async function connectToDatabase() {
   try {
     const client = new MongoClient(mongoUrl);
     await client.connect();
-    console.log('✅ Connected to Azure Cosmos DB!');
+    console.log("Connected to Azure Cosmos DB!");
     return client.db(dbName);
   } catch (error) {
-    console.error('❌ Failed to connect to Azure Cosmos DB:', error);
+    console.error("Failed to connect to Azure Cosmos DB", error);
     throw error;
   }
 }
