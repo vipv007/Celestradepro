@@ -22,7 +22,7 @@ jobs:
       # Install Angular CLI and frontend dependencies
       - name: Install Angular CLI and frontend dependencies
         run: |
-          cd Celestradepro
+          cd celestradepro
           npm install -g @angular/cli
           npm install -f
           npm install ws@latest @types/ws@latest -f
