@@ -48,7 +48,7 @@ jobs:
 
       # Install backend dependencies
       - name: Install backend dependencies
-        working-directory: ./Celestradepro/celestradepro/Backend
+        working-directory: ./celestradepro/Backend
         run: |
           npm install -f
           npm install mongoose -f
@@ -60,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-app
-          path: Celestradepro/celestradepro/Backend
+          path: ./celestradepro/Backend
 
   deploy:
     runs-on: ubuntu-latest
