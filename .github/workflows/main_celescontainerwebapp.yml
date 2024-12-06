@@ -92,7 +92,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'staging'
+          #slot-name: 'staging'
           package: www
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
