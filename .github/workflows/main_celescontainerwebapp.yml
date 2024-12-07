@@ -42,15 +42,16 @@ jobs:
       with:
         node-version: '14.x'
 
-    - name: Install backend dependencies
+    - name: Reinstall backend dependencies and MongoDB
       run: |
         cd celestradepro/Backend
         npm install
+        npm install mongodb --save
 
     - name: Set up Cosmos DB
       run: |
         cd celestradepro/Backend
-        node server.js 
+        node server.js createDbAndCollection
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
