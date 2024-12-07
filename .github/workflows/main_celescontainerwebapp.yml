@@ -96,13 +96,6 @@ jobs:
           package: www
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
-      # Deploy backend to Azure Web App (make sure your backend app is correctly set up for Azure)
-      - name: Deploy backend to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'CelesBackendWebApp'
-          slot-name: 'staging'
-          package: ./Backend
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+      
 
       
