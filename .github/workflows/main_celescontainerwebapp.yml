@@ -20,13 +20,13 @@ jobs:
 
     - name: Install dependencies and build frontend
       run: |
-        cd Celestradepro/celestradepro
+        cd celestradepro
         npm install
         npm run build --prod
 
     - name: Install backend dependencies
       run: |
-        cd Celestradepro/celestradepro/Backend
+        cd celestradepro/Backend
         npm install
 
     - name: Login to Azure
@@ -36,7 +36,7 @@ jobs:
 
     - name: Set up Cosmos DB
       run: |
-        cd Celestradepro/celestradepro/Backend
+        cd celestradepro/Backend
         node server.js createDbAndCollection
 
     - name: Deploy to Azure Web App
@@ -44,4 +44,4 @@ jobs:
       with:
         app-name: 'CelesContainerWebApp'
         slot-name: 'staging'
-        package: 'Celestradepro/celestradepro'
+        package: 'celestradepro'
