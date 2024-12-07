@@ -40,12 +40,14 @@ jobs:
     - name: Install backend dependencies
       run: |
         cd celestradepro/Backend
+        nvm install 14
         npm install
 
     - name: Set up Cosmos DB
       run: |
         cd celestradepro/Backend
-        node server.js createDbAndCollection
+        nvm use 14
+        node server.js
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
