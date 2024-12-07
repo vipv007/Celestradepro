@@ -105,18 +105,4 @@ jobs:
           package: ./Backend
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
-      # Start backend server
-      - name: Start backend server
-        working-directory: ./Backend
-        run: |
-          echo "Starting backend server..."
-          npm install
-          npm install mongoose
-          # Uncomment the next line after you install socket.io
-          # npm install socket.io
-          nohup node server.js > server.log 2>&1 & # Keeps the backend running in the background
-          tail -f server.log  # Optionally, tail logs for debugging
-        env:
-          AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false"
-          DB_NAME: 'test'
-          PORT: 443
+      
