@@ -23,12 +23,12 @@ const { comSummarizeUrl } = require('./comsummarizer');
 const app = express();
 
 const port = process.env.PORT || 3000;
- const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
- const dbName = process.env.DB_NAME || 'FinanceDB';
+//  const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
+//  const dbName = process.env.DB_NAME || 'FinanceDB';
 
-//const mongoUrl = process.env.AZURE_COSMOS_CONNECTIONSTRING ||'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@';
+const mongoUrl = process.env.AZURE_COSMOS_CONNECTIONSTRING ||'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@';
 
-//const dbName =  process.env.DB_NAME ||'celescontainerwebapp-db';
+const dbName =  process.env.DB_NAME ||'test';
 
 console.log('MongoDB Connection String:', process.env.AZURE_COSMOS_CONNECTIONSTRING);
 console.log('Database Name:', process.env.DB_NAME);

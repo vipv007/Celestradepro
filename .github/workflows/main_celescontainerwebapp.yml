@@ -10,52 +10,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
       - uses: actions/checkout@v4
 
-      # Set up Node.js
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
 
-      # Install Angular CLI and frontend dependencies
-      - name: Install Angular CLI and frontend dependencies
+      - name: 1  Install Angular CLI and frontend dependencies
+        working-directory: ./celestradepro
         run: |
-          cd celestradepro
           npm install -g @angular/cli
           npm install -f
           npm install ws@latest @types/ws@latest -f
 
-      # Modify TypeScript Files for compatibility
-      - name: Modify TypeScript Files
+      - name: Modify TypeScript Files (if necessary)
         run: |
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
-      # Build Angular app
       - name: Build Angular app
         working-directory: ./celestradepro
         run: |
           export NODE_OPTIONS="--max-old-space-size=4096"
           ng build --output-path=www
 
-      # Upload frontend artifact for deployment
       - name: Upload frontend artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: angular-app
           path: celestradepro/www
 
-      # Install backend dependencies
       - name: Install backend dependencies
         working-directory: ./celestradepro/Backend
         run: |
           npm install -f
           npm install mongoose -f
-          # Temporarily commented out socket.io installation
-          # npm install socket.io -f
+          # Uncomment if needed: npm install socket.io -f
 
-      # Upload backend artifact for deployment job
       - name: Upload backend artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -69,33 +60,45 @@ jobs:
       name: 'staging'
 
     steps:
-      # Download frontend artifact
       - name: Download frontend artifact
         uses: actions/download-artifact@v4
         with:
           name: angular-app
           path: www
 
-      # Download backend artifact
       - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-app
           path: Backend
 
-      # List files in deployment directory
-      - name: List files in deployment directory
-        run: ls -R .
+      # Optional: List files in deployment directory for debugging
+      # - name: List files in deployment directory
+      #   run: ls -R .
 
-      # Deploy Angular app to Azure Web App
       - name: Deploy Angular to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
-          #slot-name: 'staging'
+          slot-name: 'staging'
           package: www
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
-      
+      - name: Deploy backend to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'CelesBackendWebApp'
+          slot-name: 'staging'
+          package: ./Backend
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
-      
+      - name: Install pm2 (if not already installed)
+        run: |
+          npm install -g pm2
+
+      - name: Start backend server
+        working-directory: ./Backend
+        run: |
+          echo "Starting backend server..."
+          pm2 start server.js
+          pm2 save
