@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Node.js
+    - name: Set up Node.js for frontend
       uses: actions/setup-node@v2
       with:
         node-version: '14.x'
@@ -37,17 +37,20 @@ jobs:
         npm install webpack --save-dev
         npm run build --prod
 
+    - name: Set up Node.js for backend
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14.x'
+
     - name: Install backend dependencies
       run: |
         cd celestradepro/Backend
-        nvm install 14
         npm install
 
     - name: Set up Cosmos DB
       run: |
         cd celestradepro/Backend
-        nvm use 14
-        node server.js
+        node server.js 
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
