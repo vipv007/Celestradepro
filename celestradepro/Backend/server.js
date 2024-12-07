@@ -26,7 +26,7 @@ app.use(cors({
   origin: 'https://finance.celespro.com' // Replace with your frontend's domain
 }));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 //  const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
 //  const dbName = process.env.DB_NAME || 'FinanceDB';
 

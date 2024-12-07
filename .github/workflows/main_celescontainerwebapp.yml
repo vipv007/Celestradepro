@@ -49,6 +49,8 @@ jobs:
         npm install mongodb --save
 
     - name: Set up Cosmos DB
+      env:
+        PORT: 8080
       run: |
         cd celestradepro/Backend
         node server.js createDbAndCollection
