@@ -24,6 +24,7 @@ jobs:
         npm install -g @angular/cli
         npm install -f
         npm install ws@latest @types/ws@latest -f
+        npm install highcharts --save
 
     - name: Modify TypeScript Files
       run: |
