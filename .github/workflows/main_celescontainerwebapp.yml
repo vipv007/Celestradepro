@@ -87,7 +87,7 @@ jobs:
       - name: Deploy backend to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'CelesBackendWebApp'
+          app-name: 'CelesContainerWebApp'
           slot-name: 'staging'
           package: ./Backend
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
