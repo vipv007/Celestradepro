@@ -1,4 +1,4 @@
-name: Build and deploy Angular app with Node backend to Azure Web App - celestradepro
+name: Build and deploy Node.js backend to Azure Web App - celestradepro
 
 on:
   push:
@@ -17,30 +17,7 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: 1  Install Angular CLI and frontend dependencies
-        working-directory: ./celestradepro
-        run: |
-          npm install -g @angular/cli
-          npm install -f
-          npm install ws@latest @types/ws@latest -f
-
-      - name: Modify TypeScript Files (if necessary)
-        run: |
-          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-
-      - name: Build Angular app
-        working-directory: ./celestradepro
-        run: |
-          export NODE_OPTIONS="--max-old-space-size=4096"
-          ng build --output-path=www
-
-      - name: Upload frontend artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: angular-app
-          path: celestradepro/www
-
-      - name: Install backend dependencies
+      - name: 1  Install backend dependencies
         working-directory: ./celestradepro/Backend
         run: |
           npm install -f
@@ -60,29 +37,11 @@ jobs:
       name: 'staging'
 
     steps:
-      - name: Download frontend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: angular-app
-          path: www
-
       - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-app
           path: Backend
-
-      # Optional: List files in deployment directory for debugging
-      # - name: List files in deployment directory
-      #   run: ls -R .
-
-      - name: Deploy Angular to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'CelesContainerWebApp'
-          slot-name: 'staging'
-          package: www
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
       - name: Deploy backend to Azure Web App
         uses: azure/webapps-deploy@v3

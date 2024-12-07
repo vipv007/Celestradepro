@@ -22,6 +22,10 @@ const { comSummarizeUrl } = require('./comsummarizer');
 // Initialize Express app
 const app = express();
 
+app.use(cors({
+  origin: 'https://finance.celespro.com' // Replace with your frontend's domain
+}));
+
 const port = process.env.PORT || 3000;
 //  const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
 //  const dbName = process.env.DB_NAME || 'FinanceDB';
@@ -46,7 +50,6 @@ mongoose.connect(`${mongoUrl}/${dbName}`, {
 
 // Middleware setup
 app.use(bodyParser.json());
-app.use(cors());
 
 // API Routes
 app.use('/api', router);
@@ -89,3 +92,7 @@ server.listen(port, () => console.log(`Server is listening on port ${port}`));
 
 // Custom logic for main functionality
 require('./main')(app, MongoClient, mongoUrl, dbName);  // Pass app, MongoClient, and DB settings to main logic
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
