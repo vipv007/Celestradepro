@@ -33,6 +33,7 @@ jobs:
       run: |
         cd celestradepro
         npm install
+        npm install webpack --save-dev
         npm run build --prod
 
     - name: Install backend dependencies
