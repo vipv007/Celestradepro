@@ -6,16 +6,42 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Deploy to Azure Web App
-        uses: actions/setup-node@v3
-        with:
-          app-name: 'CelesContainerWebApp'
-          slot-name: 'staging'
-          package: .  # Deploy the entire directory
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_STAGINGE }}
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14.x'
+
+    - name: Install dependencies and build frontend
+      run: |
+        cd Celestradepro/celestradepro
+        npm install
+        npm run build --prod
+
+    - name: Install backend dependencies
+      run: |
+        cd Celestradepro/celestradepro/Backend
+        npm install
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Set up Cosmos DB
+      run: |
+        cd Celestradepro/celestradepro/Backend
+        node server.js createDbAndCollection
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'CelesContainerWebApp'
+        slot-name: 'staging'
+        package: 'Celestradepro/celestradepro'
