@@ -60,8 +60,8 @@ app.use('/api', router);
 // app.use('/api/optionnews', optionnewsRoutes);
 
 // Data fetching routes
-app.get('/api/data', fetchData);
-app.get('/api/data/dates', fetchAvailableDates);
+// app.get('/api/data', fetchData);
+// app.get('/api/data/dates', fetchAvailableDates);
 // app.post('/comnews/com-summarize-url', comSummarizeUrl);
 
 // Commodity-related routes
