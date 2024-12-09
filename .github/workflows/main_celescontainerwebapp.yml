@@ -53,7 +53,7 @@ jobs:
         PORT: 8081
       run: |
         cd celestradepro/Backend
-        node server.js
+        node setupDb.js
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2

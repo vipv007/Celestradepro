@@ -8,17 +8,29 @@ console.log('Starting MongoDB setup...');
 console.log('MongoDB Connection String:', mongoUrl);
 console.log('Database Name:', dbName);
 
-mongoose.connect(`${mongoUrl}/${dbName}`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => {
+async function setupDatabase() {
+  try {
+    console.log('Connecting to MongoDB...');
+    await mongoose.connect(`${mongoUrl}/${dbName}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log(`Connected to MongoDB at ${mongoUrl}/${dbName}`);
+
     // Perform any necessary setup here
+    console.log('Setting up database...');
+
+    // Example: Create a collection
+    const collection = mongoose.connection.collection('example_collection');
+    await collection.insertOne({ key: 'value' });
+    console.log('Inserted document into example_collection');
+
     console.log('MongoDB setup completed successfully.');
     process.exit(0); // Exit script
-  })
-  .catch((error) => {
-    console.error('MongoDB connection error:', error);
+  } catch (error) {
+    console.error('MongoDB connection/setup error:', error);
     process.exit(1); // Exit with error
-  });
+  }
+}
+
+setupDatabase();
