@@ -53,12 +53,26 @@ jobs:
         PORT: 8081
       run: |
         cd celestradepro/Backend
-        node setupDb.js
+        node server.js
+
+    - name: Build project for deployment
+      run: |
+        cd celestradepro
+        npm run build
+
+    - name: Archive build artifacts
+      run: |
+        cd celestradepro
+        zip -r build.zip dist/
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'CelesContainerWebApp'
         slot-name: 'staging'
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: 'celestradepro'
+        package: 'celestradepro/dist'
