@@ -11,16 +11,17 @@ console.log('Database Name:', dbName);
 async function setupDatabase() {
   try {
     console.log('Connecting to MongoDB...');
+    const startTime = Date.now();
     await mongoose.connect(`${mongoUrl}/${dbName}`, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log(`Connected to MongoDB at ${mongoUrl}/${dbName}`);
+    const connectionTime = Date.now() - startTime;
+    console.log(`Connected to MongoDB at ${mongoUrl}/${dbName} in ${connectionTime}ms`);
 
     // Perform any necessary setup here
     console.log('Setting up database...');
-
-    // Example: Create a collection
+    // Example setup task: Creating a collection
     const collection = mongoose.connection.collection('example_collection');
     await collection.insertOne({ key: 'value' });
     console.log('Inserted document into example_collection');
