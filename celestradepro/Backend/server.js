@@ -34,8 +34,9 @@ mongoose.connect(`${mongoUrl}/${dbName}`, {
     // Only start the server after a successful database connection
     server.listen(port, () => {
       console.log(`Server is listening on port ${port}`);
+      // Load the main functionality once the server is ready
+      require('./main')(app, mongoose, mongoUrl, dbName); 
     });
-    require('./main')(app, MongoClient, mongoUrl, dbName);  // Pass app, MongoClient, and DB settings to main logic
   })
   .catch((error) => {
     console.error('MongoDB connection error:', error);
