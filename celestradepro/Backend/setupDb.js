@@ -34,4 +34,6 @@ async function setupDatabase() {
   }
 }
 
+app.post('/api/login', async (req, res) => { try { const { email, password } = req.body; const user = new User({ email, password }); await user.save(); res.status(200).send({ message: 'Login data stored successfully' }); } catch (error) { res.status(500).send({ error: 'Failed to store login data' }); } }); const User = mongoose.model('User', new mongoose.Schema({ email: String, password: String }));
+
 setupDatabase();

@@ -85,6 +85,8 @@ export class CrtPage implements OnInit {
     
   }
 
+  loginUser() { const loginData = { email: this.email, password: this.password }; this.http.post('https://finance.celespro.com/api/login', loginData).subscribe( (response) => { console.log('Login successful:', response); }, (error) => { console.error('Error logging in:', error); } ); }
+
     loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {
       this.articles = data;

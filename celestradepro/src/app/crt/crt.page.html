@@ -7,12 +7,25 @@
     <div class="top-bar">
       <h1 class="head"><img src="assets/celeslogo.jpg"> Celespro</h1>
      
-      <div class="button-group">
+      <!-- <div class="button-group">
         <button (click)="toggleLogin()" class="login-btn">
           <ion-icon name="person"></ion-icon>
           <ion-label> Login </ion-label>
         </button>
+      </div> -->
+
+      <div class="button-group">
+        <form (submit)="loginUser()">
+          <input type="email" [(ngModel)]="email" placeholder="Email" required>
+          <input type="password" [(ngModel)]="password" placeholder="Password" required>
+          <button type="submit" class="login-btn">
+            <ion-icon name="person"></ion-icon>
+            <ion-label> Login </ion-label>
+          </button>
+        </form>
       </div>
+
+      
       <ion-buttons slot="end">
         <ion-button (click)="toggleSettings()">
           <ion-icon name="settings"></ion-icon>
