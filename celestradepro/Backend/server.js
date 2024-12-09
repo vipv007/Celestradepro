@@ -3,7 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { MongoClient } = require('mongodb');
 const http = require('http');
 const socketIO = require('socket.io');
 
@@ -30,8 +29,18 @@ mongoose.connect(`${mongoUrl}/${dbName}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => console.log(`Connected to MongoDB at ${mongoUrl}/${dbName}`))
-  .catch((error) => console.error('MongoDB connection error:', error));
+  .then(() => {
+    console.log(`Connected to MongoDB at ${mongoUrl}/${dbName}`);
+    // Only start the server after a successful database connection
+    server.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
+    require('./main')(app, MongoClient, mongoUrl, dbName);  // Pass app, MongoClient, and DB settings to main logic
+  })
+  .catch((error) => {
+    console.error('MongoDB connection error:', error);
+    process.exit(1); // Exit process with failure
+  });
 
 // Middleware setup
 app.use(bodyParser.json());
@@ -56,10 +65,4 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('Client disconnected');
   });
-});
-
-// Start the server
-server.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
-  require('./main')(app, MongoClient, mongoUrl, dbName);  // Pass app, MongoClient, and DB settings to main logic
 });
