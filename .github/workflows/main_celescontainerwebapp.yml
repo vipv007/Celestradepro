@@ -25,15 +25,19 @@ jobs:
         npm install -f
         npm install ws@latest @types/ws@latest -f
         npm install highcharts --save
+
     - name: Modify TypeScript Files
       run: |
+        cd celestradepro
         find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+
     - name: Install dependencies and build frontend
       run: |
         cd celestradepro
         npm install
         npm install webpack --save-dev
         npm run build --prod
+
     - name: Set up Node.js for backend
       uses: actions/setup-node@v2
       with:
@@ -44,12 +48,17 @@ jobs:
         cd celestradepro/Backend
         npm install
         npm install mongodb --save
+
     - name: Set up Cosmos DB
       env:
         PORT: 8081
+        AZURE_COSMOS_CONNECTIONSTRING: ${{ secrets.AZURE_COSMOS_CONNECTIONSTRING }}
+        DB_NAME: ${{ secrets.DB_NAME }}
       run: |
         cd celestradepro/Backend
         node setupDb.js
+
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
