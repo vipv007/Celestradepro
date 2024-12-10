@@ -77,6 +77,7 @@ export class CrtPage implements OnInit {
     this.loadCommodities();
     this.loadArticles();
     
+    
     // Load all stocks and select the first two for display
     this.stockService.getAllStocks().subscribe((response: any[]) => {
       this.stocks = response;
@@ -86,6 +87,7 @@ export class CrtPage implements OnInit {
     
   }
 
+  
   loginUser() { const loginData = { email: this.email }; this.http.post('https://finance.celespro.com/api/login', loginData).subscribe( (response) => { console.log('Email stored successfully:', response); }, (error) => { console.error('Error storing email:', error); } ); }
 
   convertToDate(dateTimeString: string): Date {
@@ -94,6 +96,8 @@ export class CrtPage implements OnInit {
     const [day, month, year] = datePart.split('/').map(Number);
     return new Date(year, month - 1, day);
   }
+
+  loadArticles() {  console.log('Articles loaded'); }
 
   calculateDaysSince(articleDate: Date): number {
     const currentDate = new Date();
