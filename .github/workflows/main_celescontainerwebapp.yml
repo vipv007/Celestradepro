@@ -16,10 +16,10 @@ jobs:
     - name: Clear npm cache
       run: npm cache clean --force
 
-    - name: Delete node_modules and package-lock.json
+    - name: Delete node_modules and package-lock.json if they exist
       run: |
         rm -rf node_modules
-        rm package-lock.json
+        if [ -f package-lock.json ]; then rm package-lock.json; fi
 
     - name: Set up Node.js for frontend
       uses: actions/setup-node@v2
@@ -61,10 +61,12 @@ jobs:
         cd celestradepro/Backend
         node setupDb.js
 
+
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'CelesContainerWebApp'
         slot-name: 'staging'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: 'celestradepro/dist'
+        package: 'celestradepro/www'
