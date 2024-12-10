@@ -8,7 +8,7 @@ import { Com_newsService } from '../services/com_news.service';
 import { StockService } from '../services/stock.service';
 import { ForexService } from '../services/forex.service';
 import { CommodityService } from '../services/commodity.service';
-
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-crt',
@@ -38,6 +38,8 @@ export class CrtPage implements OnInit {
   daysSinceArticle = [];
   selectTabs: string = 'recent'; // Default tab value
   activeContent: string = ''; // Default active content
+  
+  private apiUrl: string = 'https://finance.celespro.com/api';
 
   allSections = [
     { name: 'Top Market News', visible: true },
@@ -63,7 +65,8 @@ export class CrtPage implements OnInit {
     private forexService: ForexService,
     private optionnewsService: OptionnewsService, 
     private commodityService: CommodityService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +88,7 @@ export class CrtPage implements OnInit {
     
   }
 
+  
     loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {
       this.articles = data;
@@ -97,6 +101,7 @@ export class CrtPage implements OnInit {
     });
   }
 
+  
   convertToDate(dateTimeString: string): Date {
     // Convert the string "26/8/2024, 7:08:00 pm" into a Date object
     const [datePart, timePart] = dateTimeString.split(', ');
@@ -310,4 +315,6 @@ getForexData() {
   toggleShowMore(article) {
     article.showMore = !article.showMore;
   }
+
+  loginUser() { const loginData = { email: this.email }; this.http.post(`${this.apiUrl}/login`, loginData).subscribe( (response) => { console.log('Email stored successfully:', response); }, (error) => { console.error('Error storing email:', error); console.error('Error response:', error.error);  } ); }
 }
