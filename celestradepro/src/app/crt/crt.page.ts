@@ -8,7 +8,7 @@ import { Com_newsService } from '../services/com_news.service';
 import { StockService } from '../services/stock.service';
 import { ForexService } from '../services/forex.service';
 import { CommodityService } from '../services/commodity.service';
-
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-crt',
@@ -63,7 +63,8 @@ export class CrtPage implements OnInit {
     private forexService: ForexService,
     private optionnewsService: OptionnewsService, 
     private commodityService: CommodityService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
   ) {}
 
   ngOnInit(): void {
@@ -85,19 +86,7 @@ export class CrtPage implements OnInit {
     
   }
 
-  loginUser() { const loginData = { email: this.email, password: this.password }; this.http.post('https://finance.celespro.com/api/login', loginData).subscribe( (response) => { console.log('Login successful:', response); }, (error) => { console.error('Error logging in:', error); } ); }
-
-    loadArticles(): void {
-    this.newsService.getTopSentimentScores().subscribe(data => {
-      this.articles = data;
-
-      // Calculate days since each article's dateTime
-      this.daysSinceArticle = this.articles.map(article => {
-        const articleDateTime = this.convertToDate(article.articleDateTime);
-        return this.calculateDaysSince(articleDateTime);
-      });
-    });
-  }
+  loginUser() { const loginData = { email: this.email }; this.http.post('https://finance.celespro.com/api/login', loginData).subscribe( (response) => { console.log('Email stored successfully:', response); }, (error) => { console.error('Error storing email:', error); } ); }
 
   convertToDate(dateTimeString: string): Date {
     // Convert the string "26/8/2024, 7:08:00 pm" into a Date object
@@ -164,7 +153,7 @@ getForexData() {
       this.isLoggedIn = true;
       this.loadUserPreferences();
     }
-  }
+  }s
 
  loadUserPreferences() {
     this.userService.getUserData(this.email).subscribe((user: any) => {
