@@ -8,7 +8,7 @@ import { Com_newsService } from '../services/com_news.service';
 import { StockService } from '../services/stock.service';
 import { ForexService } from '../services/forex.service';
 import { CommodityService } from '../services/commodity.service';
-import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-crt',
@@ -63,8 +63,7 @@ export class CrtPage implements OnInit {
     private forexService: ForexService,
     private optionnewsService: OptionnewsService, 
     private commodityService: CommodityService,
-    private router: Router,
-    private http: HttpClient,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -77,7 +76,6 @@ export class CrtPage implements OnInit {
     this.loadCommodities();
     this.loadArticles();
     
-    
     // Load all stocks and select the first two for display
     this.stockService.getAllStocks().subscribe((response: any[]) => {
       this.stocks = response;
@@ -87,8 +85,17 @@ export class CrtPage implements OnInit {
     
   }
 
-  
-  loginUser() { const loginData = { email: this.email }; this.http.post('https://finance.celespro.com/api/login', loginData).subscribe( (response) => { console.log('Email stored successfully:', response); }, (error) => { console.error('Error storing email:', error); } ); }
+    loadArticles(): void {
+    this.newsService.getTopSentimentScores().subscribe(data => {
+      this.articles = data;
+
+      // Calculate days since each article's dateTime
+      this.daysSinceArticle = this.articles.map(article => {
+        const articleDateTime = this.convertToDate(article.articleDateTime);
+        return this.calculateDaysSince(articleDateTime);
+      });
+    });
+  }
 
   convertToDate(dateTimeString: string): Date {
     // Convert the string "26/8/2024, 7:08:00 pm" into a Date object
@@ -96,8 +103,6 @@ export class CrtPage implements OnInit {
     const [day, month, year] = datePart.split('/').map(Number);
     return new Date(year, month - 1, day);
   }
-
-  loadArticles() {  console.log('Articles loaded'); }
 
   calculateDaysSince(articleDate: Date): number {
     const currentDate = new Date();
@@ -157,7 +162,7 @@ getForexData() {
       this.isLoggedIn = true;
       this.loadUserPreferences();
     }
-  }s
+  }
 
  loadUserPreferences() {
     this.userService.getUserData(this.email).subscribe((user: any) => {
