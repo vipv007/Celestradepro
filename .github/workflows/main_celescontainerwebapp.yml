@@ -13,6 +13,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Clear npm cache
+      run: npm cache clean --force
+
+    - name: Delete node_modules and package-lock.json
+      run: |
+        rm -rf node_modules
+        rm package-lock.json
+
     - name: Set up Node.js for frontend
       uses: actions/setup-node@v2
       with:
@@ -20,7 +28,6 @@ jobs:
 
     - name: Install Angular CLI and frontend dependencies
       run: |
-        cd celestradepro
         npm install -g @angular/cli
         npm install -f
         npm install ws@latest @types/ws@latest -f
@@ -32,7 +39,6 @@ jobs:
 
     - name: Install dependencies and build frontend
       run: |
-        cd celestradepro
         npm install
         npm install webpack --save-dev
         npm run build --prod
@@ -55,11 +61,10 @@ jobs:
         cd celestradepro/Backend
         node setupDb.js
 
-
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'CelesContainerWebApp'
         slot-name: 'staging'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: 'celestradepro/www'
+        package: 'celestradepro/dist'
