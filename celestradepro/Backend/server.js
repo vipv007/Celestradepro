@@ -27,10 +27,7 @@ const io = socketIO(server);
 mongoose.set('strictQuery', false);
 mongoose.connect(`${mongoUrl}/${dbName}`, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
-  poolSize: 10, // Maintain up to 10 socket connections
-  serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+  useUnifiedTopology: true
 })
   .then(() => console.log(`Connected to MongoDB at ${mongoUrl}/${dbName}`))
   .catch((error) => console.error('MongoDB connection error:', error));
