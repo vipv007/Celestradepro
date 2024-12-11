@@ -49,7 +49,10 @@ jobs:
         npm install
         npm install mongodb --save
 
-    - name: Set up Cosmos DB
+    - name: Run the backend server
+      env:
+        AZURE_COSMOS_CONNECTIONSTRING: 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@'
+        DB_NAME: 'test'
       run: |
         cd celestradepro/Backend
         node server.js
