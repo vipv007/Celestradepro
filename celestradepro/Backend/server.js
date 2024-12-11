@@ -25,18 +25,22 @@ const io = socketIO(server);
 
 // Optimize Mongoose Connection
 mongoose.set('strictQuery', false);
+
+
 mongoose.connect(`${mongoUrl}/${dbName}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 100, // Keep trying to send operations for 10 seconds
-  socketTimeoutMS: 450, // Close sockets after 45 seconds of inactivity
-  connectTimeoutMS: 100, // Set connection timeout
+  serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
+  connectTimeoutMS: 30000, // Increase connection timeout to 30 seconds
 })
   .then(() => console.log(`Connected to MongoDB at ${mongoUrl}/${dbName}`))
   .catch((error) => {
     console.error('MongoDB connection error:', error);
     process.exit(1); // Exit the process with failure
   });
+
+
+
 
 // Middleware setup
 app.use(bodyParser.json());
