@@ -8,7 +8,7 @@ import { Com_newsService } from '../services/com_news.service';
 import { StockService } from '../services/stock.service';
 import { ForexService } from '../services/forex.service';
 import { CommodityService } from '../services/commodity.service';
-import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-crt',
@@ -28,7 +28,7 @@ export class CrtPage implements OnInit {
   commodities: any[] = []; 
   forexData: any[] = [];  // Store all Forex data here
   selectedForexStocks: any[] = [];  // To store and display only two Forex items
-  defaultImage: string = 'assets/g2.jpg';
+   defaultImage: string = 'assets/g2.jpg';
   isLoginOpen = false;
   isLoggedIn = false;
   email: string = '';
@@ -38,8 +38,6 @@ export class CrtPage implements OnInit {
   daysSinceArticle = [];
   selectTabs: string = 'recent'; // Default tab value
   activeContent: string = ''; // Default active content
-  
-  private apiUrl: string = 'https://finance.celespro.com/api';
 
   allSections = [
     { name: 'Top Market News', visible: true },
@@ -65,8 +63,7 @@ export class CrtPage implements OnInit {
     private forexService: ForexService,
     private optionnewsService: OptionnewsService, 
     private commodityService: CommodityService,
-    private router: Router,
-    private http: HttpClient,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -84,9 +81,11 @@ export class CrtPage implements OnInit {
       this.stocks = response;
       this.selectedStocks = this.stocks.slice(0, 2);
     });
+
+    
   }
 
-  loadArticles(): void {
+    loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {
       this.articles = data;
 
@@ -112,6 +111,7 @@ export class CrtPage implements OnInit {
     return daysDifference;
   }
 
+
   onImageError(article: any) {
     article.imageUrl = this.defaultImage;
   }
@@ -127,19 +127,21 @@ export class CrtPage implements OnInit {
     );
   }
 
-  getForexData() {
-    this.forexService.getAllForexs().subscribe(
-      (data: any) => {
-        console.log('Fetched Forex Data:', data);  // Log fetched data for debugging
-        this.forexData = data;
-        this.selectedForexStocks = this.forexData.slice(0, 2);  // Display the first two stocks
-        console.log('Selected Forex Stocks:', this.selectedForexStocks);  // Log selected stocks
-      },
-      (error) => {
-        console.error('Error fetching Forex data:', error);
-      }
-    );
-  }
+getForexData() {
+  this.forexService.getAllForexs().subscribe(
+    (data: any) => {
+      console.log('Fetched Forex Data:', data);  // Log fetched data for debugging
+      this.forexData = data;
+      this.selectedForexStocks = this.forexData.slice(0, 2);  // Display the first two stocks
+      console.log('Selected Forex Stocks:', this.selectedForexStocks);  // Log selected stocks
+    },
+    (error) => {
+      console.error('Error fetching Forex data:', error);
+    }
+  );
+}
+  
+
 
   // Fetch Commodity News
   loadCommodityNews() {
@@ -162,7 +164,7 @@ export class CrtPage implements OnInit {
     }
   }
 
-  loadUserPreferences() {
+ loadUserPreferences() {
     this.userService.getUserData(this.email).subscribe((user: any) => {
       if (user && user.selectedSections) {
         this.sections.forEach((section) => {
@@ -173,25 +175,26 @@ export class CrtPage implements OnInit {
   }
 
   saveSelectedSections() {
-    // Get the names of the currently selected sections
-    const selectedSections = this.sections
-      .filter(section => section.visible) // Only include selected (checked) sections
-      .map(section => section.name);     // Extract section names
+  // Get the names of the currently selected sections
+  const selectedSections = this.sections
+    .filter(section => section.visible) // Only include selected (checked) sections
+    .map(section => section.name);     // Extract section names
 
-    // Send the updated list of selected sections to the backend
-    this.userService.updateSelectedSections(this.email, selectedSections).subscribe(
-      (response) => {
-        console.log('Selected sections updated successfully:', response);
-      },
-      (error) => {
-        console.error('Error updating selected sections:', error);
-      }
-    );
-  }
+  // Send the updated list of selected sections to the backend
+  this.userService.updateSelectedSections(this.email, selectedSections).subscribe(
+    (response) => {
+      console.log('Selected sections updated successfully:', response);
+    },
+    (error) => {
+      console.error('Error updating selected sections:', error);
+    }
+  );
+}
 
   onSectionChange() {
-    this.saveSelectedSections();
-  }
+  this.saveSelectedSections();
+}
+
 
   onImageLoad(event: Event): void {
     console.log("Image loaded:", event);
@@ -269,7 +272,6 @@ export class CrtPage implements OnInit {
     );
   }
 
-
   // Section visibility logic
   isSectionVisible(sectionName: string): boolean {
     const section = this.sections.find(sec => sec.name === sectionName);
@@ -308,6 +310,4 @@ export class CrtPage implements OnInit {
   toggleShowMore(article) {
     article.showMore = !article.showMore;
   }
-
-  loginUser() { const loginData = { email: this.email }; this.http.post(`${this.apiUrl}/login`, loginData).subscribe( (response) => { console.log('Email stored successfully:', response); }, (error) => { console.error('Error storing email:', error); console.error('Error response:', error.error);  } ); }
 }
