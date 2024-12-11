@@ -86,4 +86,4 @@ io.on('connection', (socket) => {
 server.listen(port, () => console.log(`Server is listening on port ${port}`));
 
 // Custom logic for main functionality
-require('./main')(app, MongoClient, mongoUrl, dbName);  // Pass app, MongoClient, and DB settings to main logic
+require('./main')(app);  // Pass app to main logic
