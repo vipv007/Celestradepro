@@ -28,7 +28,7 @@ export class CrtPage implements OnInit {
   commodities: any[] = []; 
   forexData: any[] = [];  // Store all Forex data here
   selectedForexStocks: any[] = [];  // To store and display only two Forex items
-   defaultImage: string = 'assets/g2.jpg';
+  defaultImage: string = 'assets/g2.jpg';
   isLoginOpen = false;
   isLoggedIn = false;
   email: string = '';
@@ -84,12 +84,9 @@ export class CrtPage implements OnInit {
       this.stocks = response;
       this.selectedStocks = this.stocks.slice(0, 2);
     });
-
-    
   }
 
-  
-    loadArticles(): void {
+  loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {
       this.articles = data;
 
@@ -101,7 +98,6 @@ export class CrtPage implements OnInit {
     });
   }
 
-  
   convertToDate(dateTimeString: string): Date {
     // Convert the string "26/8/2024, 7:08:00 pm" into a Date object
     const [datePart, timePart] = dateTimeString.split(', ');
@@ -115,7 +111,6 @@ export class CrtPage implements OnInit {
     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     return daysDifference;
   }
-
 
   onImageError(article: any) {
     article.imageUrl = this.defaultImage;
@@ -132,21 +127,19 @@ export class CrtPage implements OnInit {
     );
   }
 
-getForexData() {
-  this.forexService.getAllForexs().subscribe(
-    (data: any) => {
-      console.log('Fetched Forex Data:', data);  // Log fetched data for debugging
-      this.forexData = data;
-      this.selectedForexStocks = this.forexData.slice(0, 2);  // Display the first two stocks
-      console.log('Selected Forex Stocks:', this.selectedForexStocks);  // Log selected stocks
-    },
-    (error) => {
-      console.error('Error fetching Forex data:', error);
-    }
-  );
-}
-  
-
+  getForexData() {
+    this.forexService.getAllForexs().subscribe(
+      (data: any) => {
+        console.log('Fetched Forex Data:', data);  // Log fetched data for debugging
+        this.forexData = data;
+        this.selectedForexStocks = this.forexData.slice(0, 2);  // Display the first two stocks
+        console.log('Selected Forex Stocks:', this.selectedForexStocks);  // Log selected stocks
+      },
+      (error) => {
+        console.error('Error fetching Forex data:', error);
+      }
+    );
+  }
 
   // Fetch Commodity News
   loadCommodityNews() {
@@ -169,7 +162,7 @@ getForexData() {
     }
   }
 
- loadUserPreferences() {
+  loadUserPreferences() {
     this.userService.getUserData(this.email).subscribe((user: any) => {
       if (user && user.selectedSections) {
         this.sections.forEach((section) => {
@@ -180,26 +173,25 @@ getForexData() {
   }
 
   saveSelectedSections() {
-  // Get the names of the currently selected sections
-  const selectedSections = this.sections
-    .filter(section => section.visible) // Only include selected (checked) sections
-    .map(section => section.name);     // Extract section names
+    // Get the names of the currently selected sections
+    const selectedSections = this.sections
+      .filter(section => section.visible) // Only include selected (checked) sections
+      .map(section => section.name);     // Extract section names
 
-  // Send the updated list of selected sections to the backend
-  this.userService.updateSelectedSections(this.email, selectedSections).subscribe(
-    (response) => {
-      console.log('Selected sections updated successfully:', response);
-    },
-    (error) => {
-      console.error('Error updating selected sections:', error);
-    }
-  );
-}
+    // Send the updated list of selected sections to the backend
+    this.userService.updateSelectedSections(this.email, selectedSections).subscribe(
+      (response) => {
+        console.log('Selected sections updated successfully:', response);
+      },
+      (error) => {
+        console.error('Error updating selected sections:', error);
+      }
+    );
+  }
 
   onSectionChange() {
-  this.saveSelectedSections();
-}
-
+    this.saveSelectedSections();
+  }
 
   onImageLoad(event: Event): void {
     console.log("Image loaded:", event);
@@ -276,6 +268,7 @@ getForexData() {
       error => console.error('Error fetching option news:', error)
     );
   }
+
 
   // Section visibility logic
   isSectionVisible(sectionName: string): boolean {

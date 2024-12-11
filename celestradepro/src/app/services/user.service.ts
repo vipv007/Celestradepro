@@ -6,10 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-
-  // private apiUrl = 'https://20.118.138.147/api'; // Your backend URL
   private apiUrl: string = 'https://finance.celespro.com/api'; // Your backend URL
-
   private email: string | null = null;
   private isLoggedInSubject = new BehaviorSubject<boolean>(false); // To track login status
   private loginExpirationDays = 2; // Set the number of days before automatic logout
@@ -83,14 +80,15 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/update-user-theme`, { email, theme });
   }
 
-    getUserData(email: string): Observable<any> {
+  // Get user data from the backend
+  getUserData(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { email });
   }
 
+  // Update selected sections for the user in the backend
   updateSelectedSections(email: string, selectedSections: string[]): Observable<any> {
-  return this.http.post(`${this.apiUrl}/update-selected-sections`, { email, selectedSections });
-}
-
+    return this.http.post(`${this.apiUrl}/update-selected-sections`, { email, selectedSections });
+  }
 
   // Get login state as an observable
   isLoggedIn(): Observable<boolean> {
@@ -110,44 +108,43 @@ export class UserService {
     this.isLoggedInSubject.next(false); // Mark user as logged out
   }
 
-  // userService.js
-    archiveArticle(email: string, archivedArticle: any): Observable<any> {
-        // Assuming you have an endpoint to handle archiving for users
-        return this.http.post(`${this.apiUrl}/users/${email}/archive`, archivedArticle);
-    }
+  // Archive article for the user
+  archiveArticle(email: string, archivedArticle: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/${email}/archive`, archivedArticle);
+  }
 
-    getArchivedArticles(email: string): Observable<any> {
-      return this.http.get(`${this.apiUrl}/archive/${email}`);
-      
+  // Get archived articles for the user
+  getArchivedArticles(email: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/archive/${email}`);
   }
-  
-   archiveArticleop(email: string, archivedArticleop: any): Observable<any> {
-        // Assuming you have an endpoint to handle archiving for users
-        return this.http.post(`${this.apiUrl}/users/${email}/archiveop`, archivedArticleop);
+
+  // Archive option article for the user
+  archiveArticleop(email: string, archivedArticleop: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/${email}/archiveop`, archivedArticleop);
   }
-  
+
+  // Get archived option articles for the user
   getArchivedArticlesop(email: string): Observable<any> {
-      return this.http.get(`${this.apiUrl}/archiveop/${email}`);
-      
+    return this.http.get(`${this.apiUrl}/archiveop/${email}`);
   }
 
+  // Archive commodity article for the user
   archiveArticlecom(email: string, archivedArticlecom: any): Observable<any> {
-        // Assuming you have an endpoint to handle archiving for users
-        return this.http.post(`${this.apiUrl}/users/${email}/archivecom`, archivedArticlecom);
-  }
-  
-  getArchivedArticlescom(email: string): Observable<any> {
-      return this.http.get(`${this.apiUrl}/archivecom/${email}`);
-      
+    return this.http.post(`${this.apiUrl}/users/${email}/archivecom`, archivedArticlecom);
   }
 
-  archiveArticlefox(email: string, archivedArticlefox: any): Observable<any> {
-        // Assuming you have an endpoint to handle archiving for users
-        return this.http.post(`${this.apiUrl}/users/${email}/archivefox`, archivedArticlefox);
+  // Get archived commodity articles for the user
+  getArchivedArticlescom(email: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/archivecom/${email}`);
   }
-  
+
+  // Archive forex article for the user
+  archiveArticlefox(email: string, archivedArticlefox: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/${email}/archivefox`, archivedArticlefox);
+  }
+
+  // Get archived forex articles for the user
   getArchivedArticlesfox(email: string): Observable<any> {
-      return this.http.get(`${this.apiUrl}/archivefox/${email}`);
-      
+    return this.http.get(`${this.apiUrl}/archivefox/${email}`);
   }
 }
