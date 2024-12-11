@@ -11,4 +11,5 @@ const userSchema = new mongoose.Schema({
   archivedForexArticles: { type: Array, default: [] }
 });
 
-module.exports = mongoose.model('User', userSchema);
+// Check if the model already exists before defining it
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);
