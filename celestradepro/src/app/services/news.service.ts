@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class NewsService {
 
   // private baseUrl = 'https://20.118.138.147/api';
-  private baseUrl ='https://finance.celespro.com/api/news';
+  private baseUrl ='https://finance.celespro.com/api';
 
   constructor(private http: HttpClient) { }
 
