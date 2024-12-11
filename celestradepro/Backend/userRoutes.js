@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('./models/User'); // Assume you have a User model defined
+const User = require('./models/User'); // Correctly import the User model
 
 // Endpoint to store email
 router.post('/store-email', async (req, res) => {

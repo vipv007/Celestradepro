@@ -9,7 +9,7 @@ const socketIO = require('socket.io');
 // Import user and news routes
 const router = require('./router');
 const newsRoutes = require('./newsRoutes');
-const userRoutes = require('./userRoutes'); // Assume you have a userRoutes file for user operations
+const userRoutes = require('./userRoutes'); // Correctly import userRoutes
 
 // Initialize Express app
 const app = express();
