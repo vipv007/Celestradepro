@@ -8,11 +8,17 @@
       <h1 class="head"><img src="assets/celeslogo.jpg"> Celespro</h1>
      
       <div>
-        <h1>Store Your Name</h1>
+        <h1>Store and Display Names</h1>
         <input [(ngModel)]="name" placeholder="Enter your name" />
         <button (click)="storeName()">Store Name</button>
+      
+        <h2>Stored Names</h2>
+        <ul>
+          <li *ngFor="let name of names">{{ name.name }}</li>
+        </ul>
       </div>
-
+      
+      
       
       <div class="button-group">
         <button (click)="toggleLogin()" class="login-btn">

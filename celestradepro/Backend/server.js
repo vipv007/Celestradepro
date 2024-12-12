@@ -40,6 +40,12 @@ app.use(cors({
   allowedHeaders: 'Content-Type,Authorization'
 }));
 
+// Log incoming requests
+app.use((req, res, next) => {
+  console.log(`Received request: ${req.method} ${req.url}`);
+  next();
+});
+
 // Define Mongoose Model for Name
 const NameSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -55,6 +61,16 @@ app.post('/api/name', async (req, res) => {
     res.status(200).json({ message: 'Name stored successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to store name' });
+  }
+});
+
+// Endpoint to get all names
+app.get('/api/names', async (req, res) => {
+  try {
+    const names = await Name.find();
+    res.status(200).json(names);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve names' });
   }
 });
 

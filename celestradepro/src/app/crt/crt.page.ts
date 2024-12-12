@@ -9,7 +9,7 @@ import { StockService } from '../services/stock.service';
 import { ForexService } from '../services/forex.service';
 import { CommodityService } from '../services/commodity.service';
 import { HttpClient } from '@angular/common/http';
-
+interface Name { name: string; }
 @Component({
   selector: 'app-crt',
   templateUrl: './crt.page.html',
@@ -38,7 +38,8 @@ export class CrtPage implements OnInit {
   daysSinceArticle = [];
   selectTabs: string = 'recent'; // Default tab value
   activeContent: string = ''; // Default active content
-  name: string = '';
+  name: string = ''; names: Name[] = [];
+ 
 
   allSections = [
     { name: 'Top Market News', visible: true },
@@ -77,7 +78,8 @@ export class CrtPage implements OnInit {
     this.getForexData();
     this.loadCommodities();
     this.loadArticles();
-    
+    this.loadNames();
+
     // Load all stocks and select the first two for display
     this.stockService.getAllStocks().subscribe((response: any[]) => {
       this.stocks = response;
@@ -87,11 +89,8 @@ export class CrtPage implements OnInit {
     
   }
 
-  storeName(): void { this.http.post('https://finance.celespro.com/api/name',
-     { name: this.name }).subscribe( (response) => { console.log('Name stored successfully:', response); },
-   (error) => { console.error('Error storing name:', error); } ); }
-
-    loadArticles(): void {
+  storeName(): void { this.http.post('https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net/api/name', { name: this.name }).subscribe( (response) => { console.log('Name stored successfully:', response); this.loadNames();  }, (error) => { console.error('Error storing name:', error); if (error.status === 200 && error.error instanceof ProgressEvent) { console.error('Unexpected HTML response, likely a misconfigured API endpoint'); } else { console.error('Unexpected error:', error.message); } } ); } loadNames(): void { this.http.get<Name[]>('https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net/api/names').subscribe( (data) => { this.names = data; }, (error) => { console.error('Error loading names:', error); } ); }
+          loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {
       this.articles = data;
 
