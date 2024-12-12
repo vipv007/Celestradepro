@@ -35,7 +35,7 @@ mongoose.connect(`${mongoUrl}/${dbName}`, {
 // Middleware setup
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'https://finance.celespro.com',
+  origin: 'https://celescontainerwebapp-staging.azurewebsites.net',
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization'
 }));

@@ -87,7 +87,7 @@ export class CrtPage implements OnInit {
     
   }
 
-  storeName(): void { this.http.post('https://celescontainerwebapp-staging.azurewebsites.net/api/name',
+  storeName(): void { this.http.post('https://finance.celespro.com/api/name',
      { name: this.name }).subscribe( (response) => { console.log('Name stored successfully:', response); },
    (error) => { console.error('Error storing name:', error); } ); }
 
