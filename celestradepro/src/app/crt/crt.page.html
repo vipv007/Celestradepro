@@ -7,6 +7,13 @@
     <div class="top-bar">
       <h1 class="head"><img src="assets/celeslogo.jpg"> Celespro</h1>
      
+      <div>
+        <h1>Store Your Name</h1>
+        <input [(ngModel)]="name" placeholder="Enter your name" />
+        <button (click)="storeName()">Store Name</button>
+      </div>
+
+      
       <div class="button-group">
         <button (click)="toggleLogin()" class="login-btn">
           <ion-icon name="person"></ion-icon>

@@ -6,11 +6,6 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const socketIO = require('socket.io');
 
-// Import user and news routes
-const router = require('./router');
-const newsRoutes = require('./newsRoutes');
-const userRoutes = require('./userRoutes'); // Correctly import userRoutes
-
 // Initialize Express app
 const app = express();
 const port = process.env.PORT || 3000;
@@ -40,30 +35,33 @@ mongoose.connect(`${mongoUrl}/${dbName}`, {
 // Middleware setup
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net',
+  origin: 'https://celescontainerwebapp-staging.azurewebsites.net',
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization'
 }));
 
-// API Routes
-app.use('/api', router);
-app.use('/api/news', newsRoutes);
-app.use('/api/users', userRoutes); // Add user routes for user operations
+// Define Mongoose Model for Name
+const NameSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+});
+const Name = mongoose.model('Name', NameSchema);
+
+// Endpoint to store name
+app.post('/api/name', async (req, res) => {
+  try {
+    const { name } = req.body;
+    const nameEntry = new Name({ name });
+    await nameEntry.save();
+    res.status(200).json({ message: 'Name stored successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to store name' });
+  }
+});
 
 // WebSocket for live data updates
 io.on('connection', (socket) => {
   console.log('New client connected');
   
-  const collection = mongoose.connection.collection('Live_Datas');
-  const changeStream = collection.watch();
-
-  changeStream.on('change', (change) => {
-    if (change.operationType === 'insert') {
-      const newPrice = change.fullDocument;
-      socket.emit('priceUpdate', newPrice);  // Send updated document to frontend
-    }
-  });
-
   socket.on('disconnect', () => {
     console.log('Client disconnected');
   });

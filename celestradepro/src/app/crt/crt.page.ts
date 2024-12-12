@@ -8,7 +8,7 @@ import { Com_newsService } from '../services/com_news.service';
 import { StockService } from '../services/stock.service';
 import { ForexService } from '../services/forex.service';
 import { CommodityService } from '../services/commodity.service';
-
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-crt',
@@ -38,6 +38,7 @@ export class CrtPage implements OnInit {
   daysSinceArticle = [];
   selectTabs: string = 'recent'; // Default tab value
   activeContent: string = ''; // Default active content
+  name: string = '';
 
   allSections = [
     { name: 'Top Market News', visible: true },
@@ -63,7 +64,8 @@ export class CrtPage implements OnInit {
     private forexService: ForexService,
     private optionnewsService: OptionnewsService, 
     private commodityService: CommodityService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +86,10 @@ export class CrtPage implements OnInit {
 
     
   }
+
+  storeName(): void { this.http.post('https://celescontainerwebapp-staging.azurewebsites.net/api/name',
+     { name: this.name }).subscribe( (response) => { console.log('Name stored successfully:', response); },
+   (error) => { console.error('Error storing name:', error); } ); }
 
     loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {
