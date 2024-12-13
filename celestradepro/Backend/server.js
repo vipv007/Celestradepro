@@ -9,8 +9,8 @@ const socketIO = require('socket.io');
 // Initialize Express app
 const app = express();
 const port = process.env.PORT || 3000;
-const mongoUrl = process.env.AZURE_COSMOS_CONNECTIONSTRING || 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@';
-const dbName = process.env.DB_NAME || 'test';
+const mongoUrl = 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@';
+const dbName = test;
 
 console.log('MongoDB Connection String:', mongoUrl);
 console.log('Database Name:', dbName);
@@ -54,22 +54,26 @@ const Name = mongoose.model('Name', NameSchema);
 
 // Endpoint to store name
 app.post('/api/name', async (req, res) => {
+  console.log(`POST /api/name request body: ${JSON.stringify(req.body)}`);
   try {
     const { name } = req.body;
     const nameEntry = new Name({ name });
     await nameEntry.save();
     res.status(200).json({ message: 'Name stored successfully' });
   } catch (error) {
+    console.error(`Error storing name: ${error}`);
     res.status(500).json({ error: 'Failed to store name' });
   }
 });
 
 // Endpoint to get all names
 app.get('/api/names', async (req, res) => {
+  console.log('GET /api/names request received');
   try {
     const names = await Name.find();
     res.status(200).json(names);
   } catch (error) {
+    console.error(`Error retrieving names: ${error}`);
     res.status(500).json({ error: 'Failed to retrieve names' });
   }
 });
@@ -85,6 +89,3 @@ io.on('connection', (socket) => {
 
 // Start the server
 server.listen(port, () => console.log(`Server is listening on port ${port}`));
-
-// Custom logic for main functionality
-require('./main')(app);  // Pass app to main logic
