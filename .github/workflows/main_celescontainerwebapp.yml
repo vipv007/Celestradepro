@@ -1,52 +1,41 @@
-name: Deploy to Azure App Service
+name: Deploy Backend to Azure App Service (Staging Slot)
 
 on:
   push:
     branches:
-      - main
-      - staging  # Trigger for staging branch
+      - main  # Trigger on changes to the main branch
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+    # Step 1: Check out the code
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    # Set up Node.js for backend and frontend
+    # Step 2: Set up Node.js
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '16.x'
 
-    # Install dependencies and build frontend
-    - name: Build Frontend (Angular)
+    # Step 3: Install dependencies
+    - name: Install Dependencies
       run: |
-        cd frontend
         npm install
-        npm run build --prod
 
-    # Package frontend files
-    - name: Package Frontend
+    # Step 4: Build or prepare the backend (if needed)
+    - name: Build Backend
       run: |
-        cd frontend
-        mkdir -p ../deploy/public
-        cp -R dist/* ../deploy/public
+        # Add any custom build commands here if needed
+        echo "No build process required for the backend"
 
-    # Install dependencies for backend
-    - name: Install Backend Dependencies
-      run: |
-        cd backend
-        npm install
-        mkdir -p ../deploy
-        cp -R * ../deploy
-
-    # Deploy to production or staging slot
-    - name: Deploy to Azure App Service
+    # Step 5: Deploy to Azure App Service (Staging Slot)
+    - name: Deploy to Azure App Service (Staging Slot)
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'CelesContainerWebApp'
-        slot-name: ${{ github.ref == 'refs/heads/staging' && 'staging' || 'production' }}
+        slot-name: 'staging'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: ./deploy
+        package: '.'
