@@ -56,6 +56,8 @@ export class CrtPage implements OnInit {
 
   sections = [...this.allSections];
 
+  private readonly API_URL = 'https://finance.celespro.com/api';
+
   constructor(
     private newsService: NewsService,
     private stockgainerService: StockGainerService,
@@ -89,8 +91,39 @@ export class CrtPage implements OnInit {
     
   }
 
-  storeName(): void { this.http.post('/api/name', { name: this.name }).subscribe( (response) => { console.log('Name stored successfully:', response); this.loadNames();}, (error) => { console.error('Error storing name:', error); if (error.status === 200 && error.error instanceof ProgressEvent) { console.error('Unexpected HTML response, likely a misconfigured API endpoint'); } else { console.error('Unexpected error:', error.message); } } ); } loadNames(): void { this.http.get<Name[]>('/api/names').subscribe( (data) => { this.names = data; }, (error) => { console.error('Error loading names:', error); } ); }
- 
+  // Store a new name
+  storeName(): void {
+    if (!this.name.trim()) {
+      alert('Name cannot be empty!');
+      return;
+    }
+
+    this.http.post(`${this.API_URL}/name`, { name: this.name }).subscribe(
+      (response) => {
+        console.log('Name stored successfully:', response);
+        this.name = ''; // Reset input field
+        this.loadNames(); // Reload the list of names
+      },
+      (error) => {
+        console.error('Error storing name:', error);
+        alert('Failed to store the name.');
+      }
+    );
+  }
+
+  // Load all stored names
+  loadNames(): void {
+    this.http.get<Name[]>(`${this.API_URL}/names`).subscribe(
+      (data) => {
+        this.names = data;
+      },
+      (error) => {
+        console.error('Error loading names:', error);
+        alert('Failed to load names.');
+      }
+    );
+  }
+  
   loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {
       this.articles = data;

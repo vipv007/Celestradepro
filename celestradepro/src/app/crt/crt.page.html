@@ -6,19 +6,7 @@
   <div class="container">
     <div class="top-bar">
       <h1 class="head"><img src="assets/celeslogo.jpg"> Celespro</h1>
-     
-      <div>
-        <h1>Store and Display Names</h1>
-        <input [(ngModel)]="name" placeholder="Enter your name" />
-        <button (click)="storeName()">Store Name</button>
-      
-        <h2>Stored Names</h2>
-        <ul>
-          <li *ngFor="let name of names">{{ name.name }}</li>
-        </ul>
-      </div>
-      
-      
+         
       
       
       <div class="button-group">
@@ -36,6 +24,22 @@
 
     <div class="home"><h3>Home</h3></div>
 
+    <div class="container">
+      <h1>Store and Display Names</h1>
+      <div class="form-group">
+        <input [(ngModel)]="name" class="form-control" placeholder="Enter your name" />
+        <button class="btn btn-primary mt-2" (click)="storeName()">Store Name</button>
+      </div>
+    
+      <h2>Stored Names</h2>
+      <ul class="list-group mt-3">
+        <li *ngFor="let nameObj of names" class="list-group-item">
+          {{ nameObj.name }}
+        </li>
+      </ul>
+    </div>
+
+    
     <!-- Settings Dropdown -->
   <div class="settings-dropdown" [ngClass]="{ 'open': isSettingsOpen }">
     <h4>Customize Sections</h4>

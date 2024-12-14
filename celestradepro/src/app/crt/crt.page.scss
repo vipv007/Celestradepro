@@ -38,6 +38,26 @@ $secondary-text-color: #777777; // Universal subtle text color
  
 }
 
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+}
+
+.btn {
+  width: 100%;
+}
+
+.list-group {
+  text-align: left;
+}
+
+
 .settings-dropdown.open {
   display: block;
 }
@@ -524,9 +544,6 @@ $border-color-dark: #444444;
      // border: 1px solid $border-color-light;
     }
 
-    tr:nth-child(even) {
-      //background-color: $secondary-color-light; /* Subtle row background */
-    }
 
     th {
       background-color: black;
