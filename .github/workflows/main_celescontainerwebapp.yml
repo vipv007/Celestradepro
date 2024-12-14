@@ -20,13 +20,15 @@ jobs:
       with:
         node-version: '16.x'
 
-    # Step 3: Install dependencies
+    # Step 3: Navigate to the backend folder and install dependencies
     - name: Install Dependencies
+      working-directory: ./Celestradepro/celestradepro/Backend  # Path to your Backend folder
       run: |
         npm install
 
-    # Step 4: Build or prepare the backend (if needed)
+    # Step 4: Build the backend (if applicable)
     - name: Build Backend
+      working-directory: ./Celestradepro/celestradepro/Backend  # Path to your Backend folder
       run: |
         # Add any custom build commands here if needed
         echo "No build process required for the backend"
@@ -38,4 +40,4 @@ jobs:
         app-name: 'CelesContainerWebApp'
         slot-name: 'staging'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: '.'
+        package: './Celestradepro/celestradepro/Backend'  # Path to your Backend folder
