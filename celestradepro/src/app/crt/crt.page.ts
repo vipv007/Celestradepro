@@ -89,8 +89,9 @@ export class CrtPage implements OnInit {
     
   }
 
-  storeName(): void { this.http.post('https://finance.celespro.com/api/name', { name: this.name }).subscribe( (response) => { console.log('Name stored successfully:', response); this.loadNames();  }, (error) => { console.error('Error storing name:', error); if (error.status === 200 && error.error instanceof ProgressEvent) { console.error('Unexpected HTML response, likely a misconfigured API endpoint'); } else { console.error('Unexpected error:', error.message); } } ); } loadNames(): void { this.http.get<Name[]>('https://finance.celespro.com/api/names').subscribe( (data) => { this.names = data; }, (error) => { console.error('Error loading names:', error); } ); }
-          loadArticles(): void {
+  storeName(): void { this.http.post('/api/name', { name: this.name }).subscribe( (response) => { console.log('Name stored successfully:', response); this.loadNames();}, (error) => { console.error('Error storing name:', error); if (error.status === 200 && error.error instanceof ProgressEvent) { console.error('Unexpected HTML response, likely a misconfigured API endpoint'); } else { console.error('Unexpected error:', error.message); } } ); } loadNames(): void { this.http.get<Name[]>('/api/names').subscribe( (data) => { this.names = data; }, (error) => { console.error('Error loading names:', error); } ); }
+ 
+  loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {
       this.articles = data;
 

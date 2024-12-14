@@ -3,28 +3,22 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const http = require('http');
-const socketIO = require('socket.io');
+const path = require('path');
 
 // Initialize Express app
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 const mongoUrl = 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@';
-const dbName = test;
+const dbName = 'test';
 
 console.log('MongoDB Connection String:', mongoUrl);
 console.log('Database Name:', dbName);
 
-const server = http.createServer(app);
-const io = socketIO(server);
-
-// Optimize Mongoose Connection
+// Connect to MongoDB
 mongoose.set('strictQuery', false);
 mongoose.connect(`${mongoUrl}/${dbName}`, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 30000,
-  connectTimeoutMS: 30000
+  useUnifiedTopology: true
 })
   .then(() => console.log(`Connected to MongoDB at ${mongoUrl}/${dbName}`))
   .catch((error) => {
@@ -34,11 +28,7 @@ mongoose.connect(`${mongoUrl}/${dbName}`, {
 
 // Middleware setup
 app.use(bodyParser.json());
-app.use(cors({
-  origin: 'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net',
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type,Authorization'
-}));
+app.use(cors());
 
 // Log incoming requests
 app.use((req, res, next) => {
@@ -52,7 +42,7 @@ const NameSchema = new mongoose.Schema({
 });
 const Name = mongoose.model('Name', NameSchema);
 
-// Endpoint to store name
+// API routes
 app.post('/api/name', async (req, res) => {
   console.log(`POST /api/name request body: ${JSON.stringify(req.body)}`);
   try {
@@ -66,7 +56,6 @@ app.post('/api/name', async (req, res) => {
   }
 });
 
-// Endpoint to get all names
 app.get('/api/names', async (req, res) => {
   console.log('GET /api/names request received');
   try {
@@ -78,14 +67,12 @@ app.get('/api/names', async (req, res) => {
   }
 });
 
-// WebSocket for live data updates
-io.on('connection', (socket) => {
-  console.log('New client connected');
-  
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
+// Serve static files from the Angular frontend app
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
 // Start the server
-server.listen(port, () => console.log(`Server is listening on port ${port}`));
+app.listen(port, () => console.log(`Server is listening on port ${port}`));
