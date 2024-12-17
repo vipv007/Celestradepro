@@ -1,42 +1,61 @@
-name: Deploy Backend to Azure App Service (Staging Slot)
+name: Deploy to Azure App Service
 
 on:
   push:
     branches:
-      - main  # Trigger on changes to the main branch
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Check out the code
-    - name: Checkout Code
-      uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    # Step 2: Set up Node.js
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
+    - name: Set up Node.js for frontend
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14.x'
+
+    - name: Install Angular CLI and frontend dependencies
+      run: |
+        cd celestradepro
+        npm install -g @angular/cli
+        npm install -f
+        npm install ws@latest @types/ws@latest -f
+        npm install highcharts --save
+    - name: Modify TypeScript Files
+      run: |
+        cd celestradepro
+        find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+    - name: Install dependencies and build frontend
+      run: |
+        cd celestradepro
+        npm install
+        npm install webpack --save-dev
+        npm run build --prod
+    - name: Set up Node.js for backend
+      uses: actions/setup-node@v2
       with:
         node-version: '16.x'
 
-    # Step 3: Navigate to the backend folder and install dependencies
-    - name: Install Dependencies
-      working-directory: ./celestradepro/Backend  # Corrected path
+    - name: Reinstall backend dependencies and MongoDB
       run: |
+        cd celestradepro/Backend
         npm install
-
-    # Step 4: Build the backend (if applicable)
-    - name: Build Backend
-      working-directory: ./celestradepro/Backend  # Corrected path
+        npm install mongodb --save
+    - name: Run the backend server in background
+      env:
+        AZURE_COSMOS_CONNECTIONSTRING: 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@'
+        DB_NAME: 'test'
       run: |
-        echo "No build process required for the backend"
-
-    # Step 5: Deploy to Azure App Service (Staging Slot)
-    - name: Deploy to Azure App Service (Staging Slot)
+        cd celestradepro/Backend
+        nohup node server.js &
+    - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'CelesContainerWebApp'
         slot-name: 'staging'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './celestradepro/Backend'  # Corrected path
+        package: 'celestradepro/www'
