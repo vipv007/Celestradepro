@@ -93,11 +93,7 @@ export class CrtPage implements OnInit {
 
   // Store a new name
   storeName(): void {
-    if (!this.name.trim()) {
-      alert('Name cannot be empty!');
-      return;
-    }
-
+    if (!this.name.trim()) return;
     this.http.post(`${this.API_URL}/name`, { name: this.name }).subscribe(
       (response) => {
         console.log('Name stored successfully:', response);
