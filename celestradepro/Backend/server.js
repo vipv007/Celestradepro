@@ -49,7 +49,7 @@ app.post('/api/name', async (req, res) => {
 });
 
 // Retrieve all stored names
-app.get('/api/names', async (req, res) => {
+app.get('/api/name', async (req, res) => {
   try {
     const names = await Name.find();
     res.status(200).json(names);

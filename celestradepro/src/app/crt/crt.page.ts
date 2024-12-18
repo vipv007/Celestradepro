@@ -38,7 +38,8 @@ export class CrtPage implements OnInit {
   daysSinceArticle = [];
   selectTabs: string = 'recent'; // Default tab value
   activeContent: string = ''; // Default active content
-  name: string = ''; names: Name[] = [];
+  name: string = ''; 
+  // name: Name[] = [];
  
 
   allSections = [
@@ -80,7 +81,7 @@ export class CrtPage implements OnInit {
     this.getForexData();
     this.loadCommodities();
     this.loadArticles();
-    this.loadNames();
+    // this.loadName();
 
     // Load all stocks and select the first two for display
     this.stockService.getAllStocks().subscribe((response: any[]) => {
@@ -98,7 +99,7 @@ export class CrtPage implements OnInit {
       (response) => {
         console.log('Name stored successfully:', response);
         this.name = ''; // Reset input field
-        this.loadNames(); // Reload the list of names
+        // this.loadName(); // Reload the list of names
       },
       (error) => {
         console.error('Error storing name:', error);
@@ -108,17 +109,17 @@ export class CrtPage implements OnInit {
   }
 
   // Load all stored names
-  loadNames(): void {
-    this.http.get<Name[]>(`${this.API_URL}/names`).subscribe(
-      (data) => {
-        this.names = data;
-      },
-      (error) => {
-        console.error('Error loading names:', error);
-        alert('Failed to load names.');
-      }
-    );
-  }
+  // loadName(): void {
+  //   this.http.get<Name[]>(`${this.API_URL}/name`).subscribe(
+  //     (data) => {
+  //       this.name = data;
+  //     },
+  //     (error) => {
+  //       console.error('Error loading names:', error);
+  //       alert('Failed to load names.');
+  //     }
+  //   );
+  // }
   
   loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {
