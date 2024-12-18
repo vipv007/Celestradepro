@@ -38,8 +38,8 @@ export class CrtPage implements OnInit {
   daysSinceArticle = [];
   selectTabs: string = 'recent'; // Default tab value
   activeContent: string = ''; // Default active content
-  name: string = ''; 
-  // name: Name[] = [];
+  newName: string = ''; 
+  names: Name[] = [];
  
 
   allSections = [
@@ -57,7 +57,7 @@ export class CrtPage implements OnInit {
 
   sections = [...this.allSections];
 
-  private readonly API_URL = 'https://finance.celespro.com/api';
+  private readonly API_URL = 'http://localhost:3000/api';
 
   constructor(
     private newsService: NewsService,
@@ -81,7 +81,7 @@ export class CrtPage implements OnInit {
     this.getForexData();
     this.loadCommodities();
     this.loadArticles();
-    // this.loadName();
+    this.loadNames();
 
     // Load all stocks and select the first two for display
     this.stockService.getAllStocks().subscribe((response: any[]) => {
@@ -92,14 +92,14 @@ export class CrtPage implements OnInit {
     
   }
 
-  // Store a new name
+    // Store a new name
   storeName(): void {
-    if (!this.name.trim()) return;
-    this.http.post(`${this.API_URL}/name`, { name: this.name }).subscribe(
-      (response) => {
-        console.log('Name stored successfully:', response);
-        this.name = ''; // Reset input field
-        // this.loadName(); // Reload the list of names
+    if (!this.newName.trim()) return; // Prevent empty or whitespace submissions
+    this.http.post(`${this.API_URL}/name`, { name: this.newName }).subscribe(
+      () => {
+        console.log('Name stored successfully');
+        this.newName = ''; // Clear the input field after storing
+        this.loadNames(); // Reload the list of names
       },
       (error) => {
         console.error('Error storing name:', error);
@@ -109,17 +109,19 @@ export class CrtPage implements OnInit {
   }
 
   // Load all stored names
-  // loadName(): void {
-  //   this.http.get<Name[]>(`${this.API_URL}/name`).subscribe(
-  //     (data) => {
-  //       this.name = data;
-  //     },
-  //     (error) => {
-  //       console.error('Error loading names:', error);
-  //       alert('Failed to load names.');
-  //     }
-  //   );
-  // }
+  loadNames(): void {
+    this.http.get<Name[]>(`${this.API_URL}/name`).subscribe(
+      (data) => {
+        this.names = data; // Assign the response array to `names`
+      },
+      (error) => {
+        console.error('Error loading names:', error);
+        alert('Failed to load names.');
+      }
+    );
+  }
+
+  
   
   loadArticles(): void {
     this.newsService.getTopSentimentScores().subscribe(data => {

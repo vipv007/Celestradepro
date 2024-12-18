@@ -82,6 +82,36 @@ io.on('connection', (socket) => {
   });
 });
 
+// Define Schema and Model
+const NameSchema = new mongoose.Schema({ name: { type: String, required: true } });
+const Name = mongoose.model('Name', NameSchema);
+
+// === API Routes ===
+
+// Store a name
+app.post('/api/name', async (req, res) => {
+  try {
+    const { name } = req.body;
+    const nameEntry = new Name({ name });
+    await nameEntry.save();
+    res.status(200).json({ message: 'Name stored successfully', name: nameEntry });
+  } catch (error) {
+    console.error('Error storing name:', error);
+    res.status(500).json({ error: 'Failed to store name' });
+  }
+});
+
+// Retrieve all stored names
+app.get('/api/name', async (req, res) => {
+  try {
+    const names = await Name.find();
+    res.status(200).json(names);
+  } catch (error) {
+    console.error('Error retrieving names:', error);
+    res.status(500).json({ error: 'Failed to retrieve names' });
+  }
+});
+
 // Start the server
 server.listen(port, () => console.log(`Server is listening on port ${port}`));
 
