@@ -11,9 +11,9 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors({
-  origin: '*', // Allow requests from any origin. Replace with your frontend URL if needed.
+  origin: 'https://finance.celespro.com', // Allow requests from any origin. Replace with your frontend URL if needed.
   methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type,Authorization'
+  allowedHeaders: 'Content-Type,application/json'
 }));
 
 // MongoDB Connection
