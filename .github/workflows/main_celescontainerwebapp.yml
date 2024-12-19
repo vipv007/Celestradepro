@@ -49,10 +49,12 @@ jobs:
           npm install
           npm install mongodb --save
 
-      - name: Build and package backend
+      - name: Build and package backend (Optional)
+        # This step depends on your backend build process.
+        # Modify or uncomment if needed.
         run: |
           cd celestradepro/Backend
-          npm run build # Or tsc, depending on your build script
+          # Your backend build commands here (e.g., npm run build)
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
