@@ -12,7 +12,8 @@ const router = require('./router');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
+
+let mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017'; // Use 'let' here
 const dbName = process.env.DB_NAME || 'FinanceDB';
 
 // Use Azure Cosmos DB connection string if available
@@ -22,6 +23,7 @@ if (process.env.AZURE_COSMOS_CONNECTIONSTRING) {
 
 console.log('MongoDB Connection String:', mongoUrl); // Log the actual connection string used
 console.log('Database Name:', dbName);
+
 
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -100,6 +102,3 @@ app.use((err, req, res, next) => {
 
 // Start the server
 server.listen(port, () => console.log(`Server is listening on port ${port}`));
-
-// Custom logic for main functionality
-require('./main')(app, MongoClient, mongoUrl, dbName);
