@@ -8,7 +8,7 @@ const http = require('http');
 const socketIO = require('socket.io');
 
 // Import routes and controllers
-const router = require('./router');
+// const router = require('./router');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -43,7 +43,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // API Routes
-app.use('/api', router);
+
 
 // WebSocket for live data updates
 io.on('connection', (socket) => {
