@@ -1,4 +1,4 @@
-name: Deploy Angular and Node.js to Azure App Service
+name: Deploy to Azure App Service
 
 on:
   push:
@@ -6,76 +6,70 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the code
-    - name: Checkout code
-      uses: actions/checkout@v2
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Step 2: Set up Node.js for Backend (Node.js server)
-    - name: Set up Node.js for Backend
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16.x'  # Adjust to your preferred version
+      # Frontend deployment steps
+      - name: Set up Node.js for frontend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
 
-    # Step 3: Install Backend dependencies (MongoDB and other required packages)
-    - name: Install Backend dependencies
-      run: |
-        cd celestradepro/Backend
-        npm install
-        npm install mongodb --save
+      - name: Install Angular CLI and frontend dependencies
+        run: |
+          cd celestradepro
+          npm install -g @angular/cli
+          npm install -f
+          npm install ws@latest @types/ws@latest -f
+          npm install highcharts --save
 
-    # Step 4: Modify TypeScript files (Optional step)
-    - name: Modify TypeScript Files
-      run: |
-        cd celestradepro
-        find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+      - name: Modify TypeScript Files (Optional)
+        run: |
+          cd celestradepro
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
-    # Step 5: Set up Node.js for Frontend (Angular)
-    - name: Set up Node.js for Frontend
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14.x'  # Angular works best with Node.js 14.x
+      - name: Build frontend
+        run: |
+          cd celestradepro
+          npm install
+          npm install webpack --save-dev
+          npm run build --prod
 
-    # Step 6: Install Angular CLI and other frontend dependencies
-    - name: Install Angular dependencies
-      run: |
-        cd celestradepro
-        npm install -g @angular/cli
-        npm install -f
-        npm install ws@latest @types/ws@latest -f
-        npm install highcharts --save
+      # Backend deployment steps
+      - name: Set up Node.js for backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
 
-    # Step to install Angular and Webpack dependencies
-    - name: Install Angular and Webpack dependencies
-      run: |
-        cd celestradepro
-        npm install
-        npm install webpack webpack-cli --save-dev
-        npm install @angular-devkit/build-angular --save-dev
+      - name: Install backend dependencies and MongoDB
+        run: |
+          cd celestradepro/Backend
+          npm install
+          npm install mongodb --save
 
-    # Step 7: Build Angular frontend (production build)
-    - name: Build Angular frontend
-      run: |
-        cd celestradepro
-        npm run build --prod
+      - name: Build and package backend
+        run: |
+          cd celestradepro/Backend
+          npm run build  # Replace with 'tsc' or other build scripts if needed
 
-    # Step 8: Deploy Backend to Azure App Service
-    - name: Deploy Backend to Azure App Service
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'CelesContainerWebApp'  # Name of your Azure App Service
-        slot-name: 'staging'  # If you're using staging slots; use 'production' for live deployment
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure publish profile stored as secret
-        package: 'celestradepro/Backend'  # Path to the backend directory for deployment
+      - name: Deploy Backend to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'CelesContainerWebApp'
+          slot-name: 'staging'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: 'celestradepro/Backend'  # Path to the backend folder
 
-    # Step 9: Deploy Frontend to Azure App Service
-    - name: Deploy Frontend to Azure App Service
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'CelesContainerWebApp'  # Same app name for the frontend
-        slot-name: 'staging'  # Same slot as the backend
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure publish profile stored as secret
-        package: 'celestradepro/www'  # Path to the built Angular app (make sure this is correct)
+      # Frontend deployment (if applicable)
+      - name: Deploy Frontend to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'CelesContainerWebApp'
+          slot-name: 'staging'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: 'celestradepro/www'  # Path to the frontend build folder
