@@ -69,7 +69,7 @@ jobs:
         app-name: 'CelesContainerWebApp'  # Name of your Azure App Service
         slot-name: 'staging'  # If you're using staging slots; use 'production' for live deployment
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure publish profile stored as secret
-        package: 'Celestradepro/celestradepro/Backend'  # Path to the backend directory for deployment
+        package: 'celestradepro/Backend'  # Path to the backend directory for deployment
 
     # Step 9: Deploy Frontend to Azure App Service
     - name: Deploy Frontend to Azure App Service
@@ -78,4 +78,4 @@ jobs:
         app-name: 'CelesContainerWebApp'  # Same app name for the frontend
         slot-name: 'staging'  # Same slot as the backend
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure publish profile stored as secret
-        package: 'Celestradepro/celestradepro/www'  # Path to the built Angular app (make sure this is correct)
+        package: 'celestradepro/www'  # Path to the built Angular app (make sure this is correct)
