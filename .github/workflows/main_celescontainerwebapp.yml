@@ -30,7 +30,7 @@ jobs:
     # Step 4: Modify TypeScript files (Optional step)
     - name: Modify TypeScript Files
       run: |
-        cd Celestradepro/celestradepro
+        cd celestradepro
         find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
     # Step 5: Set up Node.js for Frontend (Angular)
@@ -42,7 +42,7 @@ jobs:
     # Step 6: Install Angular CLI and other frontend dependencies
     - name: Install Angular dependencies
       run: |
-        cd Celestradepro/celestradepro
+        cd celestradepro
         npm install -g @angular/cli
         npm install -f
         npm install ws@latest @types/ws@latest -f
@@ -51,7 +51,7 @@ jobs:
     # Step to install Angular and Webpack dependencies
     - name: Install Angular and Webpack dependencies
       run: |
-        cd Celestradepro/celestradepro
+        cd celestradepro
         npm install
         npm install webpack webpack-cli --save-dev
         npm install @angular-devkit/build-angular --save-dev
@@ -59,7 +59,7 @@ jobs:
     # Step 7: Build Angular frontend (production build)
     - name: Build Angular frontend
       run: |
-        cd Celestradepro/celestradepro
+        cd celestradepro
         npm run build --prod
 
     # Step 8: Deploy Backend to Azure App Service
