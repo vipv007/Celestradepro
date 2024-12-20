@@ -3,31 +3,33 @@
 
 <head>
   <meta charset="utf-8" />
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
   <title>celespro</title>
 
-  <base href="/" />
+  <!-- Base href for Angular routing -->
+  <base href="/api/" />
 
+  <!-- Meta Tags -->
   <meta name="color-scheme" content="light dark" />
   <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
-
-  <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
-
-  
-  <!--script src="https://www.paypal.com/sdk/js?client-id=F49WATR6ARNX8&currency=USD"></script-->
-  <script src="https://www.paypal.com/sdk/js?client-id=test&components=buttons&enable-funding=venmo,paylater" data-sdk-integration-source="integrationbuilder_sc"></script>
-  <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
-  
-  <!-- add to homescreen for ios -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  <!-- Bootstrap CSS -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Plotly.js Library -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=test&components=buttons&enable-funding=venmo,paylater" data-sdk-integration-source="integrationbuilder_sc"></script>
+
+  <!-- Google Pay Script -->
+  <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
 </head>
 
 <body>
