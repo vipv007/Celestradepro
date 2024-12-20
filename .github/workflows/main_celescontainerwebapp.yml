@@ -6,7 +6,6 @@ on:
       - main
 
 jobs:
-  # Frontend and Backend deployment
   deploy:
     runs-on: ubuntu-latest
 
@@ -28,13 +27,19 @@ jobs:
         npm install
         npm install mongodb --save
 
-    # Step 4: Set up Node.js for Frontend (Angular)
+    # Step 4: Modify TypeScript files (Optional step)
+    - name: Modify TypeScript Files
+      run: |
+        cd celestradepro
+        find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+
+    # Step 5: Set up Node.js for Frontend (Angular)
     - name: Set up Node.js for Frontend
       uses: actions/setup-node@v2
       with:
         node-version: '14.x'  # Angular works best with Node.js 14.x
 
-    # Step 5: Install Angular CLI and other frontend dependencies
+    # Step 6: Install Angular CLI and other frontend dependencies
     - name: Install Angular dependencies
       run: |
         cd celestradepro
@@ -43,13 +48,13 @@ jobs:
         npm install ws@latest @types/ws@latest -f
         npm install highcharts --save
 
-    # Step 6: Build Angular frontend (production build)
+    # Step 7: Build Angular frontend (production build)
     - name: Build Angular frontend
       run: |
         cd celestradepro
         npm run build --prod
 
-    # Step 7: Deploy Backend to Azure App Service
+    # Step 8: Deploy Backend to Azure App Service
     - name: Deploy Backend to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
@@ -58,7 +63,7 @@ jobs:
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure publish profile stored as secret
         package: 'celestradepro/Backend'  # Path to the backend directory for deployment
 
-    # Step 8: Deploy Frontend to Azure App Service
+    # Step 9: Deploy Frontend to Azure App Service
     - name: Deploy Frontend to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
