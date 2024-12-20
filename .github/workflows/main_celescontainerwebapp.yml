@@ -10,29 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout Code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
 
-      # Step 3: Install Backend Dependencies
-      - name: Install backend dependencies
+      - name: Install dependencies
         run: |
           cd celestradepro/Backend
-          npm install
+          npm ci # Faster and more efficient than npm install
 
-      # Step 4: Test Backend (Optional)
-      #- name: Run backend tests
-        #run: |
-        #  cd celestradepro/Backend
-        #  npm test
-
-      # Step 5: Deploy to Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
