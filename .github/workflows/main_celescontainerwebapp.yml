@@ -10,23 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the code
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '16.x'
 
-      - name: Install dependencies
-        run: |
-          cd celestradepro/Backend
-          npm ci # Faster and more efficient than npm install
+      # Step 3: Navigate to Backend directory and install dependencies
+      - name: Install backend dependencies
+        working-directory: celestradepro/Backend
+        run: npm ci
 
-      - name: Deploy to Azure Web App
+      # Step 4: Run backend tests (Optional)
+      - name: Run backend tests
+        working-directory: celestradepro/Backend
+        run: |
+          echo "No tests defined yet"
+        env:
+          CI: true
+
+      # Step 5: Deploy backend to Azure App Service
+      - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'CelesContainerWebApp'
-          slot-name: 'staging'
+          app-name: 'CelesContainerWebApp' # Replace with your Azure App Service name
+          slot-name: 'staging'             # Specify 'production' if not using staging slots
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: './celestradepro/Backend'
