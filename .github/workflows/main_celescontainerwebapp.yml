@@ -23,7 +23,7 @@ jobs:
     # Step 3: Install Backend dependencies (MongoDB and other required packages)
     - name: Install Backend dependencies
       run: |
-        cd Celestradepro/celestradepro/Backend
+        cd celestradepro/Backend
         npm install
         npm install mongodb --save
 
