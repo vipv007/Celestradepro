@@ -20,10 +20,15 @@ jobs:
         with:
           node-version: '16.x'
 
-      # Step 3: Navigate to Backend directory and install dependencies
       - name: Install backend dependencies
         working-directory: celestradepro/Backend
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci || npm install
+          else
+            npm install
+          fi
+
 
       # Step 4: Run backend tests (Optional)
       - name: Run backend tests
