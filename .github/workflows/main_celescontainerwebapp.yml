@@ -24,15 +24,21 @@ jobs:
         run: |
           cd celestradepro
           npm install -g @angular/cli
-          npm install
-          npm install ws@latest @types/ws@latest
+          npm install -f
+          npm install ws@latest @types/ws@latest -f
           npm install highcharts --save
+
+      - name: Modify TypeScript Files (Optional)
+        run: |
+          cd celestradepro
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
       - name: Build frontend
         run: |
           cd celestradepro
+          npm install
           npm install webpack --save-dev
-          npm run build --prod --skipLibCheck  # Skip type checking for libraries
+          npm run build --prod
 
       # Backend deployment steps
       - name: Set up Node.js for backend
@@ -40,52 +46,36 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Install backend dependencies
+      - name: Install backend dependencies and MongoDB
         run: |
           cd celestradepro/Backend
-          rm -rf node_modules package-lock.json  # Ensure a clean install
           npm install
-          npm install typescript@latest --save-dev
           npm install mongodb --save
-          npm install dotenv --save
-          npm install express --save
-          npm install --save @types/node @types/express
+          npm install ws@latest @types/ws@latest --save
 
-      - name: Modify TypeScript files to ignore ws errors
+      - name: Modify TypeScript Files in Backend
         run: |
-          cd celestradepro
+          cd celestradepro/Backend
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
-      - name: Fix TypeScript issues
+      - name: Build and package backend
         run: |
           cd celestradepro/Backend
-          npx tsc --init  # Ensure tsconfig.json exists
-          sed -i 's/"skipLibCheck": false/"skipLibCheck": true/' tsconfig.json  # Add skipLibCheck
-
-      - name: Build backend
-        run: |
-          cd celestradepro/Backend
-          npm run build  # Build using TypeScript, output to the 'www' folder
-
-      - name: Package backend for deployment
-        run: |
-          cd celestradepro/Backend
-          zip -r backend.zip www  # Package the 'www' folder containing the backend output
+          npm run build  # Replace with 'tsc' or other build scripts if needed
 
       - name: Deploy Backend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
+          slot-name: 'staging'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/Backend/backend.zip'
-          verbose: true
+          package: 'celestradepro/Backend'  # Path to the backend folder
 
       # Frontend deployment (if applicable)
       - name: Deploy Frontend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
+          slot-name: 'staging'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: 'celestradepro/www'  # Path to the frontend build folder
