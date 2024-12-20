@@ -5,21 +5,20 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const http = require('http');
 const socketIO = require('socket.io');
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-let mongoUrl = process.env.MONGO_URL; // Get from environment in Azure
-const dbName = process.env.DB_NAME;     // Get from environment in Azure
-
+// Load environment variables
+const mongoUrl = process.env.MONGO_URL;
+const dbName = process.env.DB_NAME;
 if (!mongoUrl || !dbName) {
     console.error("MONGO_URL and DB_NAME environment variables must be set.");
     process.exit(1);
 }
 
-const server = http.createServer(app);
-const io = socketIO(server);
-
+// Setup MongoDB connection
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -30,27 +29,17 @@ mongoose.connect(mongoUrl, {
         process.exit(1);
     });
 
+// Middleware setup
 app.use(bodyParser.json());
 app.use(cors());
 
-io.on('connection', (socket) => {
-    console.log('New client connected');
-    const collection = mongoose.connection.collection('Live_Datas');
-    const changeStream = collection.watch();
+// Static files for Angular
+app.use(express.static(path.join(__dirname, 'www')));
 
-    changeStream.on('change', (change) => {
-        if (change.operationType === 'insert') {
-            const newPrice = change.fullDocument;
-            socket.emit('priceUpdate', newPrice);
-        }
-    });
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
+// API routes
+const NameSchema = new mongoose.Schema({
+    name: { type: String, required: true },
 });
-
-const NameSchema = new mongoose.Schema({ name: { type: String, required: true } });
 const Name = mongoose.model('Name', NameSchema);
 
 app.post('/api/name', async (req, res) => {
@@ -75,9 +64,41 @@ app.get('/api/name', async (req, res) => {
     }
 });
 
+// Socket.IO setup
+const server = http.createServer(app);
+const io = socketIO(server);
+io.on('connection', (socket) => {
+    console.log('New client connected');
+
+    const collection = mongoose.connection.collection('Live_Datas');
+    const changeStream = collection.watch();
+
+    changeStream.on('change', (change) => {
+        if (change.operationType === 'insert') {
+            const newPrice = change.fullDocument;
+            socket.emit('priceUpdate', newPrice);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
+
+// Angular route handler (for SPA)
+app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+        res.sendFile(path.join(__dirname, 'www'));
+    } else {
+        res.status(404).json({ error: 'API endpoint not found' });
+    }
+});
+
+// Global error handler
 app.use((err, req, res, next) => {
     console.error('Global Error Handler:', err.stack);
     res.status(500).json({ error: 'Internal Server Error' });
 });
 
+// Start server
 server.listen(port, () => console.log(`Server is listening on port ${port}`));
