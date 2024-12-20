@@ -18,7 +18,7 @@ jobs:
     - name: Set up Node.js for Backend
       uses: actions/setup-node@v2
       with:
-        node-version: '16.x'  # You can adjust to your preferred version
+        node-version: '16.x'  # Adjust to your preferred version
 
     # Step 3: Install Backend dependencies (MongoDB and other required packages)
     - name: Install Backend dependencies
@@ -56,7 +56,6 @@ jobs:
         npm install webpack webpack-cli --save-dev
         npm install @angular-devkit/build-angular --save-dev
 
-
     # Step 7: Build Angular frontend (production build)
     - name: Build Angular frontend
       run: |
@@ -79,4 +78,4 @@ jobs:
         app-name: 'CelesContainerWebApp'  # Same app name for the frontend
         slot-name: 'staging'  # Same slot as the backend
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure publish profile stored as secret
-        package: 'celestradepro/www'  # Path to the built Angular app
+        package: 'celestradepro/www'  # Path to the built Angular app (make sure this is correct)
