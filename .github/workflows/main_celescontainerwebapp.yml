@@ -61,6 +61,8 @@ jobs:
       - name: Build and package backend
         run: |
           cd celestradepro/Backend
+          npm install typescript@latest --save-dev
+          npm install cheerio-select@latest htmlparser2@latest --save
           npm run build  # Replace with 'tsc' or other build scripts if needed
 
       - name: Deploy Backend to Azure Web App
