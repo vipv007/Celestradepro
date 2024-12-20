@@ -26,6 +26,7 @@ jobs:
         cd celestradepro/Backend
         npm install
         npm install mongodb --save
+        npm install ws@latest @types/ws@latest --save
 
     # Step 4: Modify TypeScript files (Optional step)
     - name: Modify TypeScript Files
@@ -45,16 +46,8 @@ jobs:
         cd celestradepro
         npm install -g @angular/cli
         npm install -f
-        npm install ws@latest @types/ws@latest -f
+        npm install ws@latest @types/ws@latest --save
         npm install highcharts --save
-
-    # Step to install Angular and other dependencies
-    - name: Install Angular and Webpack dependencies
-      run: |
-        cd celestradepro
-        npm install
-        npm install webpack webpack-cli --save-dev
-        npm install @angular-devkit/build-angular --save-dev
 
     # Step 7: Build Angular frontend (production build)
     - name: Build Angular frontend
