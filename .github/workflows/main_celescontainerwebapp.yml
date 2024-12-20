@@ -28,11 +28,6 @@ jobs:
           npm install ws@latest @types/ws@latest -f
           npm install highcharts --save
 
-      - name: Modify TypeScript Files (Optional)
-        run: |
-          cd celestradepro
-          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-
       - name: Build frontend
         run: |
           cd celestradepro
@@ -52,11 +47,10 @@ jobs:
           npm install
           npm install mongodb --save
 
-      - name: Build and package backend
-        run: |
-          cd celestradepro/Backend
-          npm run build  # Replace with 'tsc' or other build scripts if needed
+      # No need for 'npm run build' if you're not using TypeScript or any build step in backend
+      # If you're using TypeScript, you can use `tsc` here.
 
+      # Deploy Backend to Azure Web App
       - name: Deploy Backend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
@@ -72,4 +66,4 @@ jobs:
           app-name: 'CelesContainerWebApp'
           slot-name: 'staging'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/www'  # Path to the frontend build folder
+          package: 'celestradepro/www/celestradepro'  # Specify the correct path to the dist folder
