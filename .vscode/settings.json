@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/7291c558-5e56-4b19-9a8a-344d8d353a26/resourceGroups/CelesBricks/providers/Microsoft.Web/sites/CelesContainerWebApp",
+    "appService.deploySubpath": "celestradepro\\Backend"
+}
