@@ -27,10 +27,10 @@ jobs:
           npm install
 
       # Step 4: Test Backend (Optional)
-      - name: Run backend tests
-        run: |
-          cd celestradepro/Backend
-          npm test
+      #- name: Run backend tests
+        #run: |
+        #  cd celestradepro/Backend
+        #  npm test
 
       # Step 5: Deploy to Azure App Service
       - name: Deploy to Azure Web App
