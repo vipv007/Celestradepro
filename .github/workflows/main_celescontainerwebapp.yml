@@ -48,6 +48,15 @@ jobs:
         npm install ws@latest @types/ws@latest -f
         npm install highcharts --save
 
+    # Step to install Angular and other dependencies
+    - name: Install Angular and Webpack dependencies
+      run: |
+        cd celestradepro
+        npm install
+        npm install webpack webpack-cli --save-dev
+        npm install @angular-devkit/build-angular --save-dev
+
+
     # Step 7: Build Angular frontend (production build)
     - name: Build Angular frontend
       run: |
