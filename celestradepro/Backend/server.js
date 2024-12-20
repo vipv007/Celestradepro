@@ -6,13 +6,14 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
+const apiRoutes = require('./routes/api'); // Import the external API routes from api.js
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Load environment variables
-const mongoUrl = process.env.MONGO_URL;
-const dbName = process.env.DB_NAME;
+const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017'; // Use 'let' here
+const dbName = process.env.DB_NAME || 'FinanceDB';
 if (!mongoUrl || !dbName) {
     console.error("MONGO_URL and DB_NAME environment variables must be set.");
     process.exit(1);
@@ -36,12 +37,13 @@ app.use(cors());
 // Static files for Angular
 app.use(express.static(path.join(__dirname, 'www')));
 
-// API routes
+// API Routes (name-related logic stays here in server.js)
 const NameSchema = new mongoose.Schema({
     name: { type: String, required: true },
 });
 const Name = mongoose.model('Name', NameSchema);
 
+// POST /api/name
 app.post('/api/name', async (req, res) => {
     try {
         const { name } = req.body;
@@ -54,6 +56,7 @@ app.post('/api/name', async (req, res) => {
     }
 });
 
+// GET /api/name
 app.get('/api/name', async (req, res) => {
     try {
         const names = await Name.find();
@@ -63,6 +66,9 @@ app.get('/api/name', async (req, res) => {
         res.status(500).json({ error: 'Failed to retrieve names' });
     }
 });
+
+// External API routes from api.js (if you have more API logic)
+app.use('/api', apiRoutes);  // All /api routes from api.js will be prefixed with /api
 
 // Socket.IO setup
 const server = http.createServer(app);
@@ -88,7 +94,7 @@ io.on('connection', (socket) => {
 // Angular route handler (for SPA)
 app.get('*', (req, res) => {
     if (!req.path.startsWith('/api')) {
-        res.sendFile(path.join(__dirname, 'www'));
+        res.sendFile(path.join(__dirname, 'www/index.html')); // Serve Angular's index.html for non-API routes
     } else {
         res.status(404).json({ error: 'API endpoint not found' });
     }

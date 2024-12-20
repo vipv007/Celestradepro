@@ -1,4 +1,4 @@
-name: Deploy Backend to Azure App Service
+name: Deploy Angular and Node.js to Azure App Service
 
 on:
   push:
@@ -6,56 +6,63 @@ on:
       - main
 
 jobs:
-  backend-deploy:
+  # Frontend and Backend deployment
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
+    # Step 1: Checkout the code
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Node.js for frontend
+    # Step 2: Set up Node.js for Backend (Node.js server)
+    - name: Set up Node.js for Backend
       uses: actions/setup-node@v2
       with:
-        node-version: '14.x'
+        node-version: '16.x'  # You can adjust to your preferred version
 
-    - name: Install Angular CLI and frontend dependencies
+    # Step 3: Install Backend dependencies (MongoDB and other required packages)
+    - name: Install Backend dependencies
+      run: |
+        cd celestradepro/Backend
+        npm install
+        npm install mongodb --save
+
+    # Step 4: Set up Node.js for Frontend (Angular)
+    - name: Set up Node.js for Frontend
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14.x'  # Angular works best with Node.js 14.x
+
+    # Step 5: Install Angular CLI and other frontend dependencies
+    - name: Install Angular dependencies
       run: |
         cd celestradepro
         npm install -g @angular/cli
         npm install -f
         npm install ws@latest @types/ws@latest -f
         npm install highcharts --save
-    - name: Modify TypeScript Files
-      run: |
-        cd celestradepro
-        find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-    - name: Install dependencies and build frontend
-      run: |
-        cd celestradepro
-        npm install
-        npm install webpack --save-dev
-        npm run build --prod
-    - name: Set up Node.js for backend
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16.x'
 
-    - name: Reinstall backend dependencies and MongoDB
+    # Step 6: Build Angular frontend (production build)
+    - name: Build Angular frontend
       run: |
-        cd celestradepro/Backend
-        npm install
-        npm install mongodb --save
-    - name: Run the backend server in background
-      env:
-        AZURE_COSMOS_CONNECTIONSTRING: 'mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@'
-        DB_NAME: 'test'
-      run: |
-        cd celestradepro/Backend
-        nohup node server.js &
-    - name: Deploy to Azure Web App
+        cd celestradepro
+        npm run build --prod
+
+    # Step 7: Deploy Backend to Azure App Service
+    - name: Deploy Backend to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'CelesContainerWebApp'
-        slot-name: 'staging'
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: 'celestradepro/www'
+        app-name: 'CelesContainerWebApp'  # Name of your Azure App Service
+        slot-name: 'staging'  # If you're using staging slots; use 'production' for live deployment
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure publish profile stored as secret
+        package: 'celestradepro/Backend'  # Path to the backend directory for deployment
+
+    # Step 8: Deploy Frontend to Azure App Service
+    - name: Deploy Frontend to Azure App Service
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'CelesContainerWebApp'  # Same app name for the frontend
+        slot-name: 'staging'  # Same slot as the backend
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Azure publish profile stored as secret
+        package: 'celestradepro/www'  # Path to the built Angular app
