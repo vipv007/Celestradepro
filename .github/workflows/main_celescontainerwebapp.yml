@@ -14,67 +14,59 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # --- Frontend Deployment ---
-      - name: Set up Node.js for frontend
+      # --- Set Node.js Version for Both Frontend and Backend ---
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: '16.x' # Unified Node.js version for both frontend and backend
 
-      - name: Install Angular CLI and frontend dependencies
+      # --- Frontend Deployment ---
+      - name: Install Angular CLI and dependencies
         run: |
           cd celestradepro
-          npm install -g @angular/cli
-          npm install -f
-          npm install ws@7.4.6 @types/ws@7.4.3 --save
-          npm install highcharts --save
+          npm install -g @angular/cli # Install Angular CLI globally
+          npm install # Install frontend dependencies
+          npm install ws@7.4.6 @types/ws@7.4.3 highcharts --save # Install necessary dependencies
 
       - name: Modify TypeScript Files (Optional)
         run: |
           cd celestradepro
-          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \; # Ignore the TypeScript error related to HTTPServer
 
       - name: Build frontend
         run: |
           cd celestradepro
-          npm install
-          npm install webpack --save-dev
-          npm run build --prod
+          ng build --prod # Build the Angular app for production
 
       - name: Deploy Frontend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/www'  # Path to the frontend build folder
+          app-name: 'CelesContainerWebApp' # Azure app name
+          slot-name: 'Production' # Deployment slot
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # Azure publish profile secret
+          package: 'celestradepro/dist/celestradepro' # Correct path to the build folder
 
       # --- Backend Deployment ---
-      - name: Set up Node.js for backend
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16.x'
-
-      - name: Install backend dependencies and MongoDB
+      - name: Install backend dependencies
         run: |
           cd celestradepro/Backend
-          npm install
-          npm install mongodb --save
-          npm install ws@7.4.6 @types/ws@7.4.3 --save
+          npm install # Install backend dependencies
+          npm install mongodb ws@7.4.6 @types/ws@7.4.3 --save # Install MongoDB and ws dependencies
 
       - name: Validate TypeScript configuration
         run: |
           cd celestradepro/Backend
-          npx tsc --noEmit
+          npx tsc --noEmit # Check for TypeScript errors without emitting files
 
-      - name: Build and package backend
+      - name: Build backend
         run: |
           cd celestradepro/Backend
-          npm run build  # Replace with 'tsc' or other build scripts if needed
+          npm run build # Ensure proper build script (tsc or any custom build)
 
       - name: Deploy Backend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/Backend'  # Path to the backend folder
+          app-name: 'CelesContainerWebApp' # Azure app name
+          slot-name: 'Production' # Deployment slot
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # Azure publish profile secret
+          package: 'celestradepro/Backend/build' # Correct path to the backend build folder
