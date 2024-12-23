@@ -61,28 +61,7 @@ jobs:
           npm install mongodb --save
           npm install ws@7.4.6 @types/ws@7.4.3 --save
 
-      - name: Ensure tsconfig.json exists
-        run: |
-          cd celestradepro/Backend
-          if [ ! -f tsconfig.json ]; then
-            cat <<EOF > tsconfig.json
-            {
-              "compilerOptions": {
-                "target": "ES6",
-                "module": "commonjs",
-                "outDir": "./dist",
-                "rootDir": "./src",
-                "strict": true,
-                "esModuleInterop": true,
-                "skipLibCheck": false
-              },
-              "include": ["src/**/*"],
-              "exclude": ["node_modules"]
-            }
-            EOF
-          fi
-
-      - name: Validate TypeScript configuration
+           - name: Validate TypeScript configuration
         run: |
           cd celestradepro/Backend
           npx tsc --noEmit
