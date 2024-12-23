@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Frontend deployment steps
+      # --- Frontend Deployment ---
       - name: Set up Node.js for frontend
         uses: actions/setup-node@v2
         with:
@@ -25,8 +25,13 @@ jobs:
           cd celestradepro
           npm install -g @angular/cli
           npm install -f
-          npm install ws@latest @types/ws@latest -f
+          npm install ws@7.4.6 @types/ws@7.4.3 --save
           npm install highcharts --save
+
+      - name: Modify TypeScript Files (Optional)
+        run: |
+          cd celestradepro
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
       - name: Build frontend
         run: |
@@ -35,7 +40,15 @@ jobs:
           npm install webpack --save-dev
           npm run build --prod
 
-      # Backend deployment steps
+      - name: Deploy Frontend to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'CelesContainerWebApp'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: 'celestradepro/www'  # Path to the frontend build folder
+
+      # --- Backend Deployment ---
       - name: Set up Node.js for backend
         uses: actions/setup-node@v2
         with:
@@ -46,11 +59,7 @@ jobs:
           cd celestradepro/Backend
           npm install
           npm install mongodb --save
-
-      - name: Pin cheerio-select and htmlparser2 versions
-        run: |
-          cd celestradepro/Backend
-          npm install cheerio-select@1.0.0 htmlparser2@6.1.0 --save
+          npm install ws@7.4.6 @types/ws@7.4.3 --save
 
       - name: Update tsconfig.json to skip library type checks
         run: |
@@ -69,12 +78,3 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: 'celestradepro/Backend'  # Path to the backend folder
-
-      # Frontend deployment (if applicable)
-      - name: Deploy Frontend to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/www'  # Path to the frontend build folder
