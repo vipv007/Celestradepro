@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
+      # --- Checkout the repository ---
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -61,7 +61,7 @@ jobs:
           npm install mongodb --save
           npm install ws@7.4.6 @types/ws@7.4.3 --save
 
-           - name: Validate TypeScript configuration
+      - name: Validate TypeScript configuration
         run: |
           cd celestradepro/Backend
           npx tsc --noEmit
