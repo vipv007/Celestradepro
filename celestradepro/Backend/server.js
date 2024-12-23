@@ -11,15 +11,16 @@ const apiRoutes = require('./routes/api'); // Import the external API routes fro
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Load environment variables
-const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017'; // Use 'let' here
+// MongoDB connection setup
+const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
 const dbName = process.env.DB_NAME || 'FinanceDB';
+
 if (!mongoUrl || !dbName) {
     console.error("MONGO_URL and DB_NAME environment variables must be set.");
     process.exit(1);
 }
 
-// Setup MongoDB connection
+// MongoDB connection
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -30,14 +31,22 @@ mongoose.connect(mongoUrl, {
         process.exit(1);
     });
 
+// CORS Configuration
+const corsOptions = {
+  origin: 'https://finance.celespro.com',  // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+
 // Middleware setup
 app.use(bodyParser.json());
-app.use(cors());
 
-// Static files for Angular
+// Serve Angular app for static files
 app.use(express.static(path.join(__dirname, 'www')));
 
-// API Routes (name-related logic stays here in server.js)
+// MongoDB schema and model
 const NameSchema = new mongoose.Schema({
     name: { type: String, required: true },
 });
@@ -45,65 +54,68 @@ const Name = mongoose.model('Name', NameSchema);
 
 // POST /api/name
 app.post('/api/name', async (req, res) => {
-    try {
-        const { name } = req.body;
-        const nameEntry = new Name({ name });
-        await nameEntry.save();
-        res.status(200).json({ message: 'Name stored successfully', name: nameEntry });
-    } catch (error) {
-        console.error('Error storing name:', error);
-        res.status(500).json({ error: 'Failed to store name' });
+  try {
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({ error: 'Name is required' });
     }
+    const nameEntry = new Name({ name });
+    await nameEntry.save();
+    res.status(201).json({ message: 'Name stored successfully', name: nameEntry });
+  } catch (error) {
+    console.error('Error storing name:', error);
+    res.status(500).json({ error: 'Failed to store name' });
+  }
 });
 
 // GET /api/name
 app.get('/api/name', async (req, res) => {
-    try {
-        const names = await Name.find();
-        res.status(200).json(names);
-    } catch (error) {
-        console.error('Error retrieving names:', error);
-        res.status(500).json({ error: 'Failed to retrieve names' });
-    }
+  try {
+    const names = await Name.find();
+    res.status(200).json(names);
+  } catch (error) {
+    console.error('Error retrieving names:', error);
+    res.status(500).json({ error: 'Failed to retrieve names' });
+  }
 });
 
-// External API routes from api.js (if you have more API logic)
-app.use('/api', apiRoutes);  // All /api routes from api.js will be prefixed with /api
+// External API routes from api.js
+app.use('/api', apiRoutes);
 
-// Socket.IO setup
+// Socket.IO setup for real-time data
 const server = http.createServer(app);
 const io = socketIO(server);
+
 io.on('connection', (socket) => {
-    console.log('New client connected');
+  console.log('New client connected');
+  const collection = mongoose.connection.collection('Live_Datas');
+  const changeStream = collection.watch();
 
-    const collection = mongoose.connection.collection('Live_Datas');
-    const changeStream = collection.watch();
+  changeStream.on('change', (change) => {
+    if (change.operationType === 'insert') {
+      const newPrice = change.fullDocument;
+      socket.emit('priceUpdate', newPrice);
+    }
+  });
 
-    changeStream.on('change', (change) => {
-        if (change.operationType === 'insert') {
-            const newPrice = change.fullDocument;
-            socket.emit('priceUpdate', newPrice);
-        }
-    });
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
 });
 
-// Angular route handler (for SPA)
+// Angular route handler for SPA
 app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
-        res.sendFile(path.join(__dirname, 'www/index.html')); // Serve Angular's index.html for non-API routes
-    } else {
-        res.status(404).json({ error: 'API endpoint not found' });
-    }
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, 'www/index.html'));
+  } else {
+    res.status(404).json({ error: 'API endpoint not found' });
+  }
 });
 
 // Global error handler
 app.use((err, req, res, next) => {
-    console.error('Global Error Handler:', err.stack);
-    res.status(500).json({ error: 'Internal Server Error' });
+  console.error('Global Error Handler:', err.stack);
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 // Start server

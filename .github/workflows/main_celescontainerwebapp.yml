@@ -28,9 +28,10 @@ jobs:
           npm install ws@latest @types/ws@latest -f
           npm install highcharts --save
 
-      - name: Modify TypeScript Files (Optional)
+      - name: Modify TypeScript Files to Ignore Errors
         run: |
           cd celestradepro
+          # This command will add the @ts-ignore directive above lines that contain the problematic 'server' property
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
       - name: Build frontend
@@ -64,7 +65,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
+          slot-name: 'staging'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: 'celestradepro/Backend'  # Path to the backend folder
 
@@ -73,6 +74,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
+          slot-name: 'staging'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: 'celestradepro/www'  # Path to the frontend build folder
