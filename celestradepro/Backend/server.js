@@ -53,7 +53,7 @@ const NameSchema = new mongoose.Schema({
 const Name = mongoose.model('Name', NameSchema);
 
 // POST /api/name
-app.post('/name', async (req, res) => {
+app.post('/api/name', async (req, res) => {
   try {
     const { name } = req.body;
     if (!name) {
@@ -80,7 +80,7 @@ app.get('/api/name', async (req, res) => {
 });
 
 // External API routes from api.js
-app.use('/', apiRoutes);
+app.use('/api', apiRoutes);
 
 // Socket.IO setup for real-time data
 const server = http.createServer(app);
@@ -105,8 +105,8 @@ io.on('connection', (socket) => {
 
 // Angular route handler for SPA
 app.get('*', (req, res) => {
-  if (!req.path.startsWith('/')) {
-    res.sendFile(path.join(__dirname, 'www'));
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, 'www/index.html'));
   } else {
     res.status(404).json({ error: 'API endpoint not found' });
   }
