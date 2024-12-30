@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "tsc"
+    "build": "ng build"
   },
   "dependencies": {
     "body-parser": "^1.20.3",
