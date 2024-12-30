@@ -57,7 +57,7 @@ export class CrtPage implements OnInit {
 
   sections = [...this.allSections];
 
-  private readonly API_URL = 'https://finance.celespro.com/api';
+  private readonly API_URL = 'https://finance.celespro.com';
 
   constructor(
     private newsService: NewsService,
