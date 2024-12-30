@@ -1,3 +1,4 @@
+// Backend/server.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -6,7 +7,7 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
-const apiRoutes = require('./routes/api'); // Import the external API routes from api.js
+const apiRoutes = require('./routes/api');  // Import API routes
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,16 +21,15 @@ if (!mongoUrl || !dbName) {
     process.exit(1);
 }
 
-// MongoDB connection
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
-    .then(() => console.log(`Connected to MongoDB at ${mongoUrl}`))
-    .catch((error) => {
-        console.error('MongoDB connection error:', error);
-        process.exit(1);
-    });
+.then(() => console.log(`Connected to MongoDB at ${mongoUrl}`))
+.catch((error) => {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+});
 
 // CORS Configuration
 const corsOptions = {
@@ -39,12 +39,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// Middleware setup
 app.use(bodyParser.json());
-
-// Serve Angular app for static files
-app.use(express.static(path.join(__dirname, 'www')));
 
 // MongoDB schema and model
 const NameSchema = new mongoose.Schema({
@@ -79,44 +74,22 @@ app.get('/api/name', async (req, res) => {
   }
 });
 
-// External API routes from api.js
-app.use('/api', apiRoutes);
+// Serve Angular app for static files
+app.use(express.static(path.join(__dirname, 'www')));
 
-// Socket.IO setup for real-time data
+// Angular route handler for SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'www/index.html'));
+});
+
+// Start server
 const server = http.createServer(app);
 const io = socketIO(server);
-
 io.on('connection', (socket) => {
   console.log('New client connected');
-  const collection = mongoose.connection.collection('Live_Datas');
-  const changeStream = collection.watch();
-
-  changeStream.on('change', (change) => {
-    if (change.operationType === 'insert') {
-      const newPrice = change.fullDocument;
-      socket.emit('priceUpdate', newPrice);
-    }
-  });
-
   socket.on('disconnect', () => {
     console.log('Client disconnected');
   });
 });
 
-// Angular route handler for SPA
-app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, 'www/index.html'));
-  } else {
-    res.status(404).json({ error: 'API endpoint not found' });
-  }
-});
-
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error('Global Error Handler:', err.stack);
-  res.status(500).json({ error: 'Internal Server Error' });
-});
-
-// Start server
 server.listen(port, () => console.log(`Server is listening on port ${port}`));
