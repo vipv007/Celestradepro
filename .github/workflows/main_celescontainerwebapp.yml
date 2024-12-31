@@ -62,7 +62,13 @@ jobs:
       - name: Zip backend for deployment
         run: |
           cd celestradepro/Backend
-          zip -r backend.zip ./www
+          if [ -d "www" ]; then
+            zip -r backend.zip ./www
+          else
+            echo "Error: Build output directory './www' does not exist."
+            exit 1
+          fi
+
 
       - name: Deploy Backend to Azure Web App
         uses: azure/webapps-deploy@v2
