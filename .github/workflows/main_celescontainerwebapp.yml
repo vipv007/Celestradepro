@@ -54,20 +54,23 @@ jobs:
           npm install mongodb --save
           npm install ws@latest @types/ws@latest --save
 
-      - name: Build and package backend
+      - name: Build backend
         run: |
           cd celestradepro/Backend
-          npm run build  # Replace with 'tsc' or other build scripts if needed
+          npm run build
 
-      # --- Deployment to Azure Web App ---
-      # Deploying the backend code to Azure Web App
+      - name: Zip backend for deployment
+        run: |
+          cd celestradepro/Backend
+          zip -r backend.zip ./www
+
       - name: Deploy Backend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'CelesContainerWebApp'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/Backend/www'  # Path to the backend folder
+          package: 'celestradepro/Backend/backend.zip'  # Path to the backend folder
 
       # Deploying the frontend code to Azure Web App (same App Service)
       - name: Deploy Frontend to Azure Web App
