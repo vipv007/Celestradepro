@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "./www",         
-    "rootDir": "./src",        
+    "target": "ES2020",
     "module": "commonjs",
-    "target": "es6",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./node_modules/mongoose"]
   },
-  "include": ["src/**/*"],     
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules/mongoose/types/*"
+  ]
 }
