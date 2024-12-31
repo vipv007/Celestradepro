@@ -67,7 +67,7 @@ jobs:
           app-name: 'CelesContainerWebApp'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/Backend'  # Path to the backend folder
+          package: 'celestradepro/Backend/www'  # Path to the backend folder
 
       # Deploying the frontend code to Azure Web App (same App Service)
       - name: Deploy Frontend to Azure Web App
