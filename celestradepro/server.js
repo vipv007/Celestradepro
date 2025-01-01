@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
-const apiRoutes = require('./routes/api');  // Import API routes
+const apiRoutes = require('./Backend/routes/api');  // Import API routes
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -79,7 +79,7 @@ app.use(express.static(path.join(__dirname, 'www')));
 
 // Angular route handler for SPA
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'www/index.html'));
+  res.sendFile(path.join(__dirname, 'www'));
 });
 
 // Start server
