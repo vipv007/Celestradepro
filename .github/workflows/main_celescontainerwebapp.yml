@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # --- Frontend Deployment ---
+      # Frontend deployment steps
       - name: Set up Node.js for frontend
         uses: actions/setup-node@v2
         with:
@@ -28,10 +28,9 @@ jobs:
           npm install ws@latest @types/ws@latest -f
           npm install highcharts --save
 
-      - name: Modify TypeScript Files to Ignore Errors
+      - name: Modify TypeScript Files (Optional)
         run: |
           cd celestradepro
-          # This command will add the @ts-ignore directive above lines that contain the problematic 'server' property
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
       - name: Build frontend
@@ -41,7 +40,7 @@ jobs:
           npm install webpack --save-dev
           npm run build --prod
 
-      # --- Backend Deployment ---
+      # Backend deployment steps
       - name: Set up Node.js for backend
         uses: actions/setup-node@v2
         with:
@@ -52,23 +51,11 @@ jobs:
           cd celestradepro/Backend
           npm install
           npm install mongodb --save
-          npm install ws@latest @types/ws@latest --save
 
-      - name: Build backend
+      - name: Build and package backend
         run: |
           cd celestradepro/Backend
-          npm run build
-
-      - name: Zip backend for deployment
-        run: |
-          cd celestradepro/Backend
-          if [ -d "www" ]; then
-            zip -r backend.zip ./www
-          else
-            echo "Error: Build output directory './www' does not exist."
-            exit 1
-          fi
-
+          npm run build  # Replace with 'tsc' or other build scripts if needed
 
       - name: Deploy Backend to Azure Web App
         uses: azure/webapps-deploy@v2
@@ -76,9 +63,9 @@ jobs:
           app-name: 'CelesContainerWebApp'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/Backend/backend.zip'  # Path to the backend folder
+          package: 'celestradepro/Backend'  # Path to the backend folder
 
-      # Deploying the frontend code to Azure Web App (same App Service)
+      # Frontend deployment (if applicable)
       - name: Deploy Frontend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
