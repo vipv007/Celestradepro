@@ -46,25 +46,6 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Install backend dependencies and MongoDB
-        run: |
-          cd celestradepro/Backend
-          npm install
-          npm install mongodb --save
-
-      - name: Build and package backend
-        run: |
-          cd celestradepro/Backend
-          npm run build  # Replace with 'tsc' or other build scripts if needed
-
-      - name: Deploy Backend to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/Backend'  # Path to the backend folder
-
       # Frontend deployment (if applicable)
       - name: Deploy Frontend to Azure Web App
         uses: azure/webapps-deploy@v2
