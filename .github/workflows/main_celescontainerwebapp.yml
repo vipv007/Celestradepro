@@ -24,19 +24,21 @@ jobs:
         run: |
           cd celestradepro
           npm install -g @angular/cli
-          npm install -f
-          npm install ws@latest @types/ws@latest -f
+          npm install --legacy-peer-deps
+          npm install ws@latest @types/ws@latest --legacy-peer-deps
           npm install highcharts --save
+          npm run build --prod
 
-      - name: Modify TypeScript Files (Optional)
+      # Step 3: Modify TypeScript Files (Optional)
+      - name: Modify TypeScript Files
         run: |
           cd celestradepro
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-          
-      # Step 3: Setup and Deploy Backend
+
+      # Step 4: Setup and Deploy Backend
       - name: Install dependencies for backend
         run: |
-          npm install
+          npm install --legacy-peer-deps
 
       - name: Deploy Backend and Frontend to Azure Web App
         uses: azure/webapps-deploy@v2
@@ -46,7 +48,7 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: '.' # Deploy both backend and frontend together
 
-      # Optional: Clean-up or post-deployment steps
+      # Step 5: Optional Clean-up or Post-deployment steps
       - name: Post Deployment Cleanup
         run: |
           echo "Deployment successful. Cleanup steps, if any, can be added here."
