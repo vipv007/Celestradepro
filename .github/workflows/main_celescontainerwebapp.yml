@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '18.x'
 
-      # Install Angular CLI and frontend dependencies
+      # Install frontend dependencies and build Angular app
       - name: Install Angular CLI and frontend dependencies
         run: |
           cd celestradepro
@@ -27,7 +27,7 @@ jobs:
           npm install -f
           npm install ws@latest @types/ws@latest -f
 
-      # Modify TypeScript Files (workaround for specific issues)
+      # Modify TypeScript Files
       - name: Modify TypeScript Files
         run: |
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
@@ -36,7 +36,7 @@ jobs:
       - name: Build Angular app
         working-directory: ./celestradepro
         run: |
-          export NODE_OPTIONS="--max-old-space-size=4096" # 4GB of memory
+          export NODE_OPTIONS="--max-old-space-size=4096"
           ng build --output-path=www
 
       # Install backend dependencies
@@ -46,8 +46,8 @@ jobs:
           npm install -f
           npm install mongoose -f
 
-      # Upload the built Angular and backend app as artifacts for deployment
-      - name: Upload frontend and backend artifacts
+      # Upload frontend build artifact
+      - name: Upload frontend artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: app-build
@@ -60,41 +60,46 @@ jobs:
       name: 'staging'
 
     steps:
-      # Download the frontend and backend build artifacts
+      # Download artifacts from build job
       - name: Download artifacts from build job
         uses: actions/download-artifact@v4
         with:
           name: app-build
           path: www
 
+      # Download source code for backend
+      - uses: actions/checkout@v4
+
       # List files for verification
-      - name: List files in the app directory
+      - name: List files in deployment directory
         run: ls -R www
 
-      # Deploy to Azure Web App (staging slot)
+      # Deploy to Azure Web App
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
           slot-name: 'staging'
-          package: www  # Deploy both Angular and Backend from the root directory
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}  # Azure publish profile
+          package: www
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
-      # Ensure backend starts properly on Azure (use npm start)
-      - name: Ensure backend starts after deployment
+      # Ensure backend starts properly
+      - name: Start backend server
         run: |
-          # Install backend dependencies
-          cd ./Celestradepro/celestradepro/Backend  # Update path according to where Backend is in your deployed app
+          echo "Setting up backend..."
+          cd celestradepro/Backend
           npm install
           npm install mongoose
-
-          # Start backend using the npm start script
+          
           echo "Starting backend server..."
-          npm start &  # Use npm start instead of nohup
-
-
-name: Build and deploy Angular app with Node backend to Azure Web App - celestradepro
+          # Use PM2 to manage the Node.js process
+          npm install -g pm2
+          pm2 start server.js
+        env:
+          AZURE_COSMOS_CONNECTIONSTRING: ${{ secrets.AZURE_COSMOS_CONNECTIONSTRING }}
+          DB_NAME: 'test'
+          PORT: 443
 
 on:
   push:
