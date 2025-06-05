@@ -38,48 +38,24 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB schema and model
-const NameSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-});
-const Name = mongoose.model('Name', NameSchema);
+// Serve static files from the Angular app in production
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, 'www')));
+}
 
-// POST /api/name
-app.post('/api/name', async (req, res) => {
-  try {
-    const { name } = req.body;
-    if (!name) {
-      return res.status(400).json({ error: 'Name is required' });
-    }
-    const nameEntry = new Name({ name });
-    await nameEntry.save();
-    res.status(201).json({ message: 'Name stored successfully', name: nameEntry });
-  } catch (error) {
-    console.error('Error storing name:', error);
-    res.status(500).json({ error: 'Failed to store name' });
-  }
-});
+// API Routes
+app.use('/api', apiRoutes);
 
-// GET /api/name
-app.get('/api/name', async (req, res) => {
-  try {
-    const names = await Name.find();
-    res.status(200).json(names);
-  } catch (error) {
-    console.error('Error retrieving names:', error);
-    res.status(500).json({ error: 'Failed to retrieve names' });
-  }
-});
-
-// Serve Angular app for static files
-app.use(express.static(path.join(__dirname, 'www')));
-
-// Angular route handler for SPA
+// All other GET requests not handled before will return the Angular app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'www'));
+    if (process.env.NODE_ENV === 'production') {
+        res.sendFile(path.join(__dirname, 'www', 'index.html'));
+    } else {
+        res.status(404).send('Not Found');
+    }
 });
 
 // Start server
