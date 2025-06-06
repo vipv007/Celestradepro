@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: 'staging'
 
     steps:
       # Download artifact
@@ -79,7 +79,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
+          slot-name: 'staging'
           package: www
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
 
@@ -88,7 +88,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
+          slot-name: 'staging'
           startup-command: |
             cd /home/site/wwwroot && 
             npm install -g pm2 &&
