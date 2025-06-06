@@ -1,4 +1,4 @@
-name: Build and deploy Angular app with Node backend to Azure Web App - celestradepro
+name: Deploy to Azure App Service
 
 on:
   push:
@@ -6,96 +6,78 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
-      - uses: actions/checkout@v4
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # Set up Node.js
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
+      # Frontend deployment steps
+      - name: Set up Node.js for frontend
+        uses: actions/setup-node@v2
         with:
-          node-version: '18.x'
+          node-version: '14.x'
 
-      # Install frontend dependencies and build Angular app
       - name: Install Angular CLI and frontend dependencies
         run: |
           cd celestradepro
           npm install -g @angular/cli
           npm install -f
           npm install ws@latest @types/ws@latest -f
+          npm install highcharts --save
 
-      # Modify TypeScript Files
-      - name: Modify TypeScript Files
+      - name: Modify TypeScript Files (Optional)
         run: |
+          cd celestradepro
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
-      # Build Angular app
-      - name: Build Angular app
-        working-directory: ./celestradepro
+      - name: Build frontend
         run: |
-          export NODE_OPTIONS="--max-old-space-size=4096"
-          ng build --output-path=www
+          cd celestradepro
+          npm install
+          npm install webpack --save-dev
+          npm run build --prod
 
-      # Install and build backend
-      - name: Install backend dependencies and prepare for deployment
-        working-directory: ./celestradepro/Backend
+      # Backend deployment steps
+      - name: Set up Node.js for backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      - name: Install backend dependencies and MongoDB
         run: |
-          npm install -f
-          npm install mongoose -f
-          # Copy backend files to the www directory for deployment
-          cp -r . ../www/Backend/
+          cd celestradepro/Backend
+          npm install
+          npm install mongodb --save
+          npm install ws@latest @types/ws@latest --save
 
-      # Upload artifact for deployment
-      - name: Upload artifact for deployment
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-build
-          path: celestradepro/www
+      - name: Modify TypeScript Files in Backend
+        run: |
+          cd celestradepro/Backend
+          find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'staging'
+      - name: Build and package backend
+        run: |
+          cd celestradepro/Backend
+          npm install typescript@latest --save-dev
+          npm install cheerio-select@latest htmlparser2@latest --save
+          npm run build  # Replace with 'tsc' or other build scripts if needed
 
-    steps:
-      # Download artifact
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: app-build
-          path: www
-
-      # List files to verify structure
-      - name: List files in deployment directory
-        run: ls -R www
-
-      # Deploy to Azure Web App
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+      - name: Deploy Backend to Azure Web App
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'CelesContainerWebApp'
           slot-name: 'staging'
-          package: www
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: 'celestradepro/Backend'  # Path to the backend folder
 
-      # Configure and start the application
-      - name: Configure and start application
-        uses: azure/webapps-deploy@v3
+      # Frontend deployment (if applicable)
+      - name: Deploy Frontend to Azure Web App
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'CelesContainerWebApp'
           slot-name: 'staging'
-          startup-command: |
-            cd /home/site/wwwroot && 
-            npm install -g pm2 &&
-            cd Backend && npm install && 
-            pm2 start server.js --no-daemon
-        env:
-          AZURE_COSMOS_CONNECTIONSTRING: ${{ secrets.AZURE_COSMOS_CONNECTIONSTRING }}
-          DB_NAME: 'test'
-          PORT: 443
-
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: 'celestradepro/www'  # Path to the frontend build folder
