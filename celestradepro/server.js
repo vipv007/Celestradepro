@@ -12,60 +12,62 @@ const apiRoutes = require('./Backend/routes/api');  // Import API routes
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Serve static files from the Angular app
+app.use(express.static(path.join(__dirname, 'www')));
+
 // MongoDB connection setup
-const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
+const mongoUrl = process.env.AZURE_COSMOS_CONNECTIONSTRING || process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
 const dbName = process.env.DB_NAME || 'FinanceDB';
 
-if (!mongoUrl || !dbName) {
-    console.error("MONGO_URL and DB_NAME environment variables must be set.");
-    process.exit(1);
-}
+// Enable CORS
+app.use(cors());
 
-mongoose.connect(mongoUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log(`Connected to MongoDB at ${mongoUrl}`))
-.catch((error) => {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-});
+// Parse JSON bodies
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// CORS Configuration
-const corsOptions = {
-  origin: 'https://finance.celespro.com',  // Replace with your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+// MongoDB connection with retry logic
+const connectWithRetry = () => {
+    mongoose.connect(mongoUrl, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log(`Connected to MongoDB at ${mongoUrl}`))
+    .catch((error) => {
+        console.error('MongoDB connection error:', error);
+        console.log('Retrying in 5 seconds...');
+        setTimeout(connectWithRetry, 5000);
+    });
 };
 
-app.use(cors());
-app.use(bodyParser.json());
+connectWithRetry();
 
-// Serve static files from the Angular app in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'www')));
-}
-
-// API Routes
+// API routes
 app.use('/api', apiRoutes);
 
-// All other GET requests not handled before will return the Angular app
+// All other routes should serve the Angular app
 app.get('*', (req, res) => {
-    if (process.env.NODE_ENV === 'production') {
-        res.sendFile(path.join(__dirname, 'www', 'index.html'));
-    } else {
-        res.status(404).send('Not Found');
+    res.sendFile(path.join(__dirname, 'www/index.html'));
+});
+
+// Create HTTP server
+const server = http.createServer(app);
+
+// Socket.IO setup
+const io = socketIO(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
     }
 });
 
-// Start server
-const server = http.createServer(app);
-const io = socketIO(server);
+// Socket.IO connection handling
 io.on('connection', (socket) => {
-  console.log('New client connected');
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
+    console.log('Client connected');
+    socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
-server.listen(port, () => console.log(`Server is listening on port ${port}`));
+// Start server
+server.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
