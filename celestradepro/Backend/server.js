@@ -11,10 +11,22 @@ const path = require('path');
 // Initialize Express app
 const app = express();
 const port = process.env.PORT || 3000;
+const mongoUrl = 'mongodb+srv://vipvenkatesh567:Nlddj1hFEyqKABsv@financedb.ntgkmgm.mongodb.net';
+const dbName = 'FinanceDB';
 
 // Database Configuration
-const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
-const dbName = process.env.DB_NAME || 'FinanceDB';
+// const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
+// const dbName = process.env.DB_NAME || 'FinanceDB';
+
+// const mongoose = require('mongoose');
+
+mongoose.connect(`${mongoUrl}/${dbName}`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('✅ Connected to MongoDB Atlas'))
+.catch((err) => console.error('❌ MongoDB connection error:', err));
+
 
 if (!mongoUrl || !dbName) {
     console.error("MONGO_URL and DB_NAME environment variables must be set.");
@@ -34,7 +46,7 @@ mongoose.connect(`${mongoUrl}/${dbName}`, {
 
 // Middleware Setup
 app.use(cors({
-    origin: 'https://finance.celespro.com', // Replace with your frontend URL
+    origin: 'celweb-dpbwcshbe5btg2ep.westus3-01.azurewebsites.net', // Replace with your frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -72,14 +84,15 @@ app.get('/api/name', async (req, res) => {
     }
 });
 
-// Serve Angular Static Files
-const angularBuildPath = path.join(__dirname, 'www');
-app.use(express.static(angularBuildPath));
+const frontendPath = path.join(__dirname, '../www');
+app.use(express.static(frontendPath));
 
-// Fallback Route for SPA
 app.get('*', (req, res) => {
-    res.sendFile(path.join(angularBuildPath, 'index.html'));
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
+
+
+
 
 // Set up Socket.IO
 const server = http.createServer(app);
