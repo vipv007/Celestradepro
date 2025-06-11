@@ -69,7 +69,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'celweb'
-          slot-name: 'Production'
+          slot-name: 'app'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: 'celestradepro/Backend'  # Path to the backend folder
 
@@ -78,6 +78,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'celweb'
-          slot-name: 'Production'
+          slot-name: 'app'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: 'celestradepro/www'  # Path to the frontend build folder
