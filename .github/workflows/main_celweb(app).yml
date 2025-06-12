@@ -65,6 +65,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'celweb'                        # Make sure this matches your Azure App Service name
-          slot-name: 'Production'                   # ⚠️ Use 'Production' unless your slot is truly named 'app'
+          slot-name: 'app'                   # ⚠️ Use 'Production' unless your slot is truly named 'app'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B8C6C164795845FABD2D32A817EB58B9 }}
           package: .
