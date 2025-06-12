@@ -54,9 +54,11 @@ app.get('/api/name', async (req, res) => {
   res.status(200).json(names);
 });
 
-// Serve Angular frontend
+// Serve Angular frontend from the /www folder
 const frontendPath = path.join(__dirname, '../www');
 app.use(express.static(frontendPath));
+
+// Handle Angular routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
