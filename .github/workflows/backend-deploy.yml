@@ -1,0 +1,40 @@
+name: Deploy Node.js Backend to Azure Web App
+
+on:
+  push:
+    branches:
+      - main  # or use a backend-specific branch
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - name: Install backend dependencies
+        run: |
+          cd celestradepro/Backend
+          npm install
+
+      - name: Build backend (optional, if using TypeScript or a build step)
+        run: |
+          cd celestradepro/Backend
+          if [ -f "tsconfig.json" ]; then
+            npx tsc
+          fi
+
+      - name: Deploy backend to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'CelesContainerWebApp'  # Same app if you're hosting both frontend and backend
+          slot-name: 'production'  # Change to 'app' or any slot if needed
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILEPR }}
+          package: 'celestradepro/Backend'
