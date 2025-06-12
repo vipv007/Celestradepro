@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Node.js app to Azure Web App - celweb
+name: Build and deploy Full-Stack App to Azure Web App - celweb
 
 on:
   push:
@@ -12,53 +9,62 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read #This is required for actions/checkout
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js version
+      # --- Build Angular Frontend ---
+      - name: Set up Node.js for frontend
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
+          node-version: '18.x'
 
-      - name: npm install, build, and test
+      - name: Install frontend dependencies and build
         run: |
+          cd celestradepro
+          npm install -g @angular/cli
           npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm run build --prod
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+      # --- Build Node.js Backend ---
+      - name: Install backend dependencies
+        run: |
+          cd celestradepro/Backend
+          npm install
 
-      - name: Upload artifact for deployment job
+      # --- Prepare deployment package ---
+      - name: Prepare deployment zip
+        run: |
+          mkdir deploy
+          cp -r celestradepro/Backend/* deploy/
+          cp -r celestradepro/www deploy/frontend
+          cd deploy
+          zip -r ../release.zip .
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: node-app
+          name: fullstack-app
           path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: 'app'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
-      - name: Download artifact from build job
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: node-app
+          name: fullstack-app
 
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-      
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
+      - name: Unzip artifact
+        run: unzip release.zip -d .
+
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'celweb'
-          slot-name: 'app'
-          package: .
+          app-name: 'celweb'                        # Make sure this matches your Azure App Service name
+          slot-name: 'Production'                   # ⚠️ Use 'Production' unless your slot is truly named 'app'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B8C6C164795845FABD2D32A817EB58B9 }}
+          package: .
