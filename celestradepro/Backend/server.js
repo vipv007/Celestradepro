@@ -1,4 +1,3 @@
-// Backend/server.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -8,101 +7,69 @@ const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
 
-// Initialize Express app
+// Express app
 const app = express();
 const port = process.env.PORT || 3000;
-const mongoUrl = 'mongodb+srv://vipvenkatesh567:Nlddj1hFEyqKABsv@financedb.ntgkmgm.mongodb.net';
-const dbName = 'FinanceDB';
 
-// Database Configuration
-// const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
-// const dbName = process.env.DB_NAME || 'FinanceDB';
+// MongoDB Atlas URL & DB
+const mongoUrl = process.env.MONGO_URL || 'mongodb+srv://vipvenkatesh567:Nlddj1hFEyqKABsv@financedb.ntgkmgm.mongodb.net';
+const dbName = process.env.DB_NAME || 'FinanceDB';
 
-// const mongoose = require('mongoose');
+// Validate MongoDB config
+if (!mongoUrl || !dbName) {
+  console.error("MONGO_URL and DB_NAME must be defined.");
+  process.exit(1);
+}
 
+// Connect MongoDB
 mongoose.connect(`${mongoUrl}/${dbName}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 .then(() => console.log('✅ Connected to MongoDB Atlas'))
-.catch((err) => console.error('❌ MongoDB connection error:', err));
-
-
-if (!mongoUrl || !dbName) {
-    console.error("MONGO_URL and DB_NAME environment variables must be set.");
-    process.exit(1);
-}
-
-// Connect to MongoDB
-mongoose.connect(`${mongoUrl}/${dbName}`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log(`Connected to MongoDB at ${mongoUrl}`))
-.catch((error) => {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
+.catch((err) => {
+  console.error('❌ MongoDB connection error:', err);
+  process.exit(1);
 });
 
-// Middleware Setup
-app.use(cors({
-    origin: 'celweb-dpbwcshbe5btg2ep.westus3-01.azurewebsites.net', // Replace with your frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+// Middleware
+app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB Schema and Model
-const NameSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-});
+// Schema
+const NameSchema = new mongoose.Schema({ name: { type: String, required: true } });
 const Name = mongoose.model('Name', NameSchema);
 
-// API Endpoints
+// API Routes
 app.post('/api/name', async (req, res) => {
-    try {
-        const { name } = req.body;
-        if (!name) {
-            return res.status(400).json({ error: 'Name is required' });
-        }
-        const nameEntry = new Name({ name });
-        await nameEntry.save();
-        res.status(201).json({ message: 'Name stored successfully', name: nameEntry });
-    } catch (error) {
-        console.error('Error storing name:', error);
-        res.status(500).json({ error: 'Failed to store name' });
-    }
+  const { name } = req.body;
+  if (!name) return res.status(400).json({ error: 'Name is required' });
+  const nameEntry = new Name({ name });
+  await nameEntry.save();
+  res.status(201).json({ message: 'Name stored', name: nameEntry });
 });
 
 app.get('/api/name', async (req, res) => {
-    try {
-        const names = await Name.find();
-        res.status(200).json(names);
-    } catch (error) {
-        console.error('Error retrieving names:', error);
-        res.status(500).json({ error: 'Failed to retrieve names' });
-    }
+  const names = await Name.find();
+  res.status(200).json(names);
 });
 
+// Serve Angular frontend
 const frontendPath = path.join(__dirname, '../www');
 app.use(express.static(frontendPath));
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
-
-
-
-// Set up Socket.IO
+// Socket.IO
 const server = http.createServer(app);
 const io = socketIO(server);
 io.on('connection', (socket) => {
-    console.log('New client connected');
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
+  console.log('🟢 Client connected');
+  socket.on('disconnect', () => {
+    console.log('🔴 Client disconnected');
+  });
 });
 
-// Start the Server
-server.listen(port, () => console.log(`Server is listening on port ${port}`));
+// Start server
+server.listen(port, () => console.log(`🚀 Server running on port ${port}`));
