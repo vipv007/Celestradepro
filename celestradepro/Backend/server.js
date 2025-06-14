@@ -20,8 +20,8 @@ const io = socketIO(server);
 // ───────────────────────────────────────────────
 // ⚙️ Configuration
 const port = process.env.PORT || 3000;
-const mongoUrl = process.env.MONGO_URL || 'mongodb+srv://vipvenkatesh567:Nlddj1hFEyqKABsv@financedb.ntgkmgm.mongodb.net';
-const dbName = process.env.DB_NAME || 'FinanceDB';
+const mongoUrl ='mongodb+srv://vipvenkatesh567:venkat123@financedb.ntgkmgm.mongodb.net/?retryWrites=true&w=majority&appName=FinanceDB';
+// const dbName = process.env.DB_NAME || 'FinanceDB';
 
 // Validate MongoDB configuration
 if (!mongoUrl || !dbName) {
