@@ -8,8 +8,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 export class UserService {
 
   // private apiUrl = 'http://localhost:3000/api'; // Your backend URL
-  private apiUrl = 'https://finance.celespro.com/api'; // Your backend URL
-  // private apiUrl = 'https://celescontainerwebapp-staging-b5g9ehgkhyb0dpe9.westus3-01.azurewebsites.net/api'; // Your backend URL
+  // private apiUrl = 'https://finance.celespro.com/api'; // Your backend URL
+  private apiUrl = 'https://celescontainerwebapp-gbb0eccffyfkg4hc.westus3-01.azurewebsites.net/api';
 
   private email: string | null = null;
   private isLoggedInSubject = new BehaviorSubject<boolean>(false); // To track login status
