@@ -72,15 +72,25 @@ app.post('/api/name', async (req, res) => {
   }
 });
 
-app.get('/api/name', async (req, res) => {
-  try {
-    const names = await Name.find();
-    res.status(200).json(names);
-  } catch (error) {
-    console.error('❌ GET /api/name error:', error);
-    res.status(500).json({ error: 'Server error' });
-  }
+// app.get('/api/name', async (req, res) => {
+//   try {
+//     const names = await Name.find();
+//     res.status(200).json(names);
+//   } catch (error) {
+//     console.error('❌ GET /api/name error:', error);
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// });
+
+app.post('/api/name', async (req, res) => {
+  const { name } = req.body;
+  if (!name) return res.status(400).json({ error: 'Name is required' });
+
+  const nameEntry = new Name({ name });
+  await nameEntry.save();
+  res.status(201).json({ message: 'Name stored', name: nameEntry });
 });
+
 
 // ───────────────────────────────────────────────
 // 🔌 WebSocket Setup
