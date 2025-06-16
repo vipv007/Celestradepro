@@ -3,7 +3,7 @@ name: Deploy Node.js Backend to Azure Web App
 on:
   push:
     branches:
-      - mai  # or use a backend-specific branch
+      - main # or use a backend-specific branch
   workflow_dispatch:
 
 jobs:
