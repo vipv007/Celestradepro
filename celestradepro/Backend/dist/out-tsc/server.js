@@ -20,7 +20,7 @@ const apiRoutes = require('./routes/api'); // Import API routes
 const app = express();
 const port = process.env.PORT || 3000;
 // MongoDB connection setup
-const mongoUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
+const mongoUrl = 'mongodb+srv://vipvenkatesh567:venkat123@financedb.ntgkmgm.mongodb.net/?retryWrites=true&w=majority&appName=FinanceDB';
 const dbName = process.env.DB_NAME || 'FinanceDB';
 if (!mongoUrl || !dbName) {
     console.error("MONGO_URL and DB_NAME environment variables must be set.");
