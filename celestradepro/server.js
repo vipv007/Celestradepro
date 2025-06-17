@@ -16,8 +16,8 @@ const port = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'www')));
 
 // MongoDB connection setup
-const mongoUrl = process.env.AZURE_COSMOS_CONNECTIONSTRING || process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
-const dbName = process.env.DB_NAME || 'FinanceDB';
+const mongoUrl = 'mongodb+srv://vipvenkatesh567:venkat123@financedb.ntgkmgm.mongodb.net/?retryWrites=true&w=majority&appName=FinanceDB';
+// const dbName = process.env.DB_NAME || 'FinanceDB';
 
 // Enable CORS
 app.use(cors());
