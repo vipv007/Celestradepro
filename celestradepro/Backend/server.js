@@ -58,19 +58,21 @@ const Name = mongoose.model('Name', NameSchema);
 
 // ───────────────────────────────────────────────
 // 🧩 API Routes
-app.post('/api/name', async (req, res) => {
-  try {
-    const { name } = req.body;
-    if (!name) return res.status(400).json({ error: 'Name is required' });
-
-    const nameEntry = new Name({ name });
-    await nameEntry.save();
-    res.status(201).json({ message: 'Name stored', name: nameEntry });
-  } catch (error) {
-    console.error('❌ POST /api/name error:', error);
-    res.status(500).json({ error: 'Server error' });
+// POST /api/name
+app.post('/api/name', (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ error: 'Name is required' });
   }
+  names.push({ name });
+  res.status(201).json({ message: 'Name stored successfully' });
 });
+
+// GET /api/name
+app.get('/api/name', (req, res) => {
+  res.json(names);
+});
+
 
 // app.get('/api/name', async (req, res) => {
 //   try {
@@ -82,14 +84,14 @@ app.post('/api/name', async (req, res) => {
 //   }
 // });
 
-app.post('/api/name', async (req, res) => {
-  const { name } = req.body;
-  if (!name) return res.status(400).json({ error: 'Name is required' });
+// app.post('/api/name', async (req, res) => {
+//   const { name } = req.body;
+//   if (!name) return res.status(400).json({ error: 'Name is required' });
 
-  const nameEntry = new Name({ name });
-  await nameEntry.save();
-  res.status(201).json({ message: 'Name stored', name: nameEntry });
-});
+//   const nameEntry = new Name({ name });
+//   await nameEntry.save();
+//   res.status(201).json({ message: 'Name stored', name: nameEntry });
+// });
 
 
 // ───────────────────────────────────────────────
