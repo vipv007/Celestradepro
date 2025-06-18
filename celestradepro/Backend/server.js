@@ -48,6 +48,17 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 
+const path = require('path');
+
+// Serve Angular files from "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Fallback to index.html for Angular routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
+
 // ───────────────────────────────────────────────
 // 📘 Mongoose Model
 const EmailSchema = new mongoose.Schema({
