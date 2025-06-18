@@ -73,25 +73,13 @@ app.get('/api/name', (req, res) => {
   res.json(names);
 });
 
-
-// app.get('/api/name', async (req, res) => {
-//   try {
-//     const names = await Name.find();
-//     res.status(200).json(names);
-//   } catch (error) {
-//     console.error('❌ GET /api/name error:', error);
-//     res.status(500).json({ error: 'Server error' });
-//   }
-// });
-
-// app.post('/api/name', async (req, res) => {
-//   const { name } = req.body;
-//   if (!name) return res.status(400).json({ error: 'Name is required' });
-
-//   const nameEntry = new Name({ name });
-//   await nameEntry.save();
-//   res.status(201).json({ message: 'Name stored', name: nameEntry });
-// });
+// server.js or routes/email.js
+app.post('/api/store-email', (req, res) => {
+    const email = req.body.email;
+    console.log('Received email:', email);
+    // Save to DB or handle as needed
+    res.status(200).json({ message: 'Email stored successfully' });
+});
 
 
 // ───────────────────────────────────────────────
