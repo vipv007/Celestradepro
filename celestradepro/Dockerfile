@@ -1,7 +1,7 @@
 # Stage 1: Build Angular frontend
 FROM node:16 AS build-frontend
 WORKDIR /app/frontend
-COPY package*.json ./
+COPY package*.json ./ 
 RUN npm install -g @angular/cli && npm install
 COPY . .
 RUN npm run build -- --output-path=www
@@ -9,27 +9,27 @@ RUN npm run build -- --output-path=www
 # Stage 2: Build backend
 FROM node:16 AS build-backend
 WORKDIR /app/backend
-COPY Backend/package*.json ./
+COPY Backend/package*.json ./ 
 RUN npm install --legacy-peer-deps
 COPY Backend .
 
-# Stage 3: Serve frontend + run backend
+# Stage 3: Run production container
 FROM node:16
 WORKDIR /app
 
 RUN npm install -g http-server
 
-# Copy frontend
+# Copy frontend build
 COPY --from=build-frontend /app/frontend/www ./frontend
 
-# Copy backend
+# Copy backend app
 COPY --from=build-backend /app/backend ./backend
 
 WORKDIR /app/backend
 
 EXPOSE 4200 3000
-CMD ["sh", "-c", "http-server -p 4200 /app/frontend & node server.js"]
 
+CMD ["sh", "-c", "http-server -p 4200 /app/frontend & node server.js"]
 
 
 # Stage 1: Build the Angular frontend

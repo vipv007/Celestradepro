@@ -20,12 +20,11 @@ const io = socketIO(server);
 // ───────────────────────────────────────────────
 // ⚙️ Configuration
 const port = 3000;
-const mongoUrl ='mongodb+srv://vipvenkatesh567:venkat123@financedb.ntgkmgm.mongodb.net/?retryWrites=true&w=majority&appName=FinanceDB';
-// const dbName = process.env.DB_NAME || 'FinanceDB';
+const mongoUrl = 'mongodb+srv://vipvenkatesh567:venkat123@financedb.ntgkmgm.mongodb.net';
+const dbName = 'FinanceDB';
 
-// Validate MongoDB configuration
 if (!mongoUrl || !dbName) {
-  console.error("❌ MONGO_URL and DB_NAME must be defined.");
+  console.error("❌ mongoUrl or dbName missing");
   process.exit(1);
 }
 
@@ -44,56 +43,45 @@ mongoose.connect(`${mongoUrl}/${dbName}`, {
 // ───────────────────────────────────────────────
 // 🛡️ Middleware
 app.use(cors({
-  origin: 'https://celweb-dpbwcshbe5btg2ep.westus3-01.azurewebsites.net', // Allow frontend domain
+  origin: '*', // Update if needed for production security
   credentials: true
 }));
 app.use(bodyParser.json());
 
 // ───────────────────────────────────────────────
 // 📘 Mongoose Model
-const NameSchema = new mongoose.Schema({
-  name: { type: String, required: true }
+const EmailSchema = new mongoose.Schema({
+  email: { type: String, required: true }
 });
-const Name = mongoose.model('Name', NameSchema);
+const Email = mongoose.model('Email', EmailSchema);
 
 // ───────────────────────────────────────────────
 // 🧩 API Routes
-// POST /api/name
-app.post('/api/name', (req, res) => {
-  const { name } = req.body;
-  if (!name) {
-    return res.status(400).json({ error: 'Name is required' });
-  }
-  names.push({ name });
-  res.status(201).json({ message: 'Name stored successfully' });
-});
+app.post('/api/store-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
 
-// GET /api/name
-app.get('/api/name', (req, res) => {
-  res.json(names);
-});
+    const newEmail = new Email({ email });
+    await newEmail.save();
 
-// server.js or routes/email.js
-app.post('/api/store-email', (req, res) => {
-    const email = req.body.email;
-    console.log('Received email:', email);
-    // Save to DB or handle as needed
+    console.log('✅ Received and stored email:', email);
     res.status(200).json({ message: 'Email stored successfully' });
+  } catch (error) {
+    console.error('❌ Error storing email:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
-
 
 // ───────────────────────────────────────────────
 // 🔌 WebSocket Setup
 io.on('connection', (socket) => {
-  console.log('🟢 Client connected via WebSocket');
-
-  socket.on('disconnect', () => {
-    console.log('🔴 Client disconnected');
-  });
+  console.log('🟢 WebSocket client connected');
+  socket.on('disconnect', () => console.log('🔴 Client disconnected'));
 });
 
 // ───────────────────────────────────────────────
 // 🚀 Start backend server
 server.listen(port, () => {
-  console.log(`🌐 Backend server running on port ${port}`);
+  console.log(`🌐 Backend server running on http://localhost:${port}`);
 });
