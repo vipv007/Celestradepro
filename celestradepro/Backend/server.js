@@ -10,29 +10,30 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const http = require('http');
 const socketIO = require('socket.io');
+const path = require('path');
 
 // ───────────────────────────────────────────────
-// 🚀 Initialize express app and server
+// ⚙️ Configuration from env
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-// ───────────────────────────────────────────────
-// ⚙️ Configuration
-const port = 3000;
-const mongoUrl = 'mongodb+srv://vipvenkatesh567:venkat123@financedb.ntgkmgm.mongodb.net';
-const dbName = 'FinanceDB';
+// Use PORT from environment or fallback to 3000
+const port = process.env.PORT || 3000;
 
-if (!mongoUrl || !dbName) {
-  console.error("❌ mongoUrl or dbName missing");
+// Use MONGO_URI from environment
+const mongoUri = process.env.MONGO_URI;
+
+if (!mongoUri) {
+  console.error('❌ MONGO_URI not set in environment!');
   process.exit(1);
 }
 
 // ───────────────────────────────────────────────
 // 🗄️ Connect to MongoDB Atlas
-mongoose.connect(`${mongoUrl}/${dbName}`, {
+mongoose.connect(mongoUri, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 })
 .then(() => console.log('✅ Connected to MongoDB Atlas'))
 .catch((err) => {
@@ -42,22 +43,8 @@ mongoose.connect(`${mongoUrl}/${dbName}`, {
 
 // ───────────────────────────────────────────────
 // 🛡️ Middleware
-app.use(cors({
-  origin: '*', // Update if needed for production security
-  credentials: true
-}));
+app.use(cors({ origin: '*', credentials: true }));
 app.use(bodyParser.json());
-
-const path = require('path');
-
-// Serve Angular files from "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Fallback to index.html for Angular routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
-});
-
 
 // ───────────────────────────────────────────────
 // 📘 Mongoose Model
@@ -67,7 +54,7 @@ const EmailSchema = new mongoose.Schema({
 const Email = mongoose.model('Email', EmailSchema);
 
 // ───────────────────────────────────────────────
-// 🧩 API Routes
+// 🧩 API Route
 app.post('/api/store-email', async (req, res) => {
   try {
     const { email } = req.body;
@@ -92,7 +79,14 @@ io.on('connection', (socket) => {
 });
 
 // ───────────────────────────────────────────────
-// 🚀 Start backend server
+// 🌐 Serve Angular app (if deployed together)
+app.use(express.static(path.join(__dirname, 'public')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
+// ───────────────────────────────────────────────
+// 🚀 Start server
 server.listen(port, () => {
-  console.log(`🌐 Backend server running on http://localhost:${port}`);
+  console.log(`🌍 Server running on port ${port}`);
 });
