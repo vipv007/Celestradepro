@@ -1,33 +1,16 @@
-# ---------- Stage 1: Build Angular frontend ----------
-FROM node:18 AS frontend-build
-WORKDIR /app/frontend
+# Stage 1: Build Angular
+FROM node:18 AS build-frontend
+WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build -- --output-path=dist
+RUN npm run build -- --configuration production --output-path=Backend/public
 
-# ---------- Stage 2: Build backend ----------
-FROM node:18 AS backend-build
-WORKDIR /app/backend
-COPY Backend/package*.json ./
-RUN npm install
-COPY Backend/ .
-
-# ---------- Final Stage: Serve frontend + backend ----------
+# Stage 2: Run backend
 FROM node:18
 WORKDIR /app
-
-# Copy backend
-COPY --from=backend-build /app/backend ./Backend
-
-# Copy Angular dist to backend/public
-COPY --from=frontend-build /app/frontend/dist ./Backend/public
-
+COPY --from=build-frontend /app/Backend /app/Backend
 WORKDIR /app/Backend
-
-# ENV variables (PORT/MONGO_URI can be injected via Azure App Settings)
-ENV PORT=3000
-
+RUN npm install
 EXPOSE 3000
-
 CMD ["node", "server.js"]
