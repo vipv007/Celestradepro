@@ -18,11 +18,9 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-// Use PORT from environment or fallback to 3000
 const port = process.env.PORT || 3000;
-
-// Use MONGO_URI from environment
 const mongoUri = process.env.MONGO_URI;
+
 
 if (!mongoUri) {
   console.error('❌ MONGO_URI not set in environment!');
