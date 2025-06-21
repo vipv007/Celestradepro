@@ -16,7 +16,7 @@ COPY ./celestradepro .
 ENV NODE_OPTIONS=--max_old_space_size=4096
 
 # Build the Angular app
-RUN npm run build -- --output-path=dist
+RUN npm install -g @angular/cli && npm install
 
 # Use a smaller base image to serve the Angular app
 FROM node:16
