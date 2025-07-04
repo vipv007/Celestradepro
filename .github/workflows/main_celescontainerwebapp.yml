@@ -3,7 +3,7 @@ name: Deploy to Azure App Service
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build-and-deploy:
@@ -47,52 +47,3 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: 'celestradepro/www'  # Path to the frontend build folder
 
-
-
-# name: Deploy to Azure App Service
-
-# on:
-#   push:
-#     branches:
-#       - main
-
-# jobs:
-#   build-and-deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       # Checkout the repository
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-
-#       # Frontend deployment steps
-#       - name: Set up Node.js for frontend
-#         uses: actions/setup-node@v2
-#         with:
-#           node-version: '14.x'
-
-#       - name: Install Angular CLI and frontend dependencies
-#         run: |
-#           cd celestradepro
-#           npm install -g @angular/cli
-#           npm install -f
-#           npm install ws@latest @types/ws@latest -f
-#           npm install highcharts --save
-#       - name: Modify TypeScript Files 
-#         run: |
-#           cd celestradepro
-#           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-#       - name: Build frontend
-#         run: |
-#           cd celestradepro
-#           npm install
-#           npm install webpack --save-dev
-#           npm run build --prod
-#       # Frontend deployment (if applicable)
-#       - name: Deploy Frontend to Azure Web App
-#         uses: azure/webapps-deploy@v2
-#         with:
-#           app-name: 'celweb'
-#           slot-name: 'production'
-#           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-#           package: 'celestradepro/www'  # Path to the frontend build folder  
