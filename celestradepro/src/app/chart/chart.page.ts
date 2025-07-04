@@ -1,8 +1,8 @@
 
 import { Component } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import HC_heatmap from 'highcharts/modules/heatmap';
-// Correctly initialize the heatmap module
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const HC_heatmap = require('highcharts/modules/heatmap');
 HC_heatmap(Highcharts);
 
 @Component({
