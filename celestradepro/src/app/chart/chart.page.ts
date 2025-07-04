@@ -1,7 +1,8 @@
+
 import { Component } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import HC_heatmap from 'highcharts/modules/heatmap';
-
+// Correctly initialize the heatmap module
 HC_heatmap(Highcharts);
 
 @Component({
@@ -45,11 +46,6 @@ export class ChartPage {
     }],
   };
 
-  constructor() {
-    this.initializeHighcharts();
-  }
-
-  private initializeHighcharts() {
-    HC_heatmap(Highcharts);
-  }
+  // No need to re-initialize HC_heatmap in the constructor
+  constructor() {}
 }
