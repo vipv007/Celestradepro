@@ -37,6 +37,10 @@ jobs:
           npm install
           npm install webpack --save-dev
           npm run build --prod
+      - name: List build output files
+        run: |
+          cd celestradepro/dist/celestradepro
+          ls -lR
       # Frontend deployment (if applicable)
       - name: Deploy Frontend to Azure Web App
         uses: azure/webapps-deploy@v2
