@@ -43,7 +43,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'CelesContainerWebApp'
-          slot-name: 'Production'
+          slot-name: 'Production'  # Use 'Production' for the default slot
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/dist/celestradepro'  # Path to the frontend build folder
+          package: 'celestradepro/dist/celestradepro'  # Angular build output
 
