@@ -73,9 +73,14 @@ jobs:
           name: angular-app
           path: www
 
+      # Deploy to Azure Web App (staging slot)
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: CelesContainerWebApp
+          slot-name: 'Production'
+          package: www
+
       # List files in the dist directory (for troubleshooting)
       - name: List files in the dist directory
         run: ls -R www
-
-      # Deploy to Azure Web App (staging slot)
-      - name: Deploy to Azure Web App
