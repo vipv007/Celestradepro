@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js for frontend
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: '20.x'
 
       - name: Install Angular CLI and frontend dependencies
         run: |
@@ -27,6 +27,7 @@ jobs:
           npm install -f
           npm install ws@latest @types/ws@latest -f
           npm install highcharts --save
+          npm install webpack @popperjs/core @angular/localize chart.js @angular/common @angular/compiler @angular/core acorn --save
       - name: Modify TypeScript Files (Optional)
         run: |
           cd celestradepro
