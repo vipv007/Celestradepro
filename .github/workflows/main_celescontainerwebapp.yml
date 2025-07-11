@@ -1,4 +1,4 @@
-name: Build and deploy Angular app with Node backend to Azure Web App - celestradepro
+name: Deploy to Azure App Service
 
 on:
   push:
@@ -6,81 +6,44 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
-      - uses: actions/checkout@v4
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # Set up Node.js
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
+      # Frontend deployment steps
+      - name: Set up Node.js for frontend
+        uses: actions/setup-node@v2
         with:
-          node-version: '18.x'
+          node-version: '14.x'
 
-      # Install Angular CLI and frontend dependencies
       - name: Install Angular CLI and frontend dependencies
         run: |
           cd celestradepro
           npm install -g @angular/cli
           npm install -f
           npm install ws@latest @types/ws@latest -f
-      # Modify TypeScript Files (workaround for specific issues)
-      - name: Modify TypeScript Files
+          npm install highcharts --save
+      - name: Modify TypeScript Files (Optional)
         run: |
+          cd celestradepro
           find . -type f -name '*.ts' -exec sed -i '/server?: HTTPServer<V> | HTTPSServer<V> | undefined;/s/^/\/\/ @ts-ignore\n/' {} \;
-      # Build Angular app
-      - name: Build Angular app
-        working-directory: ./celestradepro
+      - name: Build frontend
         run: |
-          export NODE_OPTIONS="--max-old-space-size=4096" # 4GB of memory
-          ng build 
-      # Upload the built Angular app as an artifact for deployment
-      - name: Upload frontend artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: angular-app
-          path: celestradepro/www
+          cd celestradepro
+          npm install
+          npm install webpack --save-dev
+          export NODE_OPTIONS="--max-old-space-size=4096"
+          ng build --output-path=www --configuration production
 
-      # Install backend dependencies
-      - name: Install backend dependencies
-        working-directory: ./celestradepro
-        run: |
-          npm install -f
-          npm install mongoose -f
-      # Start backend server (for debugging locally)
-      - name: Start backend server
-        working-directory: ./celestradepro/Backend
-        run: |
-          node server.js &
-        env:
-          AZURE_COSMOS_CONNECTIONSTRING: "mongodb://celescontainerwebapp-server:Cd8bsmtPGb944jUTWSF6f03i9ZyuoYpKSNd14ZX7rrL5hM9yzcdZF6WidOZABiakigan29ihvSGtACDbgtLJdg==@celescontainerwebapp-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@celescontainerwebapp-server@"
-          DB_NAME: 'test'
-          PORT: 3000
-          
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-
-    steps:
-      # Download the frontend build artifact
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: angular-app
-          path: www
-
-      # Deploy to Azure Web App (staging slot)
-      - name: Deploy to Azure Web App
+      # Frontend deployment (if applicable)
+      - name: Deploy Frontend to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: CelesContainerWebApp
-          slot-name: 'Production'
-          package: www
-
-      # List files in the dist directory (for troubleshooting)
-      - name: List files in the dist directory
-        run: ls -R www
+          app-name: 'CelesContainerWebApp'
+          slot-name: 'Production'  # Use 'Production' for the default slot
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: 'celestradepro/www'  # Angular build output
