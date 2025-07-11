@@ -18,15 +18,15 @@ jobs:
       - name: Set up Node.js for frontend
         uses: actions/setup-node@v2
         with:
-          node-version: '20.x'
+          node-version: '14.x'
 
       - name: Install Angular CLI and frontend dependencies
-              run: |
-                cd celestradepro
-                npm install -g @angular/cli
-                npm install -f
-                npm install ws@latest @types/ws@latest -f
-                npm install highcharts --save
+        run: |
+          cd celestradepro
+          npm install -g @angular/cli
+          npm install -f
+          npm install ws@latest @types/ws@latest -f
+          npm install highcharts --save
       - name: Modify TypeScript Files (Optional)
         run: |
           cd celestradepro
@@ -36,10 +36,10 @@ jobs:
           cd celestradepro
           npm install
           npm install webpack --save-dev
-          ng build --output-path=www --configuration production
+          npm run build --prod
       - name: List build output files
         run: |
-          cd celestradepro/www
+          cd celestradepro/dist/celestradepro
           ls -lR
       # Frontend deployment (if applicable)
       - name: Deploy Frontend to Azure Web App
@@ -48,4 +48,4 @@ jobs:
           app-name: 'CelesContainerWebApp'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/www'  # Path to the frontend build folder
+          package: 'celestradepro/dist/celestradepro'  # Path to the frontend build folder
