@@ -36,10 +36,10 @@ jobs:
           cd celestradepro
           npm install
           npm install webpack --save-dev
-          npm run build --prod
+          ng build --output-path=www --configuration production
       - name: List build output files
         run: |
-          cd celestradepro/dist/celestradepro
+          cd celestradepro/www
           ls -lR
       # Frontend deployment (if applicable)
       - name: Deploy Frontend to Azure Web App
@@ -48,4 +48,4 @@ jobs:
           app-name: 'CelesContainerWebApp'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: 'celestradepro/dist/celestradepro'  # Path to the frontend build folder
+          package: 'celestradepro/www'  # Path to the frontend build folder
