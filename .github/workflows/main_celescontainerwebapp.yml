@@ -27,8 +27,8 @@ jobs:
           npm install -f
           npm install ws@latest @types/ws@latest -f
           npm install highcharts --save
-          npm install webpack @popperjs/core chart.js @angular/common@13.2.7 @angular/compiler@13.2.7 @angular/core@13.2.7 acorn --save
-          npm install @angular/localize@13.2.7 --save
+          npm install webpack @popperjs/core chart.js @angular/common@13.2.7 @angular/compiler@13.2.7 @angular/core@13.2.7 acorn --save --legacy-peer-deps
+          npm install @angular/localize@13.2.7 --save --legacy-peer-deps
       - name: Modify TypeScript Files (Optional)
         run: |
           cd celestradepro
